@@ -13,4 +13,5 @@ if (isNaN(major) || major < 8) {
     process.exit(1);
 }
 
-createWindowlessApp()
+// noinspection JSIgnoredPromiseFromCall
+createWindowlessApp();

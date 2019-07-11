@@ -12,7 +12,8 @@
     "start:help": "npm run start -- --help",
     "start:info": "npm run start -- --info",
     "start:test": "rimraf test-out && npm run start -- test-out --verbose --typescript",
-    "package": "npm pack"
+    "package": "npm pack",
+    "build": "npm run compile && npm run package"
   },
   "repository": {
     "type": "git",

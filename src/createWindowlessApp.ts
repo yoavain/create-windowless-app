@@ -4,9 +4,9 @@ import chalk from "chalk";
 import * as envinfo from "envinfo";
 import * as path from "path";
 import * as fs from "fs-extra";
-import * as  validateProjectName from 'validate-npm-package-name';
+import validateProjectName from 'validate-npm-package-name';
 import * as os from "os";
-import * as spawn from "cross-spawn";
+import spawn from "cross-spawn";
 
 const packageJson = require('../package.json');
 
@@ -110,27 +110,24 @@ function createApp(name: string, verbose: boolean, useTypescript: boolean) {
     run(root, appName, verbose, originalDirectory, useTypescript);
 }
 
-function run(root: string, appName: string, verbose: boolean, originalDirectory: string, useTypescript: boolean) {
+function run(root: string, appName: string, verbose: boolean, originalDirectory: string, useTypescript: boolean): Promise<void> {
     const dependencies = [...consts.dependencies];
     const devDependencies = [...consts.devDependencies];
     if (useTypescript) {
         devDependencies.push(...consts.tsDevDependencies);
     }
 
-    install(root, dependencies, verbose, false)
+    return install(root, dependencies, verbose, false)
         .then(() => {
             return install(root, devDependencies, verbose, true);
         })
-
-        .then(() => {
-            console.log('Done.');
-        })
+        .then(() => console.log("Done"));
 }
 
-function install(root, dependencies, verbose, isDev) {
+function install(root: string, dependencies: string[], verbose: boolean, isDev: boolean): Promise<void> {
     return new Promise((resolve, reject) => {
         const command = 'npm';
-        let args = ['install', isDev ? '--save-dev' : '--save', '--save-exact', '--loglevel', 'error',].concat(dependencies);
+        let args = ['install', isDev ? '--save-dev' : '--save', '--save-exact', '--loglevel', 'error'].concat(dependencies);
         if (verbose) {
             args.push('--verbose');
         }
