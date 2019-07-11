@@ -10,7 +10,9 @@
     "compile": "tsc",
     "start": "ts-node src/index.ts",
     "start:help": "npm run start -- --help",
-    "start:info": "npm run start -- --info"
+    "start:info": "npm run start -- --info",
+    "start:test": "npm run start -- yoav-test --verbose --typescript",
+    "package": "npm pack"
   },
   "repository": {
     "type": "git",
@@ -22,11 +24,16 @@
   "engines": {
     "node": ">=8"
   },
+  "files": [
+    "dist/**",
+    "resources/**"
+  ],
   "bugs": {
     "url": "https://github.com/yoavain/create-windowless-app/issues"
   },
   "homepage": "https://github.com/yoavain/create-windowless-app#readme",
   "devDependencies": {
+    "@types/fs-extra": "^8.0.0",
     "@types/node": "^12.x.x",
     "ts-node": "^8.3.0",
     "typescript": "^3.x.x"
@@ -34,6 +41,8 @@
   "dependencies": {
     "chalk": "^2.4.2",
     "commander": "^2.20.0",
-    "envinfo": "^7.3.1"
+    "envinfo": "^7.3.1",
+    "fs-extra": "^8.1.0",
+    "validate-npm-package-name": "^3.0.0"
   }
 }
