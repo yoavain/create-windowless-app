@@ -2,9 +2,18 @@
   "name": "create-windowless-app",
   "version": "0.0.1",
   "description": "Create a windowless NodeJS app",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "bin": {
+    "create-windowless-app": "./dist/index.js"
+  },
   "scripts": {
-
+    "compile": "rimraf dist && tsc",
+    "start": "ts-node src/index.ts",
+    "start:help": "npm run start -- --help",
+    "start:info": "npm run start -- --info",
+    "start:test": "rimraf test-out && npm run start -- test-out --verbose --typescript",
+    "package": "npm pack",
+    "build": "npm run compile && npm run package"
   },
   "repository": {
     "type": "git",
@@ -13,12 +22,31 @@
   "keywords": [],
   "author": "yoavain",
   "license": "MIT",
+  "engines": {
+    "node": ">=8"
+  },
+  "files": [
+    "dist/**",
+    "resources/**"
+  ],
   "bugs": {
     "url": "https://github.com/yoavain/create-windowless-app/issues"
   },
   "homepage": "https://github.com/yoavain/create-windowless-app#readme",
   "devDependencies": {
+    "@types/cross-spawn": "^6.x.x",
+    "@types/fs-extra": "^8.x.x",
     "@types/node": "^12.x.x",
+    "rimraf": "^2.x.x",
+    "ts-node": "^8.x.x",
     "typescript": "^3.x.x"
+  },
+  "dependencies": {
+    "chalk": "^2.x.x",
+    "commander": "^2.x.x",
+    "cross-spawn": "^6.x.x",
+    "envinfo": "^7.x.x",
+    "fs-extra": "^8.x.x",
+    "validate-npm-package-name": "^3.x.x"
   }
 }
