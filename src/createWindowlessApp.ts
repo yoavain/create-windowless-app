@@ -15,7 +15,7 @@ const consts = require('../resources/consts.json');
 // These files should be allowed to remain on a failed install, but then silently removed during the next create.
 const errorLogFilePatterns = consts.errorLogFilePatterns;
 
-export function createWindowlessApp() {
+export function createWindowlessApp(): Promise<void> {
     let projectName: string = undefined;
 
     const program: Command = new commander.Command(packageJson.name)
@@ -66,19 +66,7 @@ export function createWindowlessApp() {
         process.exit(1);
     }
 
-    function printValidationResults(results) {
-        if (typeof results !== 'undefined') {
-            results.forEach(error => {
-                console.error(chalk.red(`  *  ${ error }`));
-            });
-        }
-    }
-
-    const hiddenProgram = new commander.Command()
-        .option('--internal-testing-template <path-to-template>', `(internal usage only, DO NOT RELY ON THIS) use a non-standard application template`)
-        .parse(process.argv);
-
-    createApp(projectName, program.verbose, program.typescript);
+    return createApp(projectName, program.verbose, program.typescript);
 }
 
 function createApp(name: string, verbose: boolean, useTypescript: boolean) {
@@ -107,7 +95,7 @@ function createApp(name: string, verbose: boolean, useTypescript: boolean) {
         process.exit(1);
     }
 
-    run(root, appName, verbose, originalDirectory, useTypescript);
+    return run(root, appName, verbose, originalDirectory, useTypescript);
 }
 
 function run(root: string, appName: string, verbose: boolean, originalDirectory: string, useTypescript: boolean): Promise<void> {
@@ -121,7 +109,43 @@ function run(root: string, appName: string, verbose: boolean, originalDirectory:
         .then(() => {
             return install(root, devDependencies, verbose, true);
         })
-        .then(() => console.log("Done"));
+        .then(() => console.log("Done"))
+        .catch(reason => {
+            console.log();
+            console.log('Aborting installation.');
+            if (reason.command) {
+                console.log(`  ${ chalk.cyan(reason.command) } has failed.`);
+            }
+            else {
+                console.log(
+                    chalk.red('Unexpected error. Please report it as a bug:')
+                );
+                console.log(reason);
+            }
+            console.log();
+
+            // On 'exit' we will delete these files from target directory.
+            const knownGeneratedFiles = [...consts.knownGeneratedFiles];
+            const currentFiles = fs.readdirSync(path.join(root));
+            currentFiles.forEach(file => {
+                knownGeneratedFiles.forEach(fileToMatch => {
+                    // This removes all knownGeneratedFiles.
+                    if (file === fileToMatch) {
+                        console.log(`Deleting generated file... ${ chalk.cyan(file) }`);
+                        fs.removeSync(path.join(root, file));
+                    }
+                });
+            });
+            const remainingFiles = fs.readdirSync(path.join(root));
+            if (!remainingFiles.length) {
+                // Delete target folder if empty
+                console.log(`Deleting ${ chalk.cyan(`${ appName }/`) } from ${ chalk.cyan(path.resolve(root, '..')) }`);
+                process.chdir(path.resolve(root, '..'));
+                fs.removeSync(path.join(root));
+            }
+            console.log('Done (with errors).');
+            process.exit(1);
+        });
 }
 
 function install(root: string, dependencies: string[], verbose: boolean, isDev: boolean): Promise<void> {

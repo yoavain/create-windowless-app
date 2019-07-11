@@ -1,6 +1,5 @@
 {
   "dependencies": [
-
   ],
   "devDependencies": [
     "jest",
@@ -32,5 +31,10 @@
     ".travis.yml",
     ".gitlab-ci.yml",
     ".gitattributes"
+  ],
+  "knownGeneratedFiles": [
+    "package.json",
+    "yarn.lock",
+    "node_modules"
   ]
 }
