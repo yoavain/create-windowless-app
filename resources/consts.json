@@ -2,5 +2,28 @@
   "dependencies": [
     "nexe",
     "typescript"
+  ],
+  "errorLogFilePatterns": [
+    "npm-debug.log",
+    "yarn-error.log",
+    "yarn-debug.log"
+  ],
+  "validFiles": [
+    ".DS_Store",
+    "Thumbs.db",
+    ".git",
+    ".gitignore",
+    ".idea",
+    "README.md",
+    "LICENSE",
+    ".hg",
+    ".hgignore",
+    ".hgcheck",
+    ".npmignore",
+    "mkdocs.yml",
+    "docs",
+    ".travis.yml",
+    ".gitlab-ci.yml",
+    ".gitattributes"
   ]
 }

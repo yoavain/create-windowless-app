@@ -62,3 +62,4 @@ typings/
 /create-windowless-app.iml
 /.idea/
 /dist/
+/test-out/

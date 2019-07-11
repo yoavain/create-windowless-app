@@ -4,14 +4,14 @@
   "description": "Create a windowless NodeJS app",
   "main": "dist/index.js",
   "bin": {
-    "create-react-app": "./dist/index.js"
+    "create-windowless-app": "./dist/index.js"
   },
   "scripts": {
     "compile": "tsc",
     "start": "ts-node src/index.ts",
     "start:help": "npm run start -- --help",
     "start:info": "npm run start -- --info",
-    "start:test": "npm run start -- yoav-test --verbose --typescript",
+    "start:test": "npm run start -- test-out --verbose --typescript",
     "package": "npm pack"
   },
   "repository": {
