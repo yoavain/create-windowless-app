@@ -1,0 +1,24 @@
+{
+  "name": "create-windowless-app",
+  "version": "0.0.1",
+  "description": "Create a windowless NodeJS app",
+  "main": "index.js",
+  "scripts": {
+
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yoavain/create-windowless-app.git"
+  },
+  "keywords": [],
+  "author": "yoavain",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yoavain/create-windowless-app/issues"
+  },
+  "homepage": "https://github.com/yoavain/create-windowless-app#readme",
+  "devDependencies": {
+    "@types/node": "^12.x.x",
+    "typescript": "^3.x.x"
+  }
+}
