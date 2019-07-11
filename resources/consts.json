@@ -1,12 +1,19 @@
 {
   "dependencies": [
-    "nexe",
+
+  ],
+  "devDependencies": [
+    "jest",
+    "nexe"
+  ],
+  "tsDevDependencies": [
+    "@types/jest",
+    "@types/node",
+    "ts-node",
     "typescript"
   ],
   "errorLogFilePatterns": [
-    "npm-debug.log",
-    "yarn-error.log",
-    "yarn-debug.log"
+    "npm-debug.log"
   ],
   "validFiles": [
     ".DS_Store",

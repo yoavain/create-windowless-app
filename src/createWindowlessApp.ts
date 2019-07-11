@@ -8,7 +8,6 @@ import * as  validateProjectName from 'validate-npm-package-name';
 import * as os from "os";
 import * as spawn from "cross-spawn";
 
-
 const packageJson = require('../package.json');
 
 const consts = require('../resources/consts.json');
@@ -45,7 +44,7 @@ export function createWindowlessApp() {
             .run({
                     System: ['OS', 'CPU'],
                     Binaries: ['Node', 'npm'],
-                    npmPackages: consts.dependencies,
+                    npmPackages: [...consts.dependencies, ...consts.devDependencies, ...consts.tsDevDependencies],
                     npmGlobalPackages: ['create-windowless-app'],
                 },
                 {
@@ -108,7 +107,45 @@ function createApp(name: string, verbose: boolean, useTypescript: boolean) {
         process.exit(1);
     }
 
+    run(root, appName, verbose, originalDirectory, useTypescript);
+}
 
+function run(root: string, appName: string, verbose: boolean, originalDirectory: string, useTypescript: boolean) {
+    const dependencies = [...consts.dependencies];
+    const devDependencies = [...consts.devDependencies];
+    if (useTypescript) {
+        devDependencies.push(...consts.tsDevDependencies);
+    }
+
+    install(root, dependencies, verbose, false)
+        .then(() => {
+            return install(root, devDependencies, verbose, true);
+        })
+
+        .then(() => {
+            console.log('Done.');
+        })
+}
+
+function install(root, dependencies, verbose, isDev) {
+    return new Promise((resolve, reject) => {
+        const command = 'npm';
+        let args = ['install', isDev ? '--save-dev' : '--save', '--save-exact', '--loglevel', 'error',].concat(dependencies);
+        if (verbose) {
+            args.push('--verbose');
+        }
+
+        const child = spawn(command, args, { stdio: 'inherit' });
+        child.on('close', code => {
+            if (code !== 0) {
+                reject({
+                    command: `${command} ${args.join(' ')}`,
+                });
+                return;
+            }
+            resolve();
+        });
+    });
 }
 
 function checkAppName(appName) {
@@ -120,7 +157,7 @@ function checkAppName(appName) {
         process.exit(1);
     }
 
-    const dependencies = consts.dependencies.sort();
+    const dependencies = [...consts.dependencies, ...consts.devDependencies].sort();
     if (dependencies.indexOf(appName) >= 0) {
         console.error(chalk.red(`We cannot create a project called ${ chalk.green(appName) } because a dependency with the same name exists.\n` +
             `Due to the way npm works, the following names are not allowed:\n\n`) +
@@ -171,7 +208,7 @@ function isSafeToCreateProjectIn(root, name) {
     const currentFiles = fs.readdirSync(path.join(root));
     currentFiles.forEach(file => {
         errorLogFilePatterns.forEach(errorLogFilePattern => {
-            // This will catch `(npm-debug|yarn-error|yarn-debug).log*` files
+            // This will catch `npm-debug.log*` files
             if (file.indexOf(errorLogFilePattern) === 0) {
                 fs.removeSync(path.join(root, file));
             }
