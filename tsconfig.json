@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+        "moduleResolution": "node",
+        "outDir": "./dist",
+        "allowJs": true,
+        "target": "es6",
+		"lib": ["es6", "es2017"]
+    },
+    "include": [
+        "./src/**/*"
+    ]
+}

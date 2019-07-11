@@ -2,9 +2,15 @@
   "name": "create-windowless-app",
   "version": "0.0.1",
   "description": "Create a windowless NodeJS app",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "bin": {
+    "create-react-app": "./dist/index.js"
+  },
   "scripts": {
-
+    "compile": "tsc",
+    "start": "ts-node src/index.ts",
+    "start:help": "npm run start -- --help",
+    "start:info": "npm run start -- --info"
   },
   "repository": {
     "type": "git",
@@ -13,12 +19,21 @@
   "keywords": [],
   "author": "yoavain",
   "license": "MIT",
+  "engines": {
+    "node": ">=8"
+  },
   "bugs": {
     "url": "https://github.com/yoavain/create-windowless-app/issues"
   },
   "homepage": "https://github.com/yoavain/create-windowless-app#readme",
   "devDependencies": {
     "@types/node": "^12.x.x",
+    "ts-node": "^8.3.0",
     "typescript": "^3.x.x"
+  },
+  "dependencies": {
+    "chalk": "^2.4.2",
+    "commander": "^2.20.0",
+    "envinfo": "^7.3.1"
   }
 }

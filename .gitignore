@@ -61,3 +61,4 @@ typings/
 .next
 /create-windowless-app.iml
 /.idea/
+/dist/
