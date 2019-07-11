@@ -5,6 +5,7 @@ import * as envinfo from "envinfo";
 import * as path from "path";
 import * as fs from "fs-extra";
 import * as  validateProjectName from 'validate-npm-package-name';
+import * as os from "os";
 
 const packageJson = require('../package.json');
 
@@ -88,6 +89,18 @@ function createApp(name: string, verbose: boolean, useTypescript: boolean) {
     if (!isSafeToCreateProjectIn(root, name)) {
         process.exit(1);
     }
+
+    console.log(`Creating a new windowless app in ${chalk.green(root)}.`);
+    console.log();
+
+    const packageJson = {
+        name: appName,
+        version: '0.1.0',
+        private: true,
+    };
+    fs.writeFileSync(path.join(root, 'package.json'), JSON.stringify(packageJson, null, 2) + os.EOL);
+
+
 }
 
 function checkAppName(appName) {
