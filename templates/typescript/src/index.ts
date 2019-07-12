@@ -1,3 +1,3 @@
-import * as notifier from 'node-notifier';
+import notifier from 'node-notifier';
 
 notifier.notify('Hello World');

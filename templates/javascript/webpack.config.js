@@ -5,7 +5,7 @@ module.exports = {
 	entry: './src/index.js',
 	target: 'node',
 	output: {
-		path: path.join(__dirname, 'dist'),
+		path: path.join(__dirname, '_build'),
 		filename: 'index.js'
 	},
 	plugins: [
