@@ -99,6 +99,7 @@ function createApp(name: string, verbose: boolean, useTypescript: boolean, skipI
         name: appName,
         version: '0.1.0',
         private: true,
+        main: "_build/index.js"
     };
     fs.writeFileSync(path.join(root, 'package.json'), JSON.stringify(packageJson, null, 2) + os.EOL);
 
@@ -124,10 +125,10 @@ function run(root: string, appName: string, verbose: boolean, originalDirectory:
         })
         .then(()=> {
             if (useTypescript) {
-                return buildTypeScriptProject(root);
+                return buildTypeScriptProject(root, appName);
             }
             else {
-                return buildJavaScriptProject(root);
+                return buildJavaScriptProject(root, appName);
             }
         })
         .then(() => console.log("Done"))
@@ -196,7 +197,7 @@ function install(root: string, dependencies: string[], verbose: boolean, isDev: 
     });
 }
 
-function buildTypeScriptProject(root: string) {
+function buildTypeScriptProject(root: string, appName: string) {
     return new Promise((resolve, reject) => {
         writeJson(path.resolve(root, tsConfigFilename), tsConfig);
         writeFile(path.resolve(root, WebpackConfigFilename), readFile(path.resolve(tsWebpackConfigLocation)));
@@ -207,14 +208,15 @@ function buildTypeScriptProject(root: string) {
             "start": "ts-node src/index.ts",
             "tsc": "tsc",
             "webpack": "webpack",
-            "build": "npm run tsc && npm run webpack"
+            "nexe": `nexe -o dist/${appName}.exe`,
+            "build": "npm run tsc && npm run webpack && npm run nexe"
         };
         mergeIntoPackageJson(root, "scripts", scripts);
         resolve();
     })
 }
 
-function buildJavaScriptProject(root: string) {
+function buildJavaScriptProject(root: string, appName: string) {
     return new Promise((resolve, reject) => {
         writeFile(path.resolve(root, WebpackConfigFilename), readFile(path.resolve(jsWebpackConfigLocation)));
         fs.ensureDirSync(path.resolve(root, "src"));
@@ -223,7 +225,8 @@ function buildJavaScriptProject(root: string) {
         const scripts: { [key: string]: string } = {
             "start": "node src/index.js",
             "webpack": "webpack",
-            "build": "npm run webpack"
+            "nexe": `nexe -o dist/${appName}.exe`,
+            "build": "npm run webpack && npm run nexe"
         };
         mergeIntoPackageJson(root, "scripts", scripts);
         resolve();
