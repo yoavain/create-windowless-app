@@ -11,6 +11,17 @@ import spawn from "cross-spawn";
 const packageJson = require('../package.json');
 
 const consts = require('../resources/consts.json');
+const TsConfigFilename = "tsconfig.json";
+const WebpackConfigFilename = "webpack.config.js";
+
+// TypeScript
+const tsWebpackConfigLocation = "../templates/typescript/webpack.config.js";
+const tsConfig = require("../templates/typescript/tsconfig.json");
+const tsIndexLocation = "../templates/typescript/src/index.ts";
+
+// JavaScript
+const jsWebpackConfigLocation = "../templates/javascript/webpack.config.js";
+const jsIndexLocation = "../templates/javascript/src/index.js";
 
 // These files should be allowed to remain on a failed install, but then silently removed during the next create.
 const errorLogFilePatterns = consts.errorLogFilePatterns;
@@ -109,6 +120,14 @@ function run(root: string, appName: string, verbose: boolean, originalDirectory:
         .then(() => {
             return install(root, devDependencies, verbose, true);
         })
+        .then(()=> {
+            if (useTypescript) {
+                return buildTypeScriptProject(root);
+            }
+            else {
+                return buildJavaScriptProject(root);
+            }
+        })
         .then(() => console.log("Done"))
         .catch(reason => {
             console.log();
@@ -167,6 +186,25 @@ function install(root: string, dependencies: string[], verbose: boolean, isDev: 
             resolve();
         });
     });
+}
+
+function buildTypeScriptProject(root: string) {
+    return new Promise((resolve, reject) => {
+        writeJson(path.resolve(root, TsConfigFilename), tsConfig);
+        // writeFile(path.resolve(root, WebpackConfigFilename), fs.readFileSync(path.resolve(tsWebpackConfigLocation), "utf-8"));
+        fs.ensureDirSync(path.resolve(root, "src"));
+        writeFile(path.resolve(root, "src", "index.ts"), fs.readFileSync(path.resolve(tsIndexLocation), "utf-8"));
+        resolve();
+    })
+}
+
+function buildJavaScriptProject(root: string) {
+    return new Promise((resolve, reject) => {
+        // writeFile(path.resolve(root, WebpackConfigFilename), fs.readFileSync(path.resolve(jsWebpackConfigLocation), "utf-8"));
+        fs.ensureDirSync(path.resolve(root, "src"));
+        writeFile(path.resolve(root, "src", "index.js"), fs.readFileSync(path.resolve(jsIndexLocation), "utf-8"));
+        resolve();
+    })
 }
 
 function checkAppName(appName) {
@@ -287,4 +325,12 @@ function checkThatNpmCanReadCwd() {
         );
     }
     return false;
+}
+
+function writeJson(fileName, object) {
+    fs.writeFileSync(fileName, JSON.stringify(object, null, 2).replace(/\n/g, os.EOL) + os.EOL);
+}
+
+function writeFile(fileName, data: string) {
+    fs.writeFileSync(fileName, data.replace(/\n/g, os.EOL) + os.EOL);
 }

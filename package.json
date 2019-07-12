@@ -27,7 +27,8 @@
   },
   "files": [
     "dist/**",
-    "resources/**"
+    "resources/**",
+    "templates/**"
   ],
   "bugs": {
     "url": "https://github.com/yoavain/create-windowless-app/issues"

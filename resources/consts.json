@@ -1,13 +1,20 @@
 {
   "dependencies": [
+    "node-notifier",
+    "winston"
   ],
   "devDependencies": [
     "jest",
-    "nexe"
+    "nexe",
+    "webpack",
+    "webpack-cli",
+    "copy-webpack-plugin"
   ],
   "tsDevDependencies": [
     "@types/jest",
     "@types/node",
+    "@types/node-notifier",
+    "@types/winston",
     "ts-node",
     "typescript"
   ],
