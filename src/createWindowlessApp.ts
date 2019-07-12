@@ -371,9 +371,17 @@ function writeFile(fileName, data: string) {
 }
 
 function mergeIntoPackageJson(root: string, field: string, data: any) {
-    let array = Array.isArray(data);
     const packageJsonPath = path.resolve(root, packageJsonFilename);
     let packageJson = readJsonFile(packageJsonPath);
-    packageJson[field] = Object.assign(packageJson.scripts || (array ? [] : {}), data);
+    if (Array.isArray(data)) {
+        let list = (packageJson[field] || []).concat(data).reduce((acc, cur) => {
+            acc[cur] = cur;
+            return acc;
+        }, {});
+        packageJson[field] = Object.keys(list);
+    }
+    else {
+        packageJson[field] = Object.assign(packageJson.scripts || {}, data);
+    }
     writeJson(packageJsonPath, packageJson);
 }
