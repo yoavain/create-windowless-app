@@ -40,7 +40,7 @@ export function createWindowlessApp(): Promise<void> {
         .option('--verbose', 'print additional logs')
         .option('--info', 'print environment debug info')
         .option('--typescript')
-        .option('--skipInstall')
+        .option('--skipInstall', 'write dependencies to package.json without installing')
         .allowUnknownOption()
         .on('--help', () => {
             console.log(`    Only ${ chalk.green('<project-directory>') } is required.`);
