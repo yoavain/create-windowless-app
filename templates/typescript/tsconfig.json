@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "moduleResolution": "node",
-    "outDir": "./dist",
+    "outDir": "./_compile",
     "esModuleInterop": true,
     "allowJs": true,
     "module": "commonjs",

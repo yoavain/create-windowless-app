@@ -191,7 +191,7 @@ function install(root: string, dependencies: string[], verbose: boolean, isDev: 
 function buildTypeScriptProject(root: string) {
     return new Promise((resolve, reject) => {
         writeJson(path.resolve(root, TsConfigFilename), tsConfig);
-        // writeFile(path.resolve(root, WebpackConfigFilename), fs.readFileSync(path.resolve(tsWebpackConfigLocation), "utf-8"));
+        writeFile(path.resolve(root, WebpackConfigFilename), fs.readFileSync(path.resolve(tsWebpackConfigLocation), "utf-8"));
         fs.ensureDirSync(path.resolve(root, "src"));
         writeFile(path.resolve(root, "src", "index.ts"), fs.readFileSync(path.resolve(tsIndexLocation), "utf-8"));
         resolve();
@@ -200,7 +200,7 @@ function buildTypeScriptProject(root: string) {
 
 function buildJavaScriptProject(root: string) {
     return new Promise((resolve, reject) => {
-        // writeFile(path.resolve(root, WebpackConfigFilename), fs.readFileSync(path.resolve(jsWebpackConfigLocation), "utf-8"));
+        writeFile(path.resolve(root, WebpackConfigFilename), fs.readFileSync(path.resolve(jsWebpackConfigLocation), "utf-8"));
         fs.ensureDirSync(path.resolve(root, "src"));
         writeFile(path.resolve(root, "src", "index.js"), fs.readFileSync(path.resolve(jsIndexLocation), "utf-8"));
         resolve();
