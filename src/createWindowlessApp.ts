@@ -332,5 +332,5 @@ function writeJson(fileName, object) {
 }
 
 function writeFile(fileName, data: string) {
-    fs.writeFileSync(fileName, data.replace(/\n/g, os.EOL) + os.EOL);
+    fs.writeFileSync(fileName, data.replace(/\n/g, os.EOL));
 }
