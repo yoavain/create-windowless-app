@@ -11,7 +11,10 @@
     "start": "ts-node src/index.ts",
     "start:help": "npm run start -- --help",
     "start:info": "npm run start -- --info",
-    "start:test": "rimraf test-out && npm run start -- test-out --verbose --typescript",
+    "start:test:javascript": "rimraf test-out && npm run start -- test-out --verbose",
+    "start:test:typescript": "rimraf test-out && npm run start -- test-out --verbose --typescript",
+    "start:test:javascript:skipInstall": "rimraf test-out && npm run start -- test-out --verbose --skipInstall",
+    "start:test:typescript:skipInstall": "rimraf test-out && npm run start -- test-out --verbose --typescript --skipInstall",
     "package": "npm pack",
     "build": "npm run compile && npm run package"
   },
@@ -27,7 +30,8 @@
   },
   "files": [
     "dist/**",
-    "resources/**"
+    "resources/**",
+    "templates/**"
   ],
   "bugs": {
     "url": "https://github.com/yoavain/create-windowless-app/issues"

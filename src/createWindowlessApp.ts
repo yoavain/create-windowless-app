@@ -8,9 +8,21 @@ import validateProjectName from 'validate-npm-package-name';
 import * as os from "os";
 import spawn from "cross-spawn";
 
-const packageJson = require('../package.json');
+const packageJsonFilename = "package.json";
+const packageJson = require(`../${packageJsonFilename}`);
 
 const consts = require('../resources/consts.json');
+const tsConfigFilename = "tsconfig.json";
+const WebpackConfigFilename = "webpack.config.js";
+
+// TypeScript
+const tsWebpackConfigLocation = "../templates/typescript/webpack.config.js";
+const tsConfig = require("../templates/typescript/tsconfig.json");
+const tsIndexLocation = "../templates/typescript/src/index.ts";
+
+// JavaScript
+const jsWebpackConfigLocation = "../templates/javascript/webpack.config.js";
+const jsIndexLocation = "../templates/javascript/src/index.js";
 
 // These files should be allowed to remain on a failed install, but then silently removed during the next create.
 const errorLogFilePatterns = consts.errorLogFilePatterns;
@@ -28,6 +40,7 @@ export function createWindowlessApp(): Promise<void> {
         .option('--verbose', 'print additional logs')
         .option('--info', 'print environment debug info')
         .option('--typescript')
+        .option('--skipInstall')
         .allowUnknownOption()
         .on('--help', () => {
             console.log(`    Only ${ chalk.green('<project-directory>') } is required.`);
@@ -66,10 +79,10 @@ export function createWindowlessApp(): Promise<void> {
         process.exit(1);
     }
 
-    return createApp(projectName, program.verbose, program.typescript);
+    return createApp(projectName, program.verbose, program.typescript, program.skipInstall);
 }
 
-function createApp(name: string, verbose: boolean, useTypescript: boolean) {
+function createApp(name: string, verbose: boolean, useTypescript: boolean, skipInstall: boolean) {
     const root = path.resolve(name);
     const appName = path.basename(root);
 
@@ -95,19 +108,27 @@ function createApp(name: string, verbose: boolean, useTypescript: boolean) {
         process.exit(1);
     }
 
-    return run(root, appName, verbose, originalDirectory, useTypescript);
+    return run(root, appName, verbose, originalDirectory, useTypescript, skipInstall);
 }
 
-function run(root: string, appName: string, verbose: boolean, originalDirectory: string, useTypescript: boolean): Promise<void> {
+function run(root: string, appName: string, verbose: boolean, originalDirectory: string, useTypescript: boolean, skipInstall: boolean): Promise<void> {
     const dependencies = [...consts.dependencies];
     const devDependencies = [...consts.devDependencies];
     if (useTypescript) {
         devDependencies.push(...consts.tsDevDependencies);
     }
 
-    return install(root, dependencies, verbose, false)
+    return install(root, dependencies, verbose, false, skipInstall)
         .then(() => {
-            return install(root, devDependencies, verbose, true);
+            return install(root, devDependencies, verbose, true, skipInstall);
+        })
+        .then(()=> {
+            if (useTypescript) {
+                return buildTypeScriptProject(root);
+            }
+            else {
+                return buildJavaScriptProject(root);
+            }
         })
         .then(() => console.log("Done"))
         .catch(reason => {
@@ -148,7 +169,7 @@ function run(root: string, appName: string, verbose: boolean, originalDirectory:
         });
 }
 
-function install(root: string, dependencies: string[], verbose: boolean, isDev: boolean): Promise<void> {
+function install(root: string, dependencies: string[], verbose: boolean, isDev: boolean, skipInstall: boolean): Promise<void> {
     return new Promise((resolve, reject) => {
         const command = 'npm';
         let args = ['install', isDev ? '--save-dev' : '--save', '--save-exact', '--loglevel', 'error'].concat(dependencies);
@@ -156,17 +177,57 @@ function install(root: string, dependencies: string[], verbose: boolean, isDev: 
             args.push('--verbose');
         }
 
-        const child = spawn(command, args, { stdio: 'inherit' });
-        child.on('close', code => {
-            if (code !== 0) {
-                reject({
-                    command: `${command} ${args.join(' ')}`,
-                });
-                return;
-            }
+        if (!skipInstall) {
+            const child = spawn(command, args, { stdio: 'inherit' });
+            child.on('close', code => {
+                if (code !== 0) {
+                    reject({
+                        command: `${ command } ${ args.join(' ') }`,
+                    });
+                    return;
+                }
+                resolve();
+            });
+        }
+        else {
+            mergeIntoPackageJson(root, isDev ? "devDependencies" : "dependencies", dependencies);
             resolve();
-        });
+        }
     });
+}
+
+function buildTypeScriptProject(root: string) {
+    return new Promise((resolve, reject) => {
+        writeJson(path.resolve(root, tsConfigFilename), tsConfig);
+        writeFile(path.resolve(root, WebpackConfigFilename), readFile(path.resolve(tsWebpackConfigLocation)));
+        fs.ensureDirSync(path.resolve(root, "src"));
+        writeFile(path.resolve(root, "src", "index.ts"), readFile(path.resolve(tsIndexLocation)));
+        // Add scripts
+        const scripts: { [key: string]: string } = {
+            "start": "ts-node src/index.ts",
+            "tsc": "tsc",
+            "webpack": "webpack",
+            "build": "npm run tsc && npm run webpack"
+        };
+        mergeIntoPackageJson(root, "scripts", scripts);
+        resolve();
+    })
+}
+
+function buildJavaScriptProject(root: string) {
+    return new Promise((resolve, reject) => {
+        writeFile(path.resolve(root, WebpackConfigFilename), readFile(path.resolve(jsWebpackConfigLocation)));
+        fs.ensureDirSync(path.resolve(root, "src"));
+        writeFile(path.resolve(root, "src", "index.js"), readFile(path.resolve(jsIndexLocation)));
+        // Add scripts
+        const scripts: { [key: string]: string } = {
+            "start": "node src/index.js",
+            "webpack": "webpack",
+            "build": "npm run webpack"
+        };
+        mergeIntoPackageJson(root, "scripts", scripts);
+        resolve();
+    })
 }
 
 function checkAppName(appName) {
@@ -287,4 +348,29 @@ function checkThatNpmCanReadCwd() {
         );
     }
     return false;
+}
+
+function readFile(fileName) {
+    return fs.readFileSync(fileName, "utf8");
+}
+
+function readJsonFile(jsonFileName) {
+    return JSON.parse(readFile(jsonFileName));
+}
+
+function writeJson(fileName, object) {
+    fs.writeFileSync(fileName, JSON.stringify(object, null, 2).replace(/\n/g, os.EOL) + os.EOL);
+}
+
+
+function writeFile(fileName, data: string) {
+    fs.writeFileSync(fileName, data.replace(/\n/g, os.EOL));
+}
+
+function mergeIntoPackageJson(root: string, field: string, data: any) {
+    let array = Array.isArray(data);
+    const packageJsonPath = path.resolve(root, packageJsonFilename);
+    let packageJson = readJsonFile(packageJsonPath);
+    packageJson[field] = Object.assign(packageJson.scripts || (array ? [] : {}), data);
+    writeJson(packageJsonPath, packageJson);
 }
