@@ -5,7 +5,7 @@ const { WindowsToaster } = require('node-notifier');
 // Notifier init
 const argv = process.argv;
 const snoreToastPath = argv[0] === "node.exe" ? null : path.join(argv[0], "../", "SnoreToast.exe");
-const notifier = new WindowsToaster({withFallback: false, customPath: snoreToastPath});
+const notifier = new WindowsToaster({withFallback: !!snoreToastPath, customPath: snoreToastPath});
 
 // Logger init
 const { combine, timestamp, printf, label } = winston.format;
