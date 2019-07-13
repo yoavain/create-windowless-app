@@ -367,7 +367,7 @@ function writeJson(fileName, object) {
 
 
 function writeFile(fileName, data: string) {
-    fs.writeFileSync(fileName, data.replace(/\n/g, os.EOL));
+    fs.writeFileSync(fileName, data.replace(/\r/g, "").replace(/\n/g, os.EOL));
 }
 
 function mergeIntoPackageJson(root: string, field: string, data: any) {
