@@ -15,6 +15,9 @@ const consts = require('../resources/consts.json');
 const tsConfigFilename = "tsconfig.json";
 const WebpackConfigFilename = "webpack.config.js";
 
+// Launcher
+const launcherLocation = "../templates/common/bin/windowless-launcher.exe";
+
 // TypeScript
 const tsWebpackConfigLocation = "../templates/typescript/webpack.config.js";
 const tsConfig = require("../templates/typescript/tsconfig.json");
@@ -130,6 +133,11 @@ function run(root: string, appName: string, verbose: boolean, originalDirectory:
             else {
                 return buildJavaScriptProject(root, appName);
             }
+        })
+        .then(()=> {
+            // Launcher
+            fs.ensureDirSync(path.resolve(root, "resources", "bin"));
+            fs.copyFileSync(path.resolve(launcherLocation), path.resolve(root, "resources", "bin", "launcher.exe"))
         })
         .then(() => console.log("Done"))
         .catch(reason => {
@@ -365,10 +373,10 @@ function writeJson(fileName, object) {
     fs.writeFileSync(fileName, JSON.stringify(object, null, 2).replace(/\n/g, os.EOL) + os.EOL);
 }
 
-
 function writeFile(fileName, data: string) {
     fs.writeFileSync(fileName, data.replace(/\r/g, "").replace(/\n/g, os.EOL));
 }
+
 
 function mergeIntoPackageJson(root: string, field: string, data: any) {
     const packageJsonPath = path.resolve(root, packageJsonFilename);
