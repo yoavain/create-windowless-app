@@ -250,7 +250,7 @@ function buildLauncher(root: string, appName: string): Promise<void> {
         fs.ensureDirSync(path.resolve("launcher-dist"));
         writeFile(path.resolve(launcherSrcModifiedLocation), replaceAppNamePlaceholder(readResource(launcherSrcResourceLocation), appName));
         const command = 'csc.exe';
-        let args = ["/t:winexe", `/out:${path.resolve(root, "resources", "bin", `${appName}-launcher.exe`)}`, `/win32icon:${defaultLauncherIconLocation}`, `${launcherSrcModifiedLocation}`];
+        let args = ["/t:winexe", `/out:${path.resolve(root, "resources", "bin", `${appName}-launcher.exe`)}`, `/win32icon:${path.resolve(__dirname, defaultLauncherIconLocation)}`, `${launcherSrcModifiedLocation}`];
         const child = spawn(command, args, { stdio: 'inherit' });
         child.on('close', code => {
             if (code !== 0) {
