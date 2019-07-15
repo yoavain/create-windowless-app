@@ -1,10 +1,23 @@
+import * as path from "path";
 import * as winston from 'winston';
-import notifier from 'node-notifier';
+import { WindowsToaster } from 'node-notifier';
+
+// App Name
+const AppName: string = "<APPNAME>";
+
+const executable: string = process.argv[0];
+
+// Args (ignore exe + js)
+const argv: string[] = process.argv.slice(2);
+
+// Notifier init
+const snoreToastPath: string = executable.endsWith(".exe")  ? path.join(executable, "../", "SnoreToast.exe") : null;
+const notifier = new WindowsToaster({withFallback: !!snoreToastPath, customPath: snoreToastPath});
 
 // Logger init
 const {combine, timestamp, printf, label} = winston.format;
 const transports = {
-    file: new winston.transports.File({filename: "app.log"})
+    file: new winston.transports.File({filename: `${AppName}.log`})
 };
 transports.file.level = "debug";
 const logger: winston.Logger = winston.createLogger({
@@ -19,7 +32,7 @@ const logger: winston.Logger = winston.createLogger({
 
 
 // Log message
-logger.log("info", "Hello World");
+logger.log("info", `"${AppName}" started with ${argv ? argv.join("; ") : "no args"}`);
 
 // Notify
-notifier.notify('Hello World');
+notifier.notify({title: `${AppName}`,  message: 'Hello World' });
