@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Diagnostics;
 using System.ComponentModel;
 
@@ -16,7 +17,7 @@ namespace MyProcessSample
                 using (Process myProcess = new Process())
                 {
 
-                    myProcess.StartInfo.FileName = AppName + ".exe";
+                    myProcess.StartInfo.FileName = Path.Combine(Environment.CurrentDirectory, AppName + ".exe");
                     myProcess.StartInfo.Arguments = String.Join(" ", args);
 
                     // Stop the process from opening a new window

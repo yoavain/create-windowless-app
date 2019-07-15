@@ -26,7 +26,7 @@ const jsIndexResourceLocation = "../templates/javascript/src/index.js";
 
 // Launcher Source
 const launcherSrcResourceLocation = "../templates/common/src/launcher.cs";
-const launcherSrcModifiedLocation = "../launcher-dist/launcher.cs";
+const launcherSrcModifiedLocation = "launcher-dist/launcher.cs";
 
 // These files should be allowed to remain on a failed install, but then silently removed during the next create.
 const errorLogFilePatterns = consts.errorLogFilePatterns;
@@ -244,7 +244,7 @@ function buildJavaScriptProject(root: string, appName: string) {
 
 function buildLauncher(root: string, appName: string): Promise<void> {
     return new Promise(((resolve, reject) => {
-        fs.ensureDirSync(path.resolve("..", "launcher-dist"));
+        fs.ensureDirSync(path.resolve("launcher-dist"));
         writeFile(path.resolve(launcherSrcModifiedLocation), replaceAppNamePlaceholder(readResource(launcherSrcResourceLocation), appName));
         const command = 'csc.exe';
         let args = ["/t:winexe", `/out:${path.resolve(root, "resources", "bin", `${appName}-launcher.exe`)}`, `${launcherSrcModifiedLocation}`];
@@ -398,7 +398,7 @@ function readJsonResource(resourceRelativePath) {
 }
 
 function replaceAppNamePlaceholder(str: string, appName: string): string {
-    return str.replace("<APPNAME>", `${appName}`)
+    return str.replace(/<APPNAME>/g, `${appName}`)
 }
 
 function writeJson(fileName: string, object) {

@@ -20,7 +20,7 @@ module.exports = {
             },
             {
                 from: 'resources/bin/<APPNAME>-launcher.exe',
-                to: '../dist/launcher.exe',
+                to: '../dist/<APPNAME>-launcher.exe',
                 toType: 'file'
             }
         ])
