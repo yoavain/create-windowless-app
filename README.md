@@ -16,9 +16,9 @@ cd my-app
 npm run build
 ```
 
-<details><summary>Or win npm</summary>
+<details><summary>Or with npm</summary>
 <p>
-Alternatively, you can install create-windowsless-app globally:
+You can install create-windowsless-app globally:
 
 ```sh
 npm install -g create-windowsless-app
@@ -32,5 +32,3 @@ create-windowless-app my-app
 </details>
 
 Then you can find in your my-app\dist folder the following files:
-
-

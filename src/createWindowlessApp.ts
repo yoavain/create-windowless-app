@@ -191,6 +191,9 @@ function install(root: string, dependencies: string[], verbose: boolean, isDev: 
         }
 
         if (!skipInstall) {
+            console.log(`Installing ${ chalk.green(isDev ? "dev dependencies" : "dependencies") }.`);
+            console.log();
+
             const child = spawn(command, args, { stdio: 'inherit' });
             child.on('close', code => {
                 if (code !== 0) {
@@ -203,6 +206,9 @@ function install(root: string, dependencies: string[], verbose: boolean, isDev: 
             });
         }
         else {
+            console.log(`Adding ${ chalk.green(isDev ? "dev dependencies" : "dependencies") } to package.json (skipping installation)`);
+            console.log();
+
             mergeIntoPackageJson(root, isDev ? "devDependencies" : "dependencies", dependencies);
             resolve();
         }
@@ -211,6 +217,9 @@ function install(root: string, dependencies: string[], verbose: boolean, isDev: 
 
 function buildTypeScriptProject(root: string, appName: string) {
     return new Promise((resolve, reject) => {
+        console.log(`Building project ${ chalk.green("files") }.`);
+        console.log();
+
         writeJson(path.resolve(root, tsConfigFilename), readJsonResource(tsConfigResourceLocation));
         writeFile(path.resolve(root, WebpackConfigFilename), replaceAppNamePlaceholder(readResource(tsWebpackConfigResourceLocation), appName));
         fs.ensureDirSync(path.resolve(root, "src"));
@@ -230,6 +239,9 @@ function buildTypeScriptProject(root: string, appName: string) {
 
 function buildJavaScriptProject(root: string, appName: string) {
     return new Promise((resolve, reject) => {
+        console.log(`Building project ${ chalk.green("files") }.`);
+        console.log();
+
         writeFile(path.resolve(root, WebpackConfigFilename), replaceAppNamePlaceholder(readResource(jsWebpackConfigResourceLocation),appName));
         fs.ensureDirSync(path.resolve(root, "src"));
         writeFile(path.resolve(root, "src", "index.js"), replaceAppNamePlaceholder(readResource(jsIndexResourceLocation), appName));
@@ -247,6 +259,9 @@ function buildJavaScriptProject(root: string, appName: string) {
 
 function buildLauncher(root: string, appName: string): Promise<void> {
     return new Promise(((resolve, reject) => {
+        console.log(`Building project ${ chalk.green("launcher") }.`);
+        console.log();
+
         fs.ensureDirSync(path.resolve("launcher-dist"));
         writeFile(path.resolve(launcherSrcModifiedLocation), replaceAppNamePlaceholder(readResource(launcherSrcResourceLocation), appName));
         const command = 'csc.exe';
