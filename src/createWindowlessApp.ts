@@ -15,9 +15,6 @@ const consts = require('../resources/consts.json');
 const tsConfigFilename = "tsconfig.json";
 const WebpackConfigFilename = "webpack.config.js";
 
-// Launcher
-const launcherLocation = "../templates/common/bin/windowless-launcher.exe";
-
 // TypeScript
 const tsWebpackConfigLocation = "../templates/typescript/webpack.config.js";
 const tsConfig = require("../templates/typescript/tsconfig.json");
@@ -26,6 +23,9 @@ const tsIndexLocation = "../templates/typescript/src/index.ts";
 // JavaScript
 const jsWebpackConfigLocation = "../templates/javascript/webpack.config.js";
 const jsIndexLocation = "../templates/javascript/src/index.js";
+
+// Launcher Source
+const launcherSrcLocation = "../templates/common/src/launcher.cs";
 
 // These files should be allowed to remain on a failed install, but then silently removed during the next create.
 const errorLogFilePatterns = consts.errorLogFilePatterns;
@@ -137,7 +137,7 @@ function run(root: string, appName: string, verbose: boolean, originalDirectory:
         .then(()=> {
             // Launcher
             fs.ensureDirSync(path.resolve(root, "resources", "bin"));
-            fs.copyFileSync(path.resolve(launcherLocation), path.resolve(root, "resources", "bin", "launcher.exe"))
+            return buildLauncher(root);
         })
         .then(() => console.log("Done"))
         .catch(reason => {
@@ -210,7 +210,7 @@ function buildTypeScriptProject(root: string, appName: string) {
         writeJson(path.resolve(root, tsConfigFilename), tsConfig);
         writeFile(path.resolve(root, WebpackConfigFilename), readFile(path.resolve(tsWebpackConfigLocation)));
         fs.ensureDirSync(path.resolve(root, "src"));
-        writeFile(path.resolve(root, "src", "index.ts"), readFile(path.resolve(tsIndexLocation)));
+        writeFile(path.resolve(root, "src", "index.ts"), replaceAppNamePlaceholder(readFile(path.resolve(tsIndexLocation)), appName));
         // Add scripts
         const scripts: { [key: string]: string } = {
             "start": "ts-node src/index.ts",
@@ -228,7 +228,7 @@ function buildJavaScriptProject(root: string, appName: string) {
     return new Promise((resolve, reject) => {
         writeFile(path.resolve(root, WebpackConfigFilename), readFile(path.resolve(jsWebpackConfigLocation)));
         fs.ensureDirSync(path.resolve(root, "src"));
-        writeFile(path.resolve(root, "src", "index.js"), readFile(path.resolve(jsIndexLocation)));
+        writeFile(path.resolve(root, "src", "index.js"), replaceAppNamePlaceholder(readFile(path.resolve(jsIndexLocation)), appName));
         // Add scripts
         const scripts: { [key: string]: string } = {
             "start": "node src/index.js",
@@ -239,6 +239,23 @@ function buildJavaScriptProject(root: string, appName: string) {
         mergeIntoPackageJson(root, "scripts", scripts);
         resolve();
     })
+}
+
+function buildLauncher(root: string): Promise<void> {
+    return new Promise(((resolve, reject) => {
+        const command = 'csc.exe';
+        let args = ["/t:winexe", `/out:${path.resolve(root, "resources", "bin", "launcher.exe")}`, `${launcherSrcLocation}`];
+        const child = spawn(command, args, { stdio: 'inherit' });
+        child.on('close', code => {
+            if (code !== 0) {
+                reject({
+                    command: `${ command } ${ args.join(' ') }`,
+                });
+                return;
+            }
+            resolve();
+        });
+    }))
 }
 
 function checkAppName(appName) {
@@ -367,6 +384,10 @@ function readFile(fileName) {
 
 function readJsonFile(jsonFileName) {
     return JSON.parse(readFile(jsonFileName));
+}
+
+function replaceAppNamePlaceholder(str: string, appName): string {
+    return str.replace("<APPNAME>", `${appName}`)
 }
 
 function writeJson(fileName, object) {

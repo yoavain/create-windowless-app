@@ -2,8 +2,13 @@ const path = require("path");
 const winston = require('winston');
 const { WindowsToaster } = require('node-notifier');
 
-// Notifier init
+// App Name
+const AppName = "<APPNAME>";
+
+// Args
 const argv = process.argv;
+
+// Notifier init
 const snoreToastPath = argv[0] === "node.exe" ? null : path.join(argv[0], "../", "SnoreToast.exe");
 const notifier = new WindowsToaster({withFallback: !!snoreToastPath, customPath: snoreToastPath});
 
@@ -25,7 +30,7 @@ const logger = winston.createLogger({
 
 
 // Log message
-logger.log("info", "Hello World");
+logger.log("info", `"${AppName}" started with ${argv ? argv.join("; ") : "no args"}`);
 
 // Notify
-notifier.notify({title: 'APP NAME',  message: 'Hello World' });
+notifier.notify({title: `${AppName}`,  message: 'Hello World' });
