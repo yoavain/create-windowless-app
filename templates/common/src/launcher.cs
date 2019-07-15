@@ -16,14 +16,10 @@ namespace MyProcessSample
             {
                 using (Process myProcess = new Process())
                 {
-
                     myProcess.StartInfo.FileName = Path.Combine(Environment.CurrentDirectory, AppName + ".exe");
                     myProcess.StartInfo.Arguments = String.Join(" ", args);
 
                     // Stop the process from opening a new window
-                    myProcess.StartInfo.RedirectStandardOutput = true;
-//                  myProcess.StartInfo.UseShellExecute = false;
-//                  myProcess.StartInfo.CreateNoWindow = true;
                     myProcess.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
 
                     myProcess.Start();

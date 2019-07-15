@@ -42,9 +42,11 @@
   ],
   "knownGeneratedFiles": [
     "package.json",
-    "yarn.lock",
-    "node_modules",
+    "webpack.config.js",
     "tsconfig.json",
-    "webpack.config.js"
+    "src",
+    "resources",
+    "node_modules",
+    "launcher-dist"
   ]
 }
