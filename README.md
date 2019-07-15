@@ -32,7 +32,7 @@ create-windowless-app my-app
 </details>
 
 <p align='center'>
-<img src='https://raw.githubusercontent.com/yoavain/create-windowless-app/master/resources/docs/usage.gif' width='600' alt='npx create-windowless-app my-app'>
+<img src='https://raw.githubusercontent.com/yoavain/create-windowless-app/master/resources/docs/usage.gif' width='952' alt='npx create-windowless-app my-app'>
 </p>
 
 
