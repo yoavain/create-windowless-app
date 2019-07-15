@@ -28,6 +28,9 @@ const jsIndexResourceLocation = "../templates/javascript/src/index.js";
 const launcherSrcResourceLocation = "../templates/common/src/launcher.cs";
 const launcherSrcModifiedLocation = "launcher-dist/launcher.cs";
 
+// Default icon location
+const defaultLauncherIconLocation = "../templates/common/resources/windows-launcher.ico";
+
 // These files should be allowed to remain on a failed install, but then silently removed during the next create.
 const errorLogFilePatterns = consts.errorLogFilePatterns;
 
@@ -247,7 +250,7 @@ function buildLauncher(root: string, appName: string): Promise<void> {
         fs.ensureDirSync(path.resolve("launcher-dist"));
         writeFile(path.resolve(launcherSrcModifiedLocation), replaceAppNamePlaceholder(readResource(launcherSrcResourceLocation), appName));
         const command = 'csc.exe';
-        let args = ["/t:winexe", `/out:${path.resolve(root, "resources", "bin", `${appName}-launcher.exe`)}`, `${launcherSrcModifiedLocation}`];
+        let args = ["/t:winexe", `/out:${path.resolve(root, "resources", "bin", `${appName}-launcher.exe`)}`, `/win32icon:${defaultLauncherIconLocation}`, `${launcherSrcModifiedLocation}`];
         const child = spawn(command, args, { stdio: 'inherit' });
         child.on('close', code => {
             if (code !== 0) {
