@@ -16,12 +16,12 @@ const tsConfigFilename = "tsconfig.json";
 const WebpackConfigFilename = "webpack.config.js";
 
 // TypeScript
-const tsWebpackConfigLocation = "../templates/typescript/webpack.config.js";
-const tsConfig = require("../templates/typescript/tsconfig.json");
+const tsWebpackConfigLocation = `../templates/typescript/${ WebpackConfigFilename }`;
+const tsConfig = require(`../templates/typescript/${ tsConfigFilename }`);
 const tsIndexLocation = "../templates/typescript/src/index.ts";
 
 // JavaScript
-const jsWebpackConfigLocation = "../templates/javascript/webpack.config.js";
+const jsWebpackConfigLocation = `../templates/javascript/${ WebpackConfigFilename }`;
 const jsIndexLocation = "../templates/javascript/src/index.js";
 
 // Launcher Source
@@ -247,7 +247,7 @@ function buildLauncher(root: string, appName: string): Promise<void> {
         fs.ensureDirSync(path.resolve("..", "launcher-dist"));
         writeFile(path.resolve(launcherSrcModifiedLocation), replaceAppNamePlaceholder(readFile(path.resolve(launcherSrcLocation)), appName));
         const command = 'csc.exe';
-        let args = ["/t:winexe", `/out:${path.resolve(root, "resources", "bin", `launcher-${appName}.exe`)}`, `${launcherSrcModifiedLocation}`];
+        let args = ["/t:winexe", `/out:${path.resolve(root, "resources", "bin", `${appName}-launcher.exe`)}`, `${launcherSrcModifiedLocation}`];
         const child = spawn(command, args, { stdio: 'inherit' });
         child.on('close', code => {
             if (code !== 0) {
