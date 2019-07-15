@@ -10,10 +10,6 @@ const executable: string = process.argv[0];
 // Args (ignore exe + js)
 const argv: string[] = process.argv.slice(2);
 
-// Notifier init
-const snoreToastPath: string = executable.endsWith(".exe")  ? path.join(executable, "../", "SnoreToast.exe") : null;
-const notifier = new WindowsToaster({withFallback: !!snoreToastPath, customPath: snoreToastPath});
-
 // Logger init
 const {combine, timestamp, printf, label} = winston.format;
 const transports = {
@@ -30,9 +26,14 @@ const logger: winston.Logger = winston.createLogger({
     transports: [transports.file]
 });
 
+// Notifier init
+const snoreToastPath: string = executable.endsWith(".exe")  ? path.resolve(executable, "../", "SnoreToast.exe") : null;
+let notifierOptions = { withFallback: false, customPath: snoreToastPath };
+const notifier = new WindowsToaster(notifierOptions);
 
 // Log message
 logger.log("info", `"${AppName}" started with ${argv ? argv.join("; ") : "no args"}`);
+logger.log("info", `Notifier started with options ${ JSON.stringify(notifierOptions) }`);
 
 // Notify
 notifier.notify({title: `${AppName}`,  message: 'Hello World' });
