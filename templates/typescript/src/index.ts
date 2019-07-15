@@ -3,13 +3,15 @@ import * as winston from 'winston';
 import { WindowsToaster } from 'node-notifier';
 
 // App Name
-const AppName = "<APPNAME>";
+const AppName: string = "<APPNAME>";
+
+const executable: string = process.argv[0];
 
 // Args (ignore exe + js)
 const argv: string[] = process.argv.slice(2);
 
 // Notifier init
-const snoreToastPath = argv[0].endsWith(".exe")  ? path.join(argv[0], "../", "SnoreToast.exe") : null;
+const snoreToastPath: string = executable.endsWith(".exe")  ? path.join(executable, "../", "SnoreToast.exe") : null;
 const notifier = new WindowsToaster({withFallback: !!snoreToastPath, customPath: snoreToastPath});
 
 // Logger init
