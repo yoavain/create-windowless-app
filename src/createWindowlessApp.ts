@@ -208,8 +208,7 @@ function install(root: string, dependencies: string[], verbose: boolean, isDev: 
 
 function buildTypeScriptProject(root: string, appName: string) {
     return new Promise((resolve, reject) => {
-        writeJson(path.resolve(root, tsConfigFilename), readResource(tsConfigResourceLocation));
-        console.log(`YOAV: root = ${root}`);
+        writeJson(path.resolve(root, tsConfigFilename), readJsonResource(tsConfigResourceLocation));
         writeFile(path.resolve(root, WebpackConfigFilename), replaceAppNamePlaceholder(readResource(tsWebpackConfigResourceLocation), appName));
         fs.ensureDirSync(path.resolve(root, "src"));
         writeFile(path.resolve(root, "src", "index.ts"), replaceAppNamePlaceholder(readResource(tsIndexResourceLocation), appName));
@@ -392,6 +391,10 @@ function readJsonFile(jsonFileName: string) {
 
 function readResource(resourceRelativePath) {
     return readFile(path.resolve(__dirname, resourceRelativePath));
+}
+
+function readJsonResource(resourceRelativePath) {
+    return JSON.parse(readResource(resourceRelativePath));
 }
 
 function replaceAppNamePlaceholder(str: string, appName: string): string {
