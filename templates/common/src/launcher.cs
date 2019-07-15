@@ -16,7 +16,7 @@ namespace MyProcessSample
                 using (Process myProcess = new Process())
                 {
 
-                    myProcess.StartInfo.FileName = AppName;
+                    myProcess.StartInfo.FileName = AppName + ".exe";
                     myProcess.StartInfo.Arguments = String.Join(" ", args);
 
                     // Stop the process from opening a new window
