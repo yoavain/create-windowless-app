@@ -85,8 +85,8 @@ Sometimes, you want to run an app as a scheduled task that runs in the backgroun
 Best solution I could find is using a script that executes the NodeJS in windowless mode
 
 This package comes to do the following:
-1) Compiles a NodeJS (javascript/typescript) project into an *.exe file bundled with NodeJS, so no installation is needed
-2) Compiles a C# launcher that executes the compiled project, in serverless mode
+1) Compile a NodeJS (javascript/typescript) project into an *.exe file bundled with NodeJS, so no installation is needed
+2) Compile a C# launcher that executes the compiled project, in windowless mode
 
 ## Template project
 
