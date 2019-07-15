@@ -31,4 +31,9 @@ create-windowless-app my-app
 </p>
 </details>
 
+<p align='center'>
+<img src='https://raw.githubusercontent.com/yoavain/create-windowless-app/master/resources/docs/usage.gif' width='600' alt='npx create-windowless-app my-app'>
+</p>
+
+
 Then you can find in your my-app\dist folder the following files:
