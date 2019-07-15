@@ -2,7 +2,7 @@
 Create a windowless NodeJS app.
 
 Create Windowless App works on Windows 64-bit only<br>
-If something doesn’t work, please [file an issue](https://github.com/yoavain/create-windowless-app/issues/new). 
+If something doesn't work, please [file an issue](https://github.com/yoavain/create-windowless-app/issues/new). 
 
 
 Pre-Requisites:
@@ -12,8 +12,6 @@ Pre-Requisites:
 
 ```sh
 npx create-windowsless-app my-app
-cd my-app
-npm run build
 ```
 
 <details><summary>Or with npm</summary>
@@ -34,6 +32,29 @@ create-windowless-app my-app
 <p align='center'>
 <img src='https://raw.githubusercontent.com/yoavain/create-windowless-app/master/resources/docs/usage.gif' width='957' alt='npx create-windowless-app my-app'>
 </p>
+
+create-windowless-app creates the following files:
+```
+my-app
+├── node_modules
+├── package.json
+├── webpack.config.js
+├── launcher-dist
+│   ├── launcher.cs
+├── resources
+│   └── bin
+│       └── my-app-launcher.exe
+└───src
+    └── index.js
+```
+
+No configuration or complicated folder structures, just the files you need to build your app.<br>
+
+Once the installation is done, you can build the project
+```
+cd my-app
+npm run build
+```
 
 Then you can find in your my-app\dist folder the following files:
 <p>
