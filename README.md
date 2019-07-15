@@ -16,9 +16,10 @@ cd my-app
 npm run build
 ```
 
-<details><summary>Option 2</summary>
+<details><summary>Or win npm</summary>
 <p>
 Alternatively, you can install create-windowsless-app globally:
+
 ```sh
 npm install -g create-windowsless-app
 ```
