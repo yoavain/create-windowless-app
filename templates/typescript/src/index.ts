@@ -15,7 +15,7 @@ const notifier = new WindowsToaster({withFallback: !!snoreToastPath, customPath:
 // Logger init
 const {combine, timestamp, printf, label} = winston.format;
 const transports = {
-    file: new winston.transports.File({filename: "app.log"})
+    file: new winston.transports.File({filename: `${AppName}.log`})
 };
 transports.file.level = "debug";
 const logger: winston.Logger = winston.createLogger({
