@@ -65,3 +65,15 @@ Then you can find in your my-app\dist folder the following files:
 * my-app-launcher is the compiled launcher.cs file that executes my-app.exe without a console window
 * SnoreToast.exe allows windows notification (using [node-notifier](https://github.com/mikaelbr/node-notifier))
 * my-app.log will be generated on first run (using [winston logger](https://github.com/winstonjs/winston))
+
+## create-windowless-app CLI
+
+```
+create-windowless-app <project-directory> [options]
+
+Options:
+    --typescript    creates a project with typescript
+    --skipInstall   writes dependencies to package.json without installing them
+
+Only <project-directory> is required.
+```
