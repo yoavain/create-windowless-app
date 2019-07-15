@@ -16,6 +16,7 @@
     "start:test:javascript:skipInstall": "rimraf test-out && npm run start -- test-out --verbose --skipInstall",
     "start:test:typescript:skipInstall": "rimraf test-out && npm run start -- test-out --verbose --typescript --skipInstall",
     "package": "npm pack",
+    "publish": "npm publish",
     "build": "npm run compile && npm run package"
   },
   "repository": {
