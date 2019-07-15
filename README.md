@@ -77,3 +77,25 @@ Options:
 
 Only <project-directory> is required.
 ```
+
+## Why?
+
+NodeJS does not have a native windowless mode (like java has javaw).
+Sometimes, you want to run an app as a scheduled task that runs in the background, or run a long task (i.e. a server) but do not want a console that must always be open.
+Best solution I could find is using a script that executes the NodeJS in windowless mode
+
+This package comes to do the following:
+1) Compiles a NodeJS (javascript/typescript) project into an *.exe file bundled with NodeJS, so no installation is needed
+2) Compiles a C# launcher that executes the compiled project, in serverless mode
+
+## Template project
+
+The "Hello World" template is a POC containing 2 features you might want when running a windowless app:
+1) Logger
+2) Notifications
+
+The template project build script does the following things
+1) Compiles TypeScript to JavaScript (if in a TypeScript template)
+2) Runs WebPack to bundle all JavaScript into a single file, and copy binary files into the "dist" folder
+3) Runs nexe to compile the single WebPack JavaScript output file to an exe file bundled with NodeJS (currently, latest NodeJS version is bundled) 
+
