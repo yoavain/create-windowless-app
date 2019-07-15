@@ -43,6 +43,8 @@
   "knownGeneratedFiles": [
     "package.json",
     "yarn.lock",
-    "node_modules"
+    "node_modules",
+    "tsconfig.json",
+    "webpack.config.js"
   ]
 }

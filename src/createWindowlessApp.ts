@@ -16,16 +16,16 @@ const tsConfigFilename = "tsconfig.json";
 const WebpackConfigFilename = "webpack.config.js";
 
 // TypeScript
-const tsWebpackConfigLocation = `../templates/typescript/${ WebpackConfigFilename }`;
-const tsConfig = require(`../templates/typescript/${ tsConfigFilename }`);
-const tsIndexLocation = "../templates/typescript/src/index.ts";
+const tsWebpackConfigResourceLocation = `../templates/typescript/${ WebpackConfigFilename }`;
+const tsConfigResourceLocation = `../templates/typescript/${ tsConfigFilename }`;
+const tsIndexResourceLocation = "../templates/typescript/src/index.ts";
 
 // JavaScript
-const jsWebpackConfigLocation = `../templates/javascript/${ WebpackConfigFilename }`;
-const jsIndexLocation = "../templates/javascript/src/index.js";
+const jsWebpackConfigResourceLocation = `../templates/javascript/${ WebpackConfigFilename }`;
+const jsIndexResourceLocation = "../templates/javascript/src/index.js";
 
 // Launcher Source
-const launcherSrcLocation = "../templates/common/src/launcher.cs";
+const launcherSrcResourceLocation = "../templates/common/src/launcher.cs";
 const launcherSrcModifiedLocation = "../launcher-dist/launcher.cs";
 
 // These files should be allowed to remain on a failed install, but then silently removed during the next create.
@@ -208,10 +208,11 @@ function install(root: string, dependencies: string[], verbose: boolean, isDev: 
 
 function buildTypeScriptProject(root: string, appName: string) {
     return new Promise((resolve, reject) => {
-        writeJson(path.resolve(root, tsConfigFilename), tsConfig);
-        writeFile(path.resolve(root, WebpackConfigFilename), replaceAppNamePlaceholder(readFile(path.resolve(tsWebpackConfigLocation)), appName));
+        writeJson(path.resolve(root, tsConfigFilename), readResource(tsConfigResourceLocation));
+        console.log(`YOAV: root = ${root}`);
+        writeFile(path.resolve(root, WebpackConfigFilename), replaceAppNamePlaceholder(readResource(tsWebpackConfigResourceLocation), appName));
         fs.ensureDirSync(path.resolve(root, "src"));
-        writeFile(path.resolve(root, "src", "index.ts"), replaceAppNamePlaceholder(readFile(path.resolve(tsIndexLocation)), appName));
+        writeFile(path.resolve(root, "src", "index.ts"), replaceAppNamePlaceholder(readResource(tsIndexResourceLocation), appName));
         // Add scripts
         const scripts: { [key: string]: string } = {
             "start": "ts-node src/index.ts",
@@ -227,9 +228,9 @@ function buildTypeScriptProject(root: string, appName: string) {
 
 function buildJavaScriptProject(root: string, appName: string) {
     return new Promise((resolve, reject) => {
-        writeFile(path.resolve(root, WebpackConfigFilename), replaceAppNamePlaceholder(readFile(path.resolve(jsWebpackConfigLocation)),appName));
+        writeFile(path.resolve(root, WebpackConfigFilename), replaceAppNamePlaceholder(readResource(jsWebpackConfigResourceLocation),appName));
         fs.ensureDirSync(path.resolve(root, "src"));
-        writeFile(path.resolve(root, "src", "index.js"), replaceAppNamePlaceholder(readFile(path.resolve(jsIndexLocation)), appName));
+        writeFile(path.resolve(root, "src", "index.js"), replaceAppNamePlaceholder(readResource(jsIndexResourceLocation), appName));
         // Add scripts
         const scripts: { [key: string]: string } = {
             "start": "node src/index.js",
@@ -245,7 +246,7 @@ function buildJavaScriptProject(root: string, appName: string) {
 function buildLauncher(root: string, appName: string): Promise<void> {
     return new Promise(((resolve, reject) => {
         fs.ensureDirSync(path.resolve("..", "launcher-dist"));
-        writeFile(path.resolve(launcherSrcModifiedLocation), replaceAppNamePlaceholder(readFile(path.resolve(launcherSrcLocation)), appName));
+        writeFile(path.resolve(launcherSrcModifiedLocation), replaceAppNamePlaceholder(readResource(launcherSrcResourceLocation), appName));
         const command = 'csc.exe';
         let args = ["/t:winexe", `/out:${path.resolve(root, "resources", "bin", `${appName}-launcher.exe`)}`, `${launcherSrcModifiedLocation}`];
         const child = spawn(command, args, { stdio: 'inherit' });
@@ -381,23 +382,27 @@ function checkThatNpmCanReadCwd() {
     return false;
 }
 
-function readFile(fileName) {
+function readFile(fileName: string) {
     return fs.readFileSync(fileName, "utf8");
 }
 
-function readJsonFile(jsonFileName) {
+function readJsonFile(jsonFileName: string) {
     return JSON.parse(readFile(jsonFileName));
 }
 
-function replaceAppNamePlaceholder(str: string, appName): string {
+function readResource(resourceRelativePath) {
+    return readFile(path.resolve(__dirname, resourceRelativePath));
+}
+
+function replaceAppNamePlaceholder(str: string, appName: string): string {
     return str.replace("<APPNAME>", `${appName}`)
 }
 
-function writeJson(fileName, object) {
+function writeJson(fileName: string, object) {
     fs.writeFileSync(fileName, JSON.stringify(object, null, 2).replace(/\n/g, os.EOL) + os.EOL);
 }
 
-function writeFile(fileName, data: string) {
+function writeFile(fileName: string, data: string) {
     fs.writeFileSync(fileName, data.replace(/\r/g, "").replace(/\n/g, os.EOL));
 }
 
