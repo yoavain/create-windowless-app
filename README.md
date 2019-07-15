@@ -1,4 +1,4 @@
-# Create Windowless App [![node](https://img.shields.io/node/v/create-windowless-app.svg)][![types](https://img.shields.io/npm/types/typescript.svg)] [![commit](https://img.shields.io/github/last-commit/yoavain/create-windowless-app.svg)][![license](https://img.shields.io/npm/l/create-windowless-app.svg)]
+# Create Windowless App ![node](https://img.shields.io/node/v/create-windowless-app.svg) ![types](https://img.shields.io/npm/types/typescript.svg) ![commit](https://img.shields.io/github/last-commit/yoavain/create-windowless-app.svg) ![license](https://img.shields.io/npm/l/create-windowless-app.svg)
 Create a windowless NodeJS app.
 
 Create Windowless App works on Windows 64-bit only<br>
