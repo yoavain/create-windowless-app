@@ -5,8 +5,8 @@ import { WindowsToaster } from 'node-notifier';
 // App Name
 const AppName = "<APPNAME>";
 
-// Args
-const argv = process.argv;
+// Args (ignore exe + js)
+const argv: string[] = process.argv.slice(2);
 
 // Notifier init
 const snoreToastPath = argv[0].endsWith(".exe")  ? path.join(argv[0], "../", "SnoreToast.exe") : null;

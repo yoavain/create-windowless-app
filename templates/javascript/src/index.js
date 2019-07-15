@@ -5,8 +5,8 @@ const { WindowsToaster } = require('node-notifier');
 // App Name
 const AppName = "<APPNAME>";
 
-// Args
-const argv = process.argv;
+// Args (ignore exe + js)
+const argv = process.argv.slice(2);
 
 // Notifier init
 const snoreToastPath = argv[0] === "node.exe" ? null : path.join(argv[0], "../", "SnoreToast.exe");
