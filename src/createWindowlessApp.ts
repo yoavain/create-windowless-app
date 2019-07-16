@@ -16,12 +16,12 @@ const tsConfigFilename = "tsconfig.json";
 const WebpackConfigFilename = "webpack.config.js";
 
 // TypeScript
-const tsWebpackConfigResourceLocation = `../templates/typescript/${ WebpackConfigFilename }`;
-const tsConfigResourceLocation = `../templates/typescript/${ tsConfigFilename }`;
+const tsWebpackConfigResourceLocation = `../templates/typescript/${WebpackConfigFilename}`;
+const tsConfigResourceLocation = `../templates/typescript/${tsConfigFilename}`;
 const tsIndexResourceLocation = "../templates/typescript/src/index.ts";
 
 // JavaScript
-const jsWebpackConfigResourceLocation = `../templates/javascript/${ WebpackConfigFilename }`;
+const jsWebpackConfigResourceLocation = `../templates/javascript/${WebpackConfigFilename}`;
 const jsIndexResourceLocation = "../templates/javascript/src/index.js";
 
 // Launcher Source
@@ -40,7 +40,7 @@ export function createWindowlessApp(): Promise<void> {
     const program: Command = new commander.Command(packageJson.name)
         .version(packageJson.version)
         .arguments('<project-directory>')
-        .usage(`${ chalk.green('<project-directory>') } [options]`)
+        .usage(`${chalk.green('<project-directory>')} [options]`)
         .action(name => {
             projectName = name;
         })
@@ -48,12 +48,13 @@ export function createWindowlessApp(): Promise<void> {
         .option('--info', 'print environment debug info')
         .option('--typescript')
         .option('--skipInstall', 'write dependencies to package.json without installing')
+        .option('--icon <icon>', 'override default icon file')
         .allowUnknownOption()
         .on('--help', () => {
-            console.log(`    Only ${ chalk.green('<project-directory>') } is required.`);
+            console.log(`    Only ${chalk.green('<project-directory>')} is required.`);
             console.log();
             console.log(`    If you have any problems, do not hesitate to file an issue:`);
-            console.log(`      ${ chalk.cyan('https://github.com/yoavain/create-windowless-app/issues/new') }`);
+            console.log(`      ${chalk.cyan('https://github.com/yoavain/create-windowless-app/issues/new')}`);
             console.log();
         })
         .parse(process.argv);
@@ -77,19 +78,19 @@ export function createWindowlessApp(): Promise<void> {
 
     if (typeof projectName === 'undefined') {
         console.error('Please specify the project directory:');
-        console.log(`  ${ chalk.cyan(program.name()) } ${ chalk.green('<project-directory>') }`);
+        console.log(`  ${chalk.cyan(program.name())} ${chalk.green('<project-directory>')}`);
         console.log();
         console.log('For example:');
-        console.log(`  ${ chalk.cyan(program.name()) } ${ chalk.green('my-windowless-app') }`);
+        console.log(`  ${chalk.cyan(program.name())} ${chalk.green('my-windowless-app')}`);
         console.log();
-        console.log(`Run ${ chalk.cyan(`${ program.name() } --help`) } to see all options.`);
+        console.log(`Run ${chalk.cyan(`${program.name()} --help`)} to see all options.`);
         process.exit(1);
     }
 
-    return createApp(projectName, program.verbose, program.typescript, program.skipInstall);
+    return createApp(projectName, program.verbose, program.typescript, program.skipInstall, program.icon);
 }
 
-function createApp(name: string, verbose: boolean, useTypescript: boolean, skipInstall: boolean) {
+function createApp(name: string, verbose: boolean, useTypescript: boolean, skipInstall: boolean, icon: string) {
     const root = path.resolve(name);
     const appName = path.basename(root);
 
@@ -116,10 +117,10 @@ function createApp(name: string, verbose: boolean, useTypescript: boolean, skipI
         process.exit(1);
     }
 
-    return run(root, appName, verbose, originalDirectory, useTypescript, skipInstall);
+    return run(root, appName, verbose, originalDirectory, useTypescript, skipInstall, icon);
 }
 
-function run(root: string, appName: string, verbose: boolean, originalDirectory: string, useTypescript: boolean, skipInstall: boolean): Promise<void> {
+function run(root: string, appName: string, verbose: boolean, originalDirectory: string, useTypescript: boolean, skipInstall: boolean, icon: string): Promise<void> {
     const dependencies = [...consts.dependencies];
     const devDependencies = [...consts.devDependencies];
     if (useTypescript) {
@@ -130,7 +131,7 @@ function run(root: string, appName: string, verbose: boolean, originalDirectory:
         .then(() => {
             return install(root, devDependencies, verbose, true, skipInstall);
         })
-        .then(()=> {
+        .then(() => {
             if (useTypescript) {
                 return buildTypeScriptProject(root, appName);
             }
@@ -138,17 +139,17 @@ function run(root: string, appName: string, verbose: boolean, originalDirectory:
                 return buildJavaScriptProject(root, appName);
             }
         })
-        .then(()=> {
+        .then(() => {
             // Launcher
             fs.ensureDirSync(path.resolve(root, "resources", "bin"));
-            return buildLauncher(root, appName);
+            return buildLauncher(root, appName, icon);
         })
         .then(() => console.log("Done"))
         .catch(reason => {
             console.log();
             console.log('Aborting installation.');
             if (reason.command) {
-                console.log(`  ${ chalk.cyan(reason.command) } has failed.`);
+                console.log(`  ${chalk.cyan(reason.command)} has failed.`);
             }
             else {
                 console.log(
@@ -165,7 +166,7 @@ function run(root: string, appName: string, verbose: boolean, originalDirectory:
                 knownGeneratedFiles.forEach(fileToMatch => {
                     // This removes all knownGeneratedFiles.
                     if (file === fileToMatch) {
-                        console.log(`Deleting generated file... ${ chalk.cyan(file) }`);
+                        console.log(`Deleting generated file... ${chalk.cyan(file)}`);
                         fs.removeSync(path.join(root, file));
                     }
                 });
@@ -173,7 +174,7 @@ function run(root: string, appName: string, verbose: boolean, originalDirectory:
             const remainingFiles = fs.readdirSync(path.join(root));
             if (!remainingFiles.length) {
                 // Delete target folder if empty
-                console.log(`Deleting ${ chalk.cyan(`${ appName }/`) } from ${ chalk.cyan(path.resolve(root, '..')) }`);
+                console.log(`Deleting ${chalk.cyan(`${appName}/`)} from ${chalk.cyan(path.resolve(root, '..'))}`);
                 process.chdir(path.resolve(root, '..'));
                 fs.removeSync(path.join(root));
             }
@@ -191,14 +192,14 @@ function install(root: string, dependencies: string[], verbose: boolean, isDev: 
         }
 
         if (!skipInstall) {
-            console.log(`Installing ${ chalk.green(isDev ? "dev dependencies" : "dependencies") }.`);
+            console.log(`Installing ${chalk.green(isDev ? "dev dependencies" : "dependencies")}.`);
             console.log();
 
             const child = spawn(command, args, { stdio: 'inherit' });
             child.on('close', code => {
                 if (code !== 0) {
                     reject({
-                        command: `${ command } ${ args.join(' ') }`,
+                        command: `${command} ${args.join(' ')}`,
                     });
                     return;
                 }
@@ -206,7 +207,7 @@ function install(root: string, dependencies: string[], verbose: boolean, isDev: 
             });
         }
         else {
-            console.log(`Adding ${ chalk.green(isDev ? "dev dependencies" : "dependencies") } to package.json (skipping installation)`);
+            console.log(`Adding ${chalk.green(isDev ? "dev dependencies" : "dependencies")} to package.json (skipping installation)`);
             console.log();
 
             mergeIntoPackageJson(root, isDev ? "devDependencies" : "dependencies", dependencies);
@@ -217,7 +218,7 @@ function install(root: string, dependencies: string[], verbose: boolean, isDev: 
 
 function buildTypeScriptProject(root: string, appName: string) {
     return new Promise((resolve, reject) => {
-        console.log(`Building project ${ chalk.green("files") }.`);
+        console.log(`Building project ${chalk.green("files")}.`);
         console.log();
 
         writeJson(path.resolve(root, tsConfigFilename), readJsonResource(tsConfigResourceLocation));
@@ -239,10 +240,10 @@ function buildTypeScriptProject(root: string, appName: string) {
 
 function buildJavaScriptProject(root: string, appName: string) {
     return new Promise((resolve, reject) => {
-        console.log(`Building project ${ chalk.green("files") }.`);
+        console.log(`Building project ${chalk.green("files")}.`);
         console.log();
 
-        writeFile(path.resolve(root, WebpackConfigFilename), replaceAppNamePlaceholder(readResource(jsWebpackConfigResourceLocation),appName));
+        writeFile(path.resolve(root, WebpackConfigFilename), replaceAppNamePlaceholder(readResource(jsWebpackConfigResourceLocation), appName));
         fs.ensureDirSync(path.resolve(root, "src"));
         writeFile(path.resolve(root, "src", "index.js"), replaceAppNamePlaceholder(readResource(jsIndexResourceLocation), appName));
         // Add scripts
@@ -257,20 +258,36 @@ function buildJavaScriptProject(root: string, appName: string) {
     })
 }
 
-function buildLauncher(root: string, appName: string): Promise<void> {
+function buildLauncher(root: string, appName: string, icon: string): Promise<void> {
     return new Promise(((resolve, reject) => {
-        console.log(`Building project ${ chalk.green("launcher") }.`);
+        console.log(`Building project ${chalk.green("launcher")}.`);
         console.log();
 
         fs.ensureDirSync(path.resolve("launcher-dist"));
         writeFile(path.resolve(launcherSrcModifiedLocation), replaceAppNamePlaceholder(readResource(launcherSrcResourceLocation), appName));
         const command = 'csc.exe';
-        let args = ["/t:winexe", `/out:${path.resolve(root, "resources", "bin", `${appName}-launcher.exe`)}`, `/win32icon:${path.resolve(__dirname, defaultLauncherIconLocation)}`, `${launcherSrcModifiedLocation}`];
+
+        // Resolve icon
+        let iconLocation = path.resolve(__dirname, defaultLauncherIconLocation);
+        if (icon) {
+            if (fs.pathExistsSync(icon)) {
+                iconLocation = path.resolve(icon);
+                console.log(`Building launcher with icon: ${chalk.green(icon)}.`);
+            }
+            else {
+                console.log(`Cannot find icon in ${chalk.red(icon)}. Building launcher with ${chalk.green("default")} icon.`);
+            }
+        }
+        else {
+            console.log(`Building launcher with ${chalk.green("default")} icon.`);
+        }
+
+        let args = ["/t:winexe", `/out:${path.resolve(root, "resources", "bin", `${appName}-launcher.exe`)}`, `/win32icon:${iconLocation}`, `${launcherSrcModifiedLocation}`];
         const child = spawn(command, args, { stdio: 'inherit' });
         child.on('close', code => {
             if (code !== 0) {
                 reject({
-                    command: `${ command } ${ args.join(' ') }`,
+                    command: `${command} ${args.join(' ')}`,
                 });
                 return;
             }
@@ -282,7 +299,7 @@ function buildLauncher(root: string, appName: string): Promise<void> {
 function checkAppName(appName) {
     const validationResult = validateProjectName(appName);
     if (!validationResult.validForNewPackages) {
-        console.error(`Could not create a project called ${ chalk.red(`"${ appName }"`) } because of npm naming restrictions:`);
+        console.error(`Could not create a project called ${chalk.red(`"${appName}"`)} because of npm naming restrictions:`);
         printValidationResults(validationResult.errors);
         printValidationResults(validationResult.warnings);
         process.exit(1);
@@ -290,9 +307,9 @@ function checkAppName(appName) {
 
     const dependencies = [...consts.dependencies, ...consts.devDependencies].sort();
     if (dependencies.indexOf(appName) >= 0) {
-        console.error(chalk.red(`We cannot create a project called ${ chalk.green(appName) } because a dependency with the same name exists.\n` +
+        console.error(chalk.red(`We cannot create a project called ${chalk.green(appName)} because a dependency with the same name exists.\n` +
             `Due to the way npm works, the following names are not allowed:\n\n`) +
-            chalk.cyan(dependencies.map(depName => `  ${ depName }`).join('\n')) +
+            chalk.cyan(dependencies.map(depName => `  ${depName}`).join('\n')) +
             chalk.red('\n\nPlease choose a different project name.')
         );
         process.exit(1);
@@ -302,7 +319,7 @@ function checkAppName(appName) {
 function printValidationResults(results) {
     if (typeof results !== 'undefined') {
         results.forEach(error => {
-            console.error(chalk.red(`  *  ${ error }`));
+            console.error(chalk.red(`  *  ${error}`));
         });
     }
 }
@@ -324,10 +341,10 @@ function isSafeToCreateProjectIn(root, name) {
         .filter(file => !errorLogFilePatterns.some(pattern => file.indexOf(pattern) === 0));
 
     if (conflicts.length > 0) {
-        console.log(`The directory ${ chalk.green(name) } contains files that could conflict:`);
+        console.log(`The directory ${chalk.green(name)} contains files that could conflict:`);
         console.log();
         for (const file of conflicts) {
-            console.log(`  ${ file }`);
+            console.log(`  ${file}`);
         }
         console.log();
         console.log('Either try using a new directory name, or remove the files listed above.');
@@ -358,7 +375,8 @@ function checkThatNpmCanReadCwd() {
         // to reproduce the wrong path. Just printing process.cwd()
         // in a Node process was not enough.
         childOutput = spawn.sync('npm', ['config', 'list']).output.join('');
-    } catch (err) {
+    }
+    catch (err) {
         // Something went wrong spawning node.
         // Not great, but it means we can't do this check.
         // We might fail later on, but let's continue.
