@@ -72,9 +72,10 @@ Then you can find in your my-app\dist folder the following files:
 create-windowless-app <project-directory> [options]
 
 Options:
-    --typescript    creates a project with typescript
-    --skipInstall   writes dependencies to package.json without installing them
-    --icon <icon>   override default launcher icon file
+    --typescript                    creates a project with typescript
+    --skip-install                  writes dependencies to package.json without installing them
+    --icon <icon>                   override default launcher icon file
+    --node-version <nodeVersion>    override node version to bundle
 
 Only <project-directory> is required.
 ```
