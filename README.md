@@ -74,6 +74,7 @@ create-windowless-app <project-directory> [options]
 Options:
     --typescript    creates a project with typescript
     --skipInstall   writes dependencies to package.json without installing them
+    --icon <icon>   override default launcher icon file
 
 Only <project-directory> is required.
 ```

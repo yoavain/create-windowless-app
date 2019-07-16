@@ -48,7 +48,7 @@ export function createWindowlessApp(): Promise<void> {
         .option('--info', 'print environment debug info')
         .option('--typescript')
         .option('--skipInstall', 'write dependencies to package.json without installing')
-        .option('--icon <icon>', 'override default icon file')
+        .option('--icon <icon>', 'override default launcher icon file')
         .allowUnknownOption()
         .on('--help', () => {
             console.log(`    Only ${chalk.green('<project-directory>')} is required.`);
