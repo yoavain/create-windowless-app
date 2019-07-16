@@ -7,6 +7,7 @@ import * as fs from "fs-extra";
 import validateProjectName from 'validate-npm-package-name';
 import * as os from "os";
 import spawn from "cross-spawn";
+import request = require("request");
 
 const packageJsonFilename = "package.json";
 const packageJson = require(`../${packageJsonFilename}`);
@@ -47,8 +48,9 @@ export function createWindowlessApp(): Promise<void> {
         .option('--verbose', 'print additional logs')
         .option('--info', 'print environment debug info')
         .option('--typescript')
-        .option('--skipInstall', 'write dependencies to package.json without installing')
+        .option('--skip-install', 'write dependencies to package.json without installing')
         .option('--icon <icon>', 'override default launcher icon file')
+        .option('--node-version <nodeVersion>', 'override node version to bundle')
         .allowUnknownOption()
         .on('--help', () => {
             console.log(`    Only ${chalk.green('<project-directory>')} is required.`);
@@ -87,10 +89,10 @@ export function createWindowlessApp(): Promise<void> {
         process.exit(1);
     }
 
-    return createApp(projectName, program.verbose, program.typescript, program.skipInstall, program.icon);
+    return createApp(projectName, program.verbose, program.typescript, program.skipInstall, program.icon, program.nodeVersion);
 }
 
-function createApp(name: string, verbose: boolean, useTypescript: boolean, skipInstall: boolean, icon: string) {
+function createApp(name: string, verbose: boolean, useTypescript: boolean, skipInstall: boolean, icon: string, nodeVersion: string) {
     const root = path.resolve(name);
     const appName = path.basename(root);
 
@@ -117,10 +119,10 @@ function createApp(name: string, verbose: boolean, useTypescript: boolean, skipI
         process.exit(1);
     }
 
-    return run(root, appName, verbose, originalDirectory, useTypescript, skipInstall, icon);
+    return run(root, appName, verbose, originalDirectory, useTypescript, skipInstall, icon, nodeVersion);
 }
 
-function run(root: string, appName: string, verbose: boolean, originalDirectory: string, useTypescript: boolean, skipInstall: boolean, icon: string): Promise<void> {
+function run(root: string, appName: string, verbose: boolean, originalDirectory: string, useTypescript: boolean, skipInstall: boolean, icon: string, nodeVersion: string): Promise<void> {
     const dependencies = [...consts.dependencies];
     const devDependencies = [...consts.devDependencies];
     if (useTypescript) {
@@ -132,11 +134,19 @@ function run(root: string, appName: string, verbose: boolean, originalDirectory:
             return install(root, devDependencies, verbose, true, skipInstall);
         })
         .then(() => {
-            if (useTypescript) {
-                return buildTypeScriptProject(root, appName);
+            if (nodeVersion) {
+                return checkNodeVersion(nodeVersion);
             }
             else {
-                return buildJavaScriptProject(root, appName);
+                return Promise.resolve(undefined);
+            }
+        })
+        .then((checkedNodeVersion: string) => {
+            if (useTypescript) {
+                return buildTypeScriptProject(root, appName, checkedNodeVersion);
+            }
+            else {
+                return buildJavaScriptProject(root, appName, checkedNodeVersion);
             }
         })
         .then(() => {
@@ -210,13 +220,17 @@ function install(root: string, dependencies: string[], verbose: boolean, isDev: 
             console.log(`Adding ${chalk.green(isDev ? "dev dependencies" : "dependencies")} to package.json (skipping installation)`);
             console.log();
 
-            mergeIntoPackageJson(root, isDev ? "devDependencies" : "dependencies", dependencies);
+            const dependenciesObject = dependencies.reduce((acc, cur) => {
+                acc[cur] = "^x.x.x";
+                return acc
+            }, {});
+            mergeIntoPackageJson(root, isDev ? "devDependencies" : "dependencies", dependenciesObject);
             resolve();
         }
     });
 }
 
-function buildTypeScriptProject(root: string, appName: string) {
+function buildTypeScriptProject(root: string, appName: string, nodeVersion: string) {
     return new Promise((resolve, reject) => {
         console.log(`Building project ${chalk.green("files")}.`);
         console.log();
@@ -225,12 +239,13 @@ function buildTypeScriptProject(root: string, appName: string) {
         writeFile(path.resolve(root, WebpackConfigFilename), replaceAppNamePlaceholder(readResource(tsWebpackConfigResourceLocation), appName));
         fs.ensureDirSync(path.resolve(root, "src"));
         writeFile(path.resolve(root, "src", "index.ts"), replaceAppNamePlaceholder(readResource(tsIndexResourceLocation), appName));
+
         // Add scripts
         const scripts: { [key: string]: string } = {
             "start": "ts-node src/index.ts",
             "tsc": "tsc",
             "webpack": "webpack",
-            "nexe": `nexe -o dist/${appName}.exe`,
+            "nexe": getNexeCommand(appName, nodeVersion),
             "build": "npm run tsc && npm run webpack && npm run nexe"
         };
         mergeIntoPackageJson(root, "scripts", scripts);
@@ -238,7 +253,7 @@ function buildTypeScriptProject(root: string, appName: string) {
     })
 }
 
-function buildJavaScriptProject(root: string, appName: string) {
+function buildJavaScriptProject(root: string, appName: string, nodeVersion: string) {
     return new Promise((resolve, reject) => {
         console.log(`Building project ${chalk.green("files")}.`);
         console.log();
@@ -250,7 +265,7 @@ function buildJavaScriptProject(root: string, appName: string) {
         const scripts: { [key: string]: string } = {
             "start": "node src/index.js",
             "webpack": "webpack",
-            "nexe": `nexe -o dist/${appName}.exe`,
+            "nexe": getNexeCommand(appName, nodeVersion),
             "build": "npm run webpack && npm run nexe"
         };
         mergeIntoPackageJson(root, "scripts", scripts);
@@ -460,4 +475,34 @@ function mergeIntoPackageJson(root: string, field: string, data: any) {
         packageJson[field] = Object.assign(packageJson.scripts || {}, data);
     }
     writeJson(packageJsonPath, packageJson);
+}
+
+function checkNodeVersion(nodeVersion: string): Promise<string> {
+    return new Promise<string>(((resolve, reject) => {
+        const options = {
+            headers: {
+                'User-Agent': 'request'
+            }
+        };
+        request.get("https://api.github.com/repos/nexe/nexe/releases/latest", options,  (error, response, body) => {
+            let split = nodeVersion.split(".");
+            const major: number = split.length > 0 && (Number(split[0]) || 0) || 0;
+            const minor: number = split.length > 1 && (Number(split[1]) || 0) || 0;
+            const patch: number = split.length > 2 && (Number(split[2]) || 0) || 0;
+            const lookupVersion = `windows-x64-${major}.${minor}.${patch}`;
+
+            const result = body && JSON.parse(body);
+            const assets = result && result.assets;
+            const windowsVersions = assets && assets.find(asset => asset.name === lookupVersion);
+            let nexeNodeVersion = windowsVersions && nodeVersion;
+            if (!nexeNodeVersion) {
+                console.log(`Can't find node version ${chalk.red(nodeVersion)} in nexe. Using latest`);
+            }
+            resolve(nexeNodeVersion);
+        })
+    }))
+}
+
+function getNexeCommand(appName: string, nodeVersion: string) {
+    return nodeVersion ? `nexe -t ${nodeVersion} -o dist/${appName}.exe` : `nexe -o dist/${appName}.exe`;
 }
