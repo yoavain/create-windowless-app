@@ -220,7 +220,11 @@ function install(root: string, dependencies: string[], verbose: boolean, isDev: 
             console.log(`Adding ${chalk.green(isDev ? "dev dependencies" : "dependencies")} to package.json (skipping installation)`);
             console.log();
 
-            mergeIntoPackageJson(root, isDev ? "devDependencies" : "dependencies", dependencies);
+            const dependenciesObject = dependencies.reduce((acc, cur) => {
+                acc[cur] = "^x.x.x";
+                return acc
+            }, {});
+            mergeIntoPackageJson(root, isDev ? "devDependencies" : "dependencies", dependenciesObject);
             resolve();
         }
     });
