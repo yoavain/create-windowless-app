@@ -1,6 +1,6 @@
 {
   "name": "create-windowless-app",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Create a windowless NodeJS app",
   "main": "dist/index.js",
   "bin": {
@@ -23,7 +23,13 @@
     "type": "git",
     "url": "git+https://github.com/yoavain/create-windowless-app.git"
   },
-  "keywords": [],
+  "keywords": [
+    "windowless",
+    "no console",
+    "nodew",
+    "template",
+    "typescript"
+  ],
   "author": "yoavain",
   "license": "MIT",
   "engines": {
