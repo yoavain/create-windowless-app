@@ -56,7 +56,7 @@
   "dependencies": {
     "chalk": "^2.x.x",
     "commander": "^3.x.x",
-    "cross-spawn": "^6.x.x",
+    "cross-spawn": "^7.x.x",
     "envinfo": "^7.x.x",
     "fs-extra": "^8.x.x",
     "request": "^2.88.0",
