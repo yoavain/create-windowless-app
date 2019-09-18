@@ -25,8 +25,11 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
-    - name: Setup MSBuild.exe
-      uses: warrenbuckley/Setup-MSBuild@v1
+    - name: Setup VSWhere.exe
+      uses: warrenbuckley/Setup-VSWhere@v1
+
+    - name: VSWhere csc.exe
+      run: vswhere -latest -requires Microsoft.Component.MSBuild -find csc.exe
 
     - name: Dependencies Install
       run: npm install
