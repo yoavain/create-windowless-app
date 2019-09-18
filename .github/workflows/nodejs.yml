@@ -31,7 +31,7 @@ jobs:
         dotnet-version: '2.2.104'
 
     - name: is csc.exe installed
-      run: where /r \ csc.exe
+      run: where csc.exe
       shell: cmd
 
     - name: Dependencies Install
