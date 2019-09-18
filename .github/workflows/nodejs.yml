@@ -27,7 +27,7 @@ jobs:
 
     - name: dotnet
       uses: joeltankam/dotnet-action@master
-      args: csc --help
+      run: csc --help
 
     - name: is csc.exe installed
       run: where /r \ csc.exe
