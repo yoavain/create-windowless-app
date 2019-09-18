@@ -1,0 +1,48 @@
+name: Node CI
+
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - '*.*.*'
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+
+    - name: Setup NodeJS
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Setup MSBuild.exe
+      uses: warrenbuckley/Setup-MSBuild@v1
+
+    - name: Dependencies Install
+      run: npm install
+      env:
+        CI: true
+
+    - name: Build
+      run: npm run build
+      env:
+        CI: true
+
+    - name: Test
+      run npm run start:test:all
+      env:
+        CI: true
+
+    - name: Publish
+      if: startsWith(github.ref, 'refs/tags/')
+      run: npm run publish

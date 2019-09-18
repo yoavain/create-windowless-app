@@ -11,10 +11,11 @@
     "start": "ts-node src/index.ts",
     "start:help": "npm run start -- --help",
     "start:info": "npm run start -- --info",
-    "start:test:javascript": "rimraf test-out && npm run start -- test-out --verbose",
-    "start:test:typescript": "rimraf test-out && npm run start -- test-out --verbose --typescript",
-    "start:test:javascript:skip-install": "rimraf test-out && npm run start -- test-out --verbose --skip-install",
-    "start:test:typescript:skip-install": "rimraf test-out && npm run start -- test-out --verbose --typescript --skip-install",
+    "start:test:all": "npm run start:test:javascript && npm run start:test:typescript && npm run start:test:javascript:skip-install && npm run start:test:typescript:skip-install",
+    "start:test:javascript": "rimraf test-out-js && npm run start -- test-out-js --verbose",
+    "start:test:typescript": "rimraf test-out-ts && npm run start -- test-out-ts --verbose --typescript",
+    "start:test:javascript:skip-install": "rimraf test-out-js-noinst && npm run start -- test-out-js-noinst --verbose --skip-install",
+    "start:test:typescript:skip-install": "rimraf test-out-ts-noinst && npm run start -- test-out-ts-noinst --verbose --typescript --skip-install",
     "package": "npm pack",
     "publish": "npm publish",
     "build": "npm run compile && npm run package"
@@ -47,8 +48,11 @@
   "devDependencies": {
     "@types/cross-spawn": "^6.x.x",
     "@types/fs-extra": "^8.x.x",
+    "@types/jest": "^24.x.x",
     "@types/node": "^12.x.x",
-    "@types/request": "^2.48.2",
+    "@types/request": "^2.x.x",
+    "global-npm": "^0.x.x",
+    "jest": "^24.x.x",
     "rimraf": "^3.x.x",
     "ts-node": "^8.x.x",
     "typescript": "^3.x.x"
@@ -59,7 +63,7 @@
     "cross-spawn": "^7.x.x",
     "envinfo": "^7.x.x",
     "fs-extra": "^8.x.x",
-    "request": "^2.88.0",
+    "request": "^2.x.x",
     "validate-npm-package-name": "^3.x.x"
   }
 }
