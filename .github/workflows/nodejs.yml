@@ -25,17 +25,14 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
-    - name: Setup DotNet
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '2.2.104'
-
     - name: Setup MSBuild.exe
       uses: warrenbuckley/Setup-MSBuild@v1
 
-    - name: is csc.exe installed
-      run: dir/s "C:\Program Files (x86)\Microsoft Visual Studio\2019\csc.exe"
-      shell: cmd
+    - name: Setup VSWhere.exe
+        uses: warrenbuckley/Setup-VSWhere@v1
+
+    - name: VSWhere csc.exe
+      run: vswhere -latest -requires Microsoft.VisualStudio.Component.Roslyn.Compiler -find csc.exe
 
     - name: Dependencies Install
       run: npm install
