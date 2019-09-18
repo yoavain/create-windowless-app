@@ -30,8 +30,11 @@ jobs:
       with:
         dotnet-version: '2.2.104'
 
+    - name: Setup MSBuild.exe
+      uses: warrenbuckley/Setup-MSBuild@v1
+
     - name: is csc.exe installed
-      run: dir/s %DOTNET_ROOT%
+      run: dir/s c:\csc.exe
       shell: cmd
 
     - name: Dependencies Install
