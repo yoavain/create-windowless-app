@@ -34,7 +34,7 @@ jobs:
       uses: warrenbuckley/Setup-MSBuild@v1
 
     - name: is csc.exe installed
-      run: dir/s c:\csc.exe
+      run: dir/s "C:\Program Files (x86)\Microsoft Visual Studio\2019\csc.exe"
       shell: cmd
 
     - name: Dependencies Install
