@@ -29,7 +29,7 @@ jobs:
       uses: warrenbuckley/Setup-MSBuild@v1
 
     - name: Setup VSWhere.exe
-        uses: warrenbuckley/Setup-VSWhere@v1
+      uses: warrenbuckley/Setup-VSWhere@v1
 
     - name: VSWhere csc.exe
       run: vswhere -latest -requires Microsoft.VisualStudio.Component.Roslyn.Compiler -find csc.exe
