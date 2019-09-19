@@ -28,9 +28,6 @@ jobs:
     - name: Setup csc.exe
       uses: yoavain/Setup-CSC@v4
 
-    - name: Check CSC
-      run: csc --help
-
     - name: Dependencies Install
       run: npm install
       env:
