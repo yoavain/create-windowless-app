@@ -25,14 +25,11 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
-    - name: Setup MSBuild.exe
-      uses: warrenbuckley/Setup-MSBuild@v1
+    - name: Setup csc.exe
+      uses: yoavain/Setup-CSC@v1
 
-    - name: Setup VSWhere.exe
-      uses: warrenbuckley/Setup-VSWhere@v1
-
-    - name: VSWhere csc.exe
-      run: vswhere -latest -requires Microsoft.VisualStudio.Component.Roslyn.Compiler -find MSBuild\**\csc.exe
+    - name: Check CSC
+      run: csc --help
 
     - name: Dependencies Install
       run: npm install
