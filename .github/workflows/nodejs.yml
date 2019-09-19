@@ -26,7 +26,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
 
     - name: Setup csc.exe
-      uses: yoavain/Setup-CSC@v1
+      uses: yoavain/Setup-CSC@v2
 
     - name: Check CSC
       run: csc --help
