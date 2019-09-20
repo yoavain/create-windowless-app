@@ -25,6 +25,9 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
+    - name: Test npm config a secret
+      run: npm config set TEST_TOKEN ${{ secrets.TEST_TOKEN }}
+
     - name: Setup csc.exe
       uses: yoavain/Setup-CSC@v4
 
