@@ -46,6 +46,7 @@ jobs:
     - name: Publish
       if: startsWith(github.ref, 'refs/tags/')
       uses: actions/npm@1.0.0
-      args: publish
-      with:
+      env:
         NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+        with:
+          args: publish
