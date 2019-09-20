@@ -48,5 +48,5 @@ jobs:
       uses: actions/npm@1.0.0
       env:
         NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
-        with:
-          args: publish
+      with:
+        args: publish
