@@ -32,6 +32,8 @@ jobs:
       run: npm install
       env:
         CI: true
+        NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+
 
     - name: Build
       run: npm run build
