@@ -17,7 +17,6 @@
     "start:test:javascript:skip-install": "rimraf test-out-js-noinst && npm run start -- test-out-js-noinst --verbose --skip-install",
     "start:test:typescript:skip-install": "rimraf test-out-ts-noinst && npm run start -- test-out-ts-noinst --verbose --typescript --skip-install",
     "package": "npm pack",
-    "publish": "npm publish",
     "build": "npm run compile && npm run package"
   },
   "repository": {
