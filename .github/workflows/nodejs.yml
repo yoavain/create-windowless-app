@@ -26,7 +26,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
 
     - name: Setup csc.exe
-      uses: yoavain/Setup-CSC@v4
+      uses: yoavain/Setup-CSC@v5
 
     - name: Dependencies Install
       run: npm install
