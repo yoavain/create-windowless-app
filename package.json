@@ -1,12 +1,13 @@
 {
   "name": "create-windowless-app",
-  "version": "0.2.3",
+  "version": "0.2.5",
   "description": "Create a windowless NodeJS app",
   "main": "dist/index.js",
   "bin": {
     "create-windowless-app": "./dist/index.js"
   },
   "scripts": {
+    "test": "jest",
     "compile": "rimraf dist && tsc",
     "start": "ts-node src/index.ts",
     "start:help": "npm run start -- --help",
@@ -17,7 +18,7 @@
     "start:test:javascript:skip-install": "rimraf test-out-js-noinst && npm run start -- test-out-js-noinst --verbose --skip-install",
     "start:test:typescript:skip-install": "rimraf test-out-ts-noinst && npm run start -- test-out-ts-noinst --verbose --typescript --skip-install",
     "package": "npm pack",
-    "build": "npm run compile && npm run package"
+    "build": "npm run test && npm run compile && npm run package"
   },
   "repository": {
     "type": "git",
@@ -50,9 +51,12 @@
     "@types/jest": "^24.x.x",
     "@types/node": "^12.x.x",
     "@types/request": "^2.x.x",
+    "@types/semver-compare": "^1.x.x",
     "global-npm": "^0.x.x",
     "jest": "^24.x.x",
     "rimraf": "^3.x.x",
+    "semver-compare": "^1.x.x",
+    "ts-jest": "^24.x.x",
     "ts-node": "^8.x.x",
     "typescript": "^3.x.x"
   },
