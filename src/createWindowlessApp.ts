@@ -8,6 +8,7 @@ import validateProjectName from 'validate-npm-package-name';
 import * as os from "os";
 import spawn from "cross-spawn";
 import request = require("request");
+import semverCompare from "semver-compare";
 
 const packageJsonFilename = "package.json";
 const packageJson = require(`../${packageJsonFilename}`);
@@ -134,12 +135,7 @@ function run(root: string, appName: string, verbose: boolean, originalDirectory:
             return install(root, devDependencies, verbose, true, skipInstall);
         })
         .then(() => {
-            if (nodeVersion) {
-                return checkNodeVersion(nodeVersion);
-            }
-            else {
-                return Promise.resolve(undefined);
-            }
+            return checkNodeVersion(nodeVersion);
         })
         .then((checkedNodeVersion: string) => {
             if (useTypescript) {
@@ -477,32 +473,58 @@ function mergeIntoPackageJson(root: string, field: string, data: any) {
     writeJson(packageJsonPath, packageJson);
 }
 
-function checkNodeVersion(nodeVersion: string): Promise<string> {
+export function checkNodeVersion(nodeVersion?: string): Promise<string> {
     return new Promise<string>(((resolve, reject) => {
+        const windowsPrefix: string = "windows-x64";
+        const windowsPrefixLength: number = windowsPrefix.length + 1;
         const options = {
             headers: {
                 'User-Agent': 'request'
             }
         };
         request.get("https://api.github.com/repos/nexe/nexe/releases/latest", options,  (error, response, body) => {
-            let split = nodeVersion.split(".");
-            const major: number = split.length > 0 && (Number(split[0]) || 0) || 0;
-            const minor: number = split.length > 1 && (Number(split[1]) || 0) || 0;
-            const patch: number = split.length > 2 && (Number(split[2]) || 0) || 0;
-            const lookupVersion = `windows-x64-${major}.${minor}.${patch}`;
 
             const result = body && JSON.parse(body);
             const assets = result && result.assets;
-            const windowsVersions = assets && assets.find(asset => asset.name === lookupVersion);
-            let nexeNodeVersion = windowsVersions && nodeVersion;
-            if (!nexeNodeVersion) {
-                console.log(`Can't find node version ${chalk.red(nodeVersion)} in nexe. Using latest`);
+
+            let nexeNodeVersion: string;
+            if (nodeVersion) {
+                // Find exact
+                let split = nodeVersion.split(".");
+                const major: number = split.length > 0 && (Number(split[0]) || 0) || 0;
+                const minor: number = split.length > 1 && (Number(split[1]) || 0) || 0;
+                const patch: number = split.length > 2 && (Number(split[2]) || 0) || 0;
+                const lookupVersion = `${windowsPrefix}-${major}.${minor}.${patch}`;
+
+                const windowsVersion = assets && assets.find(asset => asset.name === lookupVersion);
+                if (windowsVersion && windowsVersion.name) {
+                    nexeNodeVersion = windowsVersion.name;
+                    console.log(`Found version ${chalk.green(nodeVersion)} in nexe`);
+                }
+                else {
+                    console.log(`Can't find node version ${chalk.red(nodeVersion)} in nexe. Looking for latest nexe release`);
+                }
             }
+
+            if (!nexeNodeVersion) {
+                // Find latest
+                const windowsVersions = assets && assets.filter(asset => asset.name.startsWith(windowsPrefix)).map(asset => asset.name);
+                const latestWindowsVersion = windowsVersions && windowsVersions.reduce((acc, cur) => {
+                    let curSemVer: string = cur.substring(windowsPrefixLength);
+                    let accSemVer: string = acc.substring(windowsPrefixLength);
+                    acc = semverCompare(curSemVer, accSemVer) > 0 ? cur: acc;
+                    return acc;
+                }, `${windowsPrefix}-0.0.0`);
+
+                console.log(`Using latest nexe release: ${latestWindowsVersion}`);
+                nexeNodeVersion = latestWindowsVersion;
+            }
+
             resolve(nexeNodeVersion);
         })
     }))
 }
 
 function getNexeCommand(appName: string, nodeVersion: string) {
-    return nodeVersion ? `nexe -t ${nodeVersion} -o dist/${appName}.exe` : `nexe -o dist/${appName}.exe`;
+    return `nexe -t ${nodeVersion} -o dist/${appName}.exe`;
 }
