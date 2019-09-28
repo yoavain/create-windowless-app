@@ -3,20 +3,18 @@ using System.IO;
 using System.Diagnostics;
 using System.ComponentModel;
 
-namespace MyProcessSample
-{
-    class MyProcess
-    {
-        public static void Main(string[] args)
-        {
+namespace MyProcessSample {
+    class MyProcess {
+        public static void Main(string[] args) {
             // App Name
             const string AppName = "<APPNAME>";
 
-            try
-            {
-                using (Process myProcess = new Process())
-                {
+            try {
+                using (Process myProcess = new Process()) {
                     myProcess.StartInfo.FileName = Path.Combine(Environment.CurrentDirectory, AppName + ".exe");
+                    for (int i=0; i < args.Length; i++) {
+                        args[i] = "\"" + args[i] + "\"";
+                    }
                     myProcess.StartInfo.Arguments = String.Join(" ", args);
 
                     // Stop the process from opening a new window
@@ -25,8 +23,7 @@ namespace MyProcessSample
                     myProcess.Start();
                 }
             }
-            catch (Exception e)
-            {
+            catch (Exception e) {
                 Console.WriteLine(e.Message);
             }
         }
