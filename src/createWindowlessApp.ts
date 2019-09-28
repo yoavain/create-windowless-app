@@ -526,5 +526,5 @@ export function checkNodeVersion(nodeVersion?: string): Promise<string> {
 }
 
 function getNexeCommand(appName: string, nodeVersion: string) {
-    return nodeVersion ? `nexe -t ${nodeVersion} -o dist/${appName}.exe` : `nexe -o dist/${appName}.exe`;
+    return `nexe -t ${nodeVersion} -o dist/${appName}.exe`;
 }
