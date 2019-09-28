@@ -1,6 +1,6 @@
 {
   "name": "create-windowless-app",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "Create a windowless NodeJS app",
   "main": "dist/index.js",
   "bin": {
@@ -55,7 +55,6 @@
     "global-npm": "^0.x.x",
     "jest": "^24.x.x",
     "rimraf": "^3.x.x",
-    "semver-compare": "^1.x.x",
     "ts-jest": "^24.x.x",
     "ts-node": "^8.x.x",
     "typescript": "^3.x.x"
@@ -67,6 +66,7 @@
     "envinfo": "^7.x.x",
     "fs-extra": "^8.x.x",
     "request": "^2.x.x",
+    "semver-compare": "^1.x.x",
     "validate-npm-package-name": "^3.x.x"
   }
 }
