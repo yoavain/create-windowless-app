@@ -11,11 +11,15 @@ namespace MyProcessSample {
 
             try {
                 using (Process myProcess = new Process()) {
-                    myProcess.StartInfo.FileName = Path.Combine(Environment.CurrentDirectory, AppName + ".exe");
+                    myProcess.StartInfo.FileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, AppName + ".exe");
+
                     for (int i=0; i < args.Length; i++) {
                         args[i] = "\"" + args[i] + "\"";
                     }
                     myProcess.StartInfo.Arguments = String.Join(" ", args);
+
+                    // WorkingDirectory same as BaseDirectory
+					myProcess.StartInfo.WorkingDirectory = AppDomain.CurrentDomain.BaseDirectory;
 
                     // Stop the process from opening a new window
                     myProcess.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
