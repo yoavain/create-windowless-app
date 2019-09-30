@@ -10,7 +10,6 @@ import spawn from "cross-spawn";
 import semverCompare from "semver-compare";
 import inquirer from "inquirer";
 import request = require("request");
-import validateNpmPackageName from "validate-npm-package-name";
 
 const packageJsonFilename = "package.json";
 const packageJson = require(`../${packageJsonFilename}`);
@@ -54,10 +53,10 @@ function interactiveMode(): Promise<ProgramConfig> {
             message: "Project Name:",
             name: "projectName",
             validate: value => {
-                let result = validateNpmPackageName(value);
+                let result = validateProjectName(value);
                 return result.validForNewPackages ||
-                    (validateNpmPackageName(value).errors && validateNpmPackageName(value).errors[0]) ||
-                    (validateNpmPackageName(value).warnings && validateNpmPackageName(value).warnings[0]) ||
+                    (validateProjectName(value).errors && validateProjectName(value).errors[0]) ||
+                    (validateProjectName(value).warnings && validateProjectName(value).warnings[0]) ||
                     "Invalid project name";
             }
         },
@@ -92,15 +91,11 @@ function interactiveMode(): Promise<ProgramConfig> {
     ]);
 }
 
-function validateInput(programConfig, program) {
+function validateInput(programConfig: ProgramConfig, program: Command) {
     if (!programConfig.projectName || typeof programConfig.projectName === 'undefined') {
-        console.error('Please specify the project directory:');
-        console.log(`  ${chalk.cyan(program.name())} ${chalk.green('<project-directory>')}`);
+        console.error(`${chalk.red('Missing project name')}`);
         console.log();
-        console.log('For example:');
-        console.log(`  ${chalk.cyan(program.name())} ${chalk.green('my-windowless-app')}`);
-        console.log();
-        console.log(`Run ${chalk.cyan(`${program.name()} --help`)} to see all options.`);
+        program.outputHelp();
         process.exit(1);
     }
 
