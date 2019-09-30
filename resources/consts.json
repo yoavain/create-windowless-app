@@ -9,7 +9,9 @@
     "webpack",
     "webpack-cli",
     "copy-webpack-plugin",
-    "clean-webpack-plugin"
+    "clean-webpack-plugin",
+    "husky",
+    "cross-spawn"
   ],
   "tsDevDependencies": [
     "@types/jest",
@@ -17,7 +19,8 @@
     "@types/node-notifier",
     "@types/winston",
     "ts-node",
-    "typescript"
+    "typescript",
+    "@types/cross-spawn"
   ],
   "errorLogFilePatterns": [
     "npm-debug.log"

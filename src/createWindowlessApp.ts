@@ -9,6 +9,7 @@ import * as os from "os";
 import spawn from "cross-spawn";
 import semverCompare from "semver-compare";
 import inquirer from "inquirer";
+import { compileLauncher } from "../templates/typescript/src/launcherCompiler";
 import request = require("request");
 
 const packageJsonFilename = "package.json";
@@ -22,14 +23,17 @@ const WebpackConfigFilename = "webpack.config.js";
 const tsWebpackConfigResourceLocation = `../templates/typescript/${WebpackConfigFilename}`;
 const tsConfigResourceLocation = `../templates/typescript/${tsConfigFilename}`;
 const tsIndexResourceLocation = "../templates/typescript/src/index.ts";
+const tsLauncherCompilerLocation = "../templates/typescript/src/launcherCompiler.ts";
 
 // JavaScript
 const jsWebpackConfigResourceLocation = `../templates/javascript/${WebpackConfigFilename}`;
 const jsIndexResourceLocation = "../templates/javascript/src/index.js";
+const jsLauncherCompilerLocation = "../templates/javascript/src/launcherCompiler.js";
 
 // Launcher Source
 const launcherSrcResourceLocation = "../templates/common/src/launcher.cs";
 const launcherSrcModifiedLocation = "launcher-dist/launcher.cs";
+
 
 // Default icon location
 const defaultLauncherIconLocation = "../templates/common/resources/windows-launcher.ico";
@@ -314,6 +318,7 @@ function buildTypeScriptProject(root: string, appName: string, nodeVersion: stri
         writeFile(path.resolve(root, WebpackConfigFilename), replaceAppNamePlaceholder(readResource(tsWebpackConfigResourceLocation), appName));
         fs.ensureDirSync(path.resolve(root, "src"));
         writeFile(path.resolve(root, "src", "index.ts"), replaceAppNamePlaceholder(readResource(tsIndexResourceLocation), appName));
+        writeFile(path.resolve(root, "launcher-dist", "launcherCompiler.ts"), readResource(tsLauncherCompilerLocation));
 
         // Add scripts
         const scripts: { [key: string]: string } = {
@@ -336,6 +341,8 @@ function buildJavaScriptProject(root: string, appName: string, nodeVersion: stri
         writeFile(path.resolve(root, WebpackConfigFilename), replaceAppNamePlaceholder(readResource(jsWebpackConfigResourceLocation), appName));
         fs.ensureDirSync(path.resolve(root, "src"));
         writeFile(path.resolve(root, "src", "index.js"), replaceAppNamePlaceholder(readResource(jsIndexResourceLocation), appName));
+        writeFile(path.resolve(root, "launcher-dist", "launcherCompiler.js"), readResource(jsLauncherCompilerLocation));
+
         // Add scripts
         const scripts: { [key: string]: string } = {
             "start": "node src/index.js",
@@ -348,38 +355,28 @@ function buildJavaScriptProject(root: string, appName: string, nodeVersion: stri
     })
 }
 
-function buildLauncher(root: string, appName: string, icon: string): Promise<void> {
-    return new Promise(((resolve, reject) => {
-        console.log(`Building project ${chalk.green("launcher")}.`);
-        console.log();
+export function buildLauncher(root: string, appName: string, icon: string): Promise<void> {
+    console.log(`Building project ${chalk.green("launcher")}.`);
+    console.log();
 
-        fs.ensureDirSync(path.resolve("launcher-dist"));
-        writeFile(path.resolve(launcherSrcModifiedLocation), replaceAppNamePlaceholder(readResource(launcherSrcResourceLocation), appName));
-        const command = 'csc.exe';
+    fs.ensureDirSync(path.resolve("launcher-dist"));
+    writeFile(path.resolve(launcherSrcModifiedLocation), replaceAppNamePlaceholder(readResource(launcherSrcResourceLocation), appName));
 
-        // Resolve icon
-        let iconLocation: string;
-        if (icon) {
-            iconLocation = path.resolve(icon);
-            console.log(`Building launcher with icon: ${chalk.green(icon)}.`);
-        }
-        else {
-            iconLocation = path.resolve(__dirname, defaultLauncherIconLocation);
-            console.log(`Building launcher with ${chalk.green("default")} icon.`);
-        }
+    // Resolve icon
+    let iconLocation: string;
+    if (icon) {
+        iconLocation = path.resolve(icon);
+        console.log(`Building launcher with icon: ${chalk.green(icon)}.`);
+    }
+    else {
+        iconLocation = path.resolve(__dirname, defaultLauncherIconLocation);
+        console.log(`Building launcher with ${chalk.green("default")} icon.`);
+    }
 
-        let args = ["/t:winexe", `/out:${path.resolve(root, "resources", "bin", `${appName}-launcher.exe`)}`, `/win32icon:${iconLocation}`, `${launcherSrcModifiedLocation}`];
-        const child = spawn(command, args, { stdio: 'inherit' });
-        child.on('close', code => {
-            if (code !== 0) {
-                reject({
-                    command: `${command} ${args.join(' ')}`,
-                });
-                return;
-            }
-            resolve();
-        });
-    }))
+    // Compiled file location
+    const outputLocation: string = path.resolve(root, "resources", "bin", `${appName}-launcher.exe`);
+
+    return compileLauncher(launcherSrcModifiedLocation, iconLocation, outputLocation);
 }
 
 function checkAppName(appName) {
