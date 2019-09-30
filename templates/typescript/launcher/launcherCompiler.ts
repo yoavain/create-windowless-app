@@ -12,7 +12,7 @@ export function checkCscInPath(): Promise<boolean> {
         });
 }
 
-export function compileLauncher(sourceLocation: string, iconLocation: string, outputLocation: string): Promise<void> {
+export function compileLauncher(sourceLocation: string, outputLocation: string, iconLocation: string): Promise<void> {
     return new Promise(((resolve, reject) => {
         const command: string = 'csc.exe';
         const args: string[] = ["/t:winexe", `/out:${outputLocation}`, `/win32icon:${iconLocation}`, `${sourceLocation}`];

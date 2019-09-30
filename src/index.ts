@@ -3,7 +3,7 @@
 'use strict';
 
 import { createWindowlessApp } from './createWindowlessApp';
-import { checkCscInPath } from "../templates/typescript/src/launcherCompiler";
+import { checkCscInPath } from "../templates/typescript/launcher/launcherCompiler";
 
 const currentNodeVersion: string = process.versions.node;
 const semver: string[] = currentNodeVersion.split('.');

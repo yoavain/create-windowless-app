@@ -9,7 +9,7 @@ import * as os from "os";
 import spawn from "cross-spawn";
 import semverCompare from "semver-compare";
 import inquirer from "inquirer";
-import { compileLauncher } from "../templates/typescript/src/launcherCompiler";
+import { compileLauncher } from "../templates/typescript/launcher/launcherCompiler";
 import request = require("request");
 
 const packageJsonFilename = "package.json";
@@ -23,17 +23,18 @@ const WebpackConfigFilename = "webpack.config.js";
 const tsWebpackConfigResourceLocation = `../templates/typescript/${WebpackConfigFilename}`;
 const tsConfigResourceLocation = `../templates/typescript/${tsConfigFilename}`;
 const tsIndexResourceLocation = "../templates/typescript/src/index.ts";
-const tsLauncherCompilerLocation = "../templates/typescript/src/launcherCompiler.ts";
+const tsLauncherCompilerLocation = "../templates/typescript/launcher/launcherCompiler.ts";
+const tsLauncherCompilerRunLocation = "../templates/typescript/launcher/launcherCompilerRun.ts";
 
 // JavaScript
 const jsWebpackConfigResourceLocation = `../templates/javascript/${WebpackConfigFilename}`;
 const jsIndexResourceLocation = "../templates/javascript/src/index.js";
-const jsLauncherCompilerLocation = "../templates/javascript/src/launcherCompiler.js";
+const jsLauncherCompilerLocation = "../templates/javascript/launcher/launcherCompiler.js";
+const jsLauncherCompilerRunLocation = "../templates/javascript/launcher/launcherCompilerRun.js";
 
 // Launcher Source
 const launcherSrcResourceLocation = "../templates/common/src/launcher.cs";
-const launcherSrcModifiedLocation = "launcher-dist/launcher.cs";
-
+const launcherSrcModifiedLocation = "launcher/launcher.cs";
 
 // Default icon location
 const defaultLauncherIconLocation = "../templates/common/resources/windows-launcher.ico";
@@ -230,7 +231,7 @@ function run(root: string, appName: string, originalDirectory: string, programCo
         .then(() => {
             // Launcher
             fs.ensureDirSync(path.resolve(root, "resources", "bin"));
-            return buildLauncher(root, appName, icon);
+            return buildLauncher(root, appName, icon, typescript);
         })
         .then(() => console.log("Done"))
         .catch(reason => {
@@ -318,7 +319,6 @@ function buildTypeScriptProject(root: string, appName: string, nodeVersion: stri
         writeFile(path.resolve(root, WebpackConfigFilename), replaceAppNamePlaceholder(readResource(tsWebpackConfigResourceLocation), appName));
         fs.ensureDirSync(path.resolve(root, "src"));
         writeFile(path.resolve(root, "src", "index.ts"), replaceAppNamePlaceholder(readResource(tsIndexResourceLocation), appName));
-        writeFile(path.resolve(root, "launcher-dist", "launcherCompiler.ts"), readResource(tsLauncherCompilerLocation));
 
         // Add scripts
         const scripts: { [key: string]: string } = {
@@ -326,9 +326,19 @@ function buildTypeScriptProject(root: string, appName: string, nodeVersion: stri
             "tsc": "tsc",
             "webpack": "webpack",
             "nexe": getNexeCommand(appName, nodeVersion),
-            "build": "npm run tsc && npm run webpack && npm run nexe"
+            "build": "npm run tsc && npm run webpack && npm run nexe",
+            "rebuild-launcher": `ts-node launcher/launcherCompilerRun.ts -- launcher/launcher.cs resources/bin/${appName}-launcher.exe`
         };
         mergeIntoPackageJson(root, "scripts", scripts);
+
+        // Add husky
+        const husky = {
+            hooks: {
+                "pre-commit": `git diff HEAD --exit-code --stat launcher.cs || npm run rebuild-launcher && git add resources/bin/${appName}-launcher.exe`
+            }
+        };
+        mergeIntoPackageJson(root, "husky", husky);
+
         resolve();
     })
 }
@@ -341,26 +351,43 @@ function buildJavaScriptProject(root: string, appName: string, nodeVersion: stri
         writeFile(path.resolve(root, WebpackConfigFilename), replaceAppNamePlaceholder(readResource(jsWebpackConfigResourceLocation), appName));
         fs.ensureDirSync(path.resolve(root, "src"));
         writeFile(path.resolve(root, "src", "index.js"), replaceAppNamePlaceholder(readResource(jsIndexResourceLocation), appName));
-        writeFile(path.resolve(root, "launcher-dist", "launcherCompiler.js"), readResource(jsLauncherCompilerLocation));
 
         // Add scripts
         const scripts: { [key: string]: string } = {
             "start": "node src/index.js",
             "webpack": "webpack",
             "nexe": getNexeCommand(appName, nodeVersion),
-            "build": "npm run webpack && npm run nexe"
+            "build": "npm run webpack && npm run nexe",
+            "rebuild-launcher": `node launcher/launcherCompilerRun.ts -- launcher/launcher.cs resources/bin/${appName}-launcher.exe`
         };
         mergeIntoPackageJson(root, "scripts", scripts);
+
+        // Add husky
+        const husky = {
+            hooks: {
+                "pre-commit": `git diff HEAD --exit-code --stat launcher.cs || npm run rebuild-launcher && git add resources/bin/${appName}-launcher.exe`
+            }
+        };
+        mergeIntoPackageJson(root, "husky", husky);
+
         resolve();
     })
 }
 
-export function buildLauncher(root: string, appName: string, icon: string): Promise<void> {
+export function buildLauncher(root: string, appName: string, icon: string, typescript: boolean): Promise<void> {
     console.log(`Building project ${chalk.green("launcher")}.`);
     console.log();
 
-    fs.ensureDirSync(path.resolve("launcher-dist"));
+    fs.ensureDirSync(path.resolve("launcher"));
     writeFile(path.resolve(launcherSrcModifiedLocation), replaceAppNamePlaceholder(readResource(launcherSrcResourceLocation), appName));
+    if (typescript) {
+        writeFile(path.resolve(root, "launcher", "launcherCompiler.ts"), readResource(tsLauncherCompilerLocation));
+        writeFile(path.resolve(root, "launcher", "launcherCompilerRun.ts"), readResource(tsLauncherCompilerRunLocation));
+    }
+    else {
+        writeFile(path.resolve(root, "launcher", "launcherCompiler.js"), readResource(jsLauncherCompilerLocation));
+        writeFile(path.resolve(root, "launcher", "launcherCompilerRun.js"), readResource(jsLauncherCompilerRunLocation));
+    }
 
     // Resolve icon
     let iconLocation: string;
@@ -376,7 +403,7 @@ export function buildLauncher(root: string, appName: string, icon: string): Prom
     // Compiled file location
     const outputLocation: string = path.resolve(root, "resources", "bin", `${appName}-launcher.exe`);
 
-    return compileLauncher(launcherSrcModifiedLocation, iconLocation, outputLocation);
+    return compileLauncher(launcherSrcModifiedLocation, outputLocation, iconLocation);
 }
 
 function checkAppName(appName) {
@@ -540,7 +567,7 @@ function mergeIntoPackageJson(root: string, field: string, data: any) {
         packageJson[field] = Object.keys(list);
     }
     else {
-        packageJson[field] = Object.assign(packageJson.scripts || {}, data);
+        packageJson[field] = Object.assign(packageJson[field] || {}, data);
     }
     writeJson(packageJsonPath, packageJson);
 }
