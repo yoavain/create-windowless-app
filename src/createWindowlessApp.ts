@@ -7,8 +7,10 @@ import * as fs from "fs-extra";
 import validateProjectName from 'validate-npm-package-name';
 import * as os from "os";
 import spawn from "cross-spawn";
-import request = require("request");
 import semverCompare from "semver-compare";
+import inquirer from "inquirer";
+import request = require("request");
+import validateNpmPackageName from "validate-npm-package-name";
 
 const packageJsonFilename = "package.json";
 const packageJson = require(`../${packageJsonFilename}`);
@@ -36,7 +38,74 @@ const defaultLauncherIconLocation = "../templates/common/resources/windows-launc
 // These files should be allowed to remain on a failed install, but then silently removed during the next create.
 const errorLogFilePatterns = consts.errorLogFilePatterns;
 
-export function createWindowlessApp(): Promise<void> {
+type ProgramConfig = {
+    projectName: string
+    icon?: string
+    typescript: boolean
+    skipInstall: boolean
+    nodeVersion: string
+    verbose: boolean
+}
+
+function interactiveMode(): Promise<ProgramConfig> {
+    return inquirer.prompt([
+        {
+            type: "input",
+            message: "Project Name:",
+            name: "projectName",
+            validate: value => {
+                let result = validateNpmPackageName(value);
+                return result.validForNewPackages ||
+                    (validateNpmPackageName(value).errors && validateNpmPackageName(value).errors[0]) ||
+                    (validateNpmPackageName(value).warnings && validateNpmPackageName(value).warnings[0]) ||
+                    "Invalid project name";
+            }
+        },
+        {
+            type: "input",
+            message: "Icon:",
+            name: "icon"
+        },
+        {
+            type: "confirm",
+            message: "TypeScript:",
+            name: "typescript",
+            default: true
+        },
+        {
+            type: "confirm",
+            message: "Skip Install:",
+            name: "skipInstall",
+            default: false
+        },
+        {
+            type: "input",
+            message: "Node Version:",
+            name: "nodeVersion"
+        },
+        {
+            type: "confirm",
+            message: "Verbose:",
+            name: "verbose",
+            default: false
+        }
+    ]);
+}
+
+function validateInput(programConfig, program) {
+    if (!programConfig.projectName || typeof programConfig.projectName === 'undefined') {
+        console.error('Please specify the project directory:');
+        console.log(`  ${chalk.cyan(program.name())} ${chalk.green('<project-directory>')}`);
+        console.log();
+        console.log('For example:');
+        console.log(`  ${chalk.cyan(program.name())} ${chalk.green('my-windowless-app')}`);
+        console.log();
+        console.log(`Run ${chalk.cyan(`${program.name()} --help`)} to see all options.`);
+        process.exit(1);
+    }
+}
+
+export async function createWindowlessApp(): Promise<void> {
     let projectName: string = undefined;
 
     const program: Command = new commander.Command(packageJson.name)
@@ -48,6 +117,7 @@ export function createWindowlessApp(): Promise<void> {
         })
         .option('--verbose', 'print additional logs')
         .option('--info', 'print environment debug info')
+        .option('--interactive', 'interactive mode')
         .option('--typescript')
         .option('--skip-install', 'write dependencies to package.json without installing')
         .option('--icon <icon>', 'override default launcher icon file')
@@ -79,21 +149,29 @@ export function createWindowlessApp(): Promise<void> {
             .then(console.log);
     }
 
-    if (typeof projectName === 'undefined') {
-        console.error('Please specify the project directory:');
-        console.log(`  ${chalk.cyan(program.name())} ${chalk.green('<project-directory>')}`);
-        console.log();
-        console.log('For example:');
-        console.log(`  ${chalk.cyan(program.name())} ${chalk.green('my-windowless-app')}`);
-        console.log();
-        console.log(`Run ${chalk.cyan(`${program.name()} --help`)} to see all options.`);
-        process.exit(1);
+    let programConfig: ProgramConfig;
+    if (program.interactive) {
+        programConfig = await interactiveMode();
+        console.log(JSON.stringify(programConfig));
+    }
+    else {
+        programConfig = {
+            projectName,
+            verbose: program.verbose,
+            typescript: program.typescript,
+            skipInstall: program.skipInstall,
+            icon: program.icon,
+            nodeVersion: program.nodeVersion
+        };
     }
 
-    return createApp(projectName, program.verbose, program.typescript, program.skipInstall, program.icon, program.nodeVersion);
+    validateInput(programConfig, program);
+
+    return createApp(programConfig);
 }
 
-function createApp(name: string, verbose: boolean, useTypescript: boolean, skipInstall: boolean, icon: string, nodeVersion: string) {
+function createApp(programConfig: ProgramConfig) {
+    const { projectName: name, verbose, typescript: useTypescript, skipInstall, icon,nodeVersion} = programConfig;
     const root = path.resolve(name);
     const appName = path.basename(root);
 
