@@ -7,8 +7,9 @@ import * as fs from "fs-extra";
 import validateProjectName from 'validate-npm-package-name';
 import * as os from "os";
 import spawn from "cross-spawn";
-import request = require("request");
 import semverCompare from "semver-compare";
+import inquirer from "inquirer";
+import request = require("request");
 
 const packageJsonFilename = "package.json";
 const packageJson = require(`../${packageJsonFilename}`);
@@ -36,7 +37,75 @@ const defaultLauncherIconLocation = "../templates/common/resources/windows-launc
 // These files should be allowed to remain on a failed install, but then silently removed during the next create.
 const errorLogFilePatterns = consts.errorLogFilePatterns;
 
-export function createWindowlessApp(): Promise<void> {
+type ProgramConfig = {
+    projectName: string
+    icon?: string
+    typescript: boolean
+    skipInstall: boolean
+    nodeVersion: string
+    verbose: boolean
+}
+
+function interactiveMode(): Promise<ProgramConfig> {
+    return inquirer.prompt([
+        {
+            type: "input",
+            message: "Project Name:",
+            name: "projectName",
+            validate: value => {
+                let result = validateProjectName(value);
+                return result.validForNewPackages ||
+                    (validateProjectName(value).errors && validateProjectName(value).errors[0]) ||
+                    (validateProjectName(value).warnings && validateProjectName(value).warnings[0]) ||
+                    "Invalid project name";
+            }
+        },
+        {
+            type: "input",
+            message: "Icon:",
+            name: "icon"
+        },
+        {
+            type: "confirm",
+            message: "TypeScript:",
+            name: "typescript",
+            default: true
+        },
+        {
+            type: "confirm",
+            message: "Skip Install:",
+            name: "skipInstall",
+            default: false
+        },
+        {
+            type: "input",
+            message: "Node Version:",
+            name: "nodeVersion"
+        },
+        {
+            type: "confirm",
+            message: "Verbose:",
+            name: "verbose",
+            default: false
+        }
+    ]);
+}
+
+function validateInput(programConfig: ProgramConfig, program: Command) {
+    if (!programConfig.projectName || typeof programConfig.projectName === 'undefined') {
+        console.error(`${chalk.red('Missing project name')}`);
+        console.log();
+        program.outputHelp();
+        process.exit(1);
+    }
+
+    if (programConfig.icon && !fs.pathExistsSync(programConfig.icon)) {
+        console.log(`Cannot find icon in ${chalk.red(programConfig.icon)}. Switching to ${chalk.green("default")} icon.`);
+        programConfig.icon = undefined;
+    }
+}
+
+export async function createWindowlessApp(): Promise<void> {
     let projectName: string = undefined;
 
     const program: Command = new commander.Command(packageJson.name)
@@ -48,6 +117,7 @@ export function createWindowlessApp(): Promise<void> {
         })
         .option('--verbose', 'print additional logs')
         .option('--info', 'print environment debug info')
+        .option('--interactive', 'interactive mode')
         .option('--typescript')
         .option('--skip-install', 'write dependencies to package.json without installing')
         .option('--icon <icon>', 'override default launcher icon file')
@@ -79,27 +149,34 @@ export function createWindowlessApp(): Promise<void> {
             .then(console.log);
     }
 
-    if (typeof projectName === 'undefined') {
-        console.error('Please specify the project directory:');
-        console.log(`  ${chalk.cyan(program.name())} ${chalk.green('<project-directory>')}`);
-        console.log();
-        console.log('For example:');
-        console.log(`  ${chalk.cyan(program.name())} ${chalk.green('my-windowless-app')}`);
-        console.log();
-        console.log(`Run ${chalk.cyan(`${program.name()} --help`)} to see all options.`);
-        process.exit(1);
+    let programConfig: ProgramConfig;
+    if (program.interactive) {
+        programConfig = await interactiveMode();
+    }
+    else {
+        programConfig = {
+            projectName,
+            verbose: program.verbose,
+            typescript: program.typescript,
+            skipInstall: program.skipInstall,
+            icon: program.icon,
+            nodeVersion: program.nodeVersion
+        };
     }
 
-    return createApp(projectName, program.verbose, program.typescript, program.skipInstall, program.icon, program.nodeVersion);
+    validateInput(programConfig, program);
+
+    return createApp(programConfig);
 }
 
-function createApp(name: string, verbose: boolean, useTypescript: boolean, skipInstall: boolean, icon: string, nodeVersion: string) {
-    const root = path.resolve(name);
+function createApp(programConfig: ProgramConfig) {
+    const { projectName } = programConfig;
+    const root = path.resolve(projectName);
     const appName = path.basename(root);
 
     checkAppName(appName);
-    fs.ensureDirSync(name);
-    if (!isSafeToCreateProjectIn(root, name)) {
+    fs.ensureDirSync(projectName);
+    if (!isSafeToCreateProjectIn(root, projectName)) {
         process.exit(1);
     }
 
@@ -120,25 +197,26 @@ function createApp(name: string, verbose: boolean, useTypescript: boolean, skipI
         process.exit(1);
     }
 
-    return run(root, appName, verbose, originalDirectory, useTypescript, skipInstall, icon, nodeVersion);
+    return run(root, appName, originalDirectory, programConfig);
 }
 
-function run(root: string, appName: string, verbose: boolean, originalDirectory: string, useTypescript: boolean, skipInstall: boolean, icon: string, nodeVersion: string): Promise<void> {
+function run(root: string, appName: string, originalDirectory: string, programConfig: ProgramConfig): Promise<void> {
+    const { typescript, icon, nodeVersion } = programConfig;
     const dependencies = [...consts.dependencies];
     const devDependencies = [...consts.devDependencies];
-    if (useTypescript) {
+    if (typescript) {
         devDependencies.push(...consts.tsDevDependencies);
     }
 
-    return install(root, dependencies, verbose, false, skipInstall)
+    return install(root, dependencies, false, programConfig)
         .then(() => {
-            return install(root, devDependencies, verbose, true, skipInstall);
+            return install(root, devDependencies, true, programConfig);
         })
         .then(() => {
             return checkNodeVersion(nodeVersion);
         })
         .then((checkedNodeVersion: string) => {
-            if (useTypescript) {
+            if (typescript) {
                 return buildTypeScriptProject(root, appName, checkedNodeVersion);
             }
             else {
@@ -189,7 +267,8 @@ function run(root: string, appName: string, verbose: boolean, originalDirectory:
         });
 }
 
-function install(root: string, dependencies: string[], verbose: boolean, isDev: boolean, skipInstall: boolean): Promise<void> {
+function install(root: string, dependencies: string[], isDev: boolean, programConfig: ProgramConfig): Promise<void> {
+    const { verbose, skipInstall } = programConfig;
     return new Promise((resolve, reject) => {
         const command = 'npm';
         let args = ['install', isDev ? '--save-dev' : '--save', '--save-exact', '--loglevel', 'error'].concat(dependencies);
@@ -279,17 +358,13 @@ function buildLauncher(root: string, appName: string, icon: string): Promise<voi
         const command = 'csc.exe';
 
         // Resolve icon
-        let iconLocation = path.resolve(__dirname, defaultLauncherIconLocation);
+        let iconLocation: string;
         if (icon) {
-            if (fs.pathExistsSync(icon)) {
-                iconLocation = path.resolve(icon);
-                console.log(`Building launcher with icon: ${chalk.green(icon)}.`);
-            }
-            else {
-                console.log(`Cannot find icon in ${chalk.red(icon)}. Building launcher with ${chalk.green("default")} icon.`);
-            }
+            iconLocation = path.resolve(icon);
+            console.log(`Building launcher with icon: ${chalk.green(icon)}.`);
         }
         else {
+            iconLocation = path.resolve(__dirname, defaultLauncherIconLocation);
             console.log(`Building launcher with ${chalk.green("default")} icon.`);
         }
 
