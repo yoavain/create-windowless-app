@@ -11,6 +11,7 @@ import semver from "semver";
 import semverCompare from "semver-compare";
 import inquirer from "inquirer";
 import { compileLauncher } from "../templates/typescript/launcher/launcherCompiler";
+import { PathLike } from "fs";
 import request = require("request");
 
 const packageJsonFilename = "package.json";
@@ -194,7 +195,7 @@ function createApp(programConfig: ProgramConfig) {
         private: true,
         main: "_build/index.js"
     };
-    fs.writeFileSync(path.join(root, 'package.json'), JSON.stringify(packageJson, null, 2) + os.EOL);
+    writeJson(path.join(root, 'package.json'), packageJson);
 
     const originalDirectory = process.cwd();
     process.chdir(root);
@@ -328,7 +329,7 @@ function buildTypeScriptProject(root: string, appName: string, nodeVersion: stri
             "nexe": getNexeCommand(appName, nodeVersion),
             "build": "npm run tsc && npm run webpack && npm run nexe",
             "check-csc": "ts-node -e \"require(\"\"./launcher/launcherCompiler\"\").checkCscInPath(true)\"",
-            "rebuild-launcher": `csc /t:winexe /out:resources/bin/${appName}-launcher.exe launcher/launcher.cs`
+            "rebuild-launcher": `csc /t:winexe /out:resources/bin/${appName}-launcher.exe /win32icon:launcher/launcher.ico launcher/launcher.cs`
         };
         mergeIntoPackageJson(root, "scripts", scripts);
 
@@ -360,7 +361,7 @@ function buildJavaScriptProject(root: string, appName: string, nodeVersion: stri
             "nexe": getNexeCommand(appName, nodeVersion),
             "build": "npm run webpack && npm run nexe",
             "check-csc": "node -e \"require(\"\"./launcher/launcherCompiler\"\").checkCscInPath(true)\"",
-            "rebuild-launcher": `csc /t:winexe /out:resources/bin/${appName}-launcher.exe launcher/launcher.cs`
+            "rebuild-launcher": `csc /t:winexe /out:resources/bin/${appName}-launcher.exe /win32icon:launcher/launcher.ico launcher/launcher.cs`
         };
         mergeIntoPackageJson(root, "scripts", scripts);
 
@@ -383,10 +384,10 @@ export function buildLauncher(root: string, appName: string, icon: string, types
     fs.ensureDirSync(path.resolve("launcher"));
     writeFile(path.resolve(launcherSrcModifiedLocation), replaceAppNamePlaceholder(readResource(launcherSrcResourceLocation), appName));
     if (typescript) {
-        writeFile(path.resolve(root, "launcher", "launcherCompiler.ts"), readResource(tsLauncherCompilerLocation));
+        copyFile(tsLauncherCompilerLocation, path.resolve(root, "launcher", "launcherCompiler.ts"));
     }
     else {
-        writeFile(path.resolve(root, "launcher", "launcherCompiler.js"), readResource(jsLauncherCompilerLocation));
+        copyFile(jsLauncherCompilerLocation, path.resolve(root, "launcher", "launcherCompiler.js"));
     }
 
     // Resolve icon
@@ -399,6 +400,7 @@ export function buildLauncher(root: string, appName: string, icon: string, types
         iconLocation = path.resolve(__dirname, defaultLauncherIconLocation);
         console.log(`Building launcher with ${chalk.green("default")} icon.`);
     }
+    copyFile(iconLocation, path.resolve(root, "launcher", "launcher.ico"));
 
     // Compiled file location
     const outputLocation: string = path.resolve(root, "resources", "bin", `${appName}-launcher.exe`);
@@ -553,6 +555,10 @@ function writeJson(fileName: string, object) {
 
 function writeFile(fileName: string, data: string) {
     fs.writeFileSync(fileName, data.replace(/\r/g, "").replace(/\n/g, os.EOL));
+}
+
+function copyFile(source: PathLike, destination: PathLike) {
+    fs.copyFileSync(source, destination);
 }
 
 
