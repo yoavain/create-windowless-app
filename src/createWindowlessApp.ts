@@ -7,6 +7,7 @@ import * as fs from "fs-extra";
 import validateProjectName from 'validate-npm-package-name';
 import * as os from "os";
 import spawn from "cross-spawn";
+import semver from "semver";
 import semverCompare from "semver-compare";
 import inquirer from "inquirer";
 import { compileLauncher } from "../templates/typescript/launcher/launcherCompiler";
@@ -24,13 +25,11 @@ const tsWebpackConfigResourceLocation = `../templates/typescript/${WebpackConfig
 const tsConfigResourceLocation = `../templates/typescript/${tsConfigFilename}`;
 const tsIndexResourceLocation = "../templates/typescript/src/index.ts";
 const tsLauncherCompilerLocation = "../templates/typescript/launcher/launcherCompiler.ts";
-const tsLauncherCompilerRunLocation = "../templates/typescript/launcher/launcherCompilerRun.ts";
 
 // JavaScript
 const jsWebpackConfigResourceLocation = `../templates/javascript/${WebpackConfigFilename}`;
 const jsIndexResourceLocation = "../templates/javascript/src/index.js";
 const jsLauncherCompilerLocation = "../templates/javascript/launcher/launcherCompiler.js";
-const jsLauncherCompilerRunLocation = "../templates/javascript/launcher/launcherCompilerRun.js";
 
 // Launcher Source
 const launcherSrcResourceLocation = "../templates/common/src/launcher.cs";
@@ -85,7 +84,8 @@ function interactiveMode(): Promise<ProgramConfig> {
         {
             type: "input",
             message: "Node Version:",
-            name: "nodeVersion"
+            name: "nodeVersion",
+            validate: value => !value || !!semver.valid(value) || "Invalid node version"
         },
         {
             type: "confirm",
@@ -327,14 +327,15 @@ function buildTypeScriptProject(root: string, appName: string, nodeVersion: stri
             "webpack": "webpack",
             "nexe": getNexeCommand(appName, nodeVersion),
             "build": "npm run tsc && npm run webpack && npm run nexe",
-            "rebuild-launcher": `ts-node launcher/launcherCompilerRun.ts -- launcher/launcher.cs resources/bin/${appName}-launcher.exe`
+            "check-csc": "node -e \"require(\\\"./launcher/launcherCompiler\\\").checkCscInPath(true)\"",
+            "rebuild-launcher": `csc /t:winexe /out:resources/bin/${appName}-launcher.exe launcher/launcher.cs`
         };
         mergeIntoPackageJson(root, "scripts", scripts);
 
         // Add husky
         const husky = {
             hooks: {
-                "pre-commit": `git diff HEAD --exit-code --stat launcher.cs || npm run rebuild-launcher && git add resources/bin/${appName}-launcher.exe`
+                "pre-commit": `git diff HEAD --exit-code --stat launcher.cs || npm run check-csc && npm run rebuild-launcher && git add resources/bin/${appName}-launcher.exe`
             }
         };
         mergeIntoPackageJson(root, "husky", husky);
@@ -358,14 +359,15 @@ function buildJavaScriptProject(root: string, appName: string, nodeVersion: stri
             "webpack": "webpack",
             "nexe": getNexeCommand(appName, nodeVersion),
             "build": "npm run webpack && npm run nexe",
-            "rebuild-launcher": `node launcher/launcherCompilerRun.ts -- launcher/launcher.cs resources/bin/${appName}-launcher.exe`
+            "check-csc": "node -e \"require(\\\"./launcher/launcherCompiler\\\").checkCscInPath(true)\"",
+            "rebuild-launcher": `csc /t:winexe /out:resources/bin/${appName}-launcher.exe launcher/launcher.cs`
         };
         mergeIntoPackageJson(root, "scripts", scripts);
 
         // Add husky
         const husky = {
             hooks: {
-                "pre-commit": `git diff HEAD --exit-code --stat launcher.cs || npm run rebuild-launcher && git add resources/bin/${appName}-launcher.exe`
+                "pre-commit": `git diff HEAD --exit-code --stat launcher.cs || npm run check-csc && npm run rebuild-launcher && git add resources/bin/${appName}-launcher.exe`
             }
         };
         mergeIntoPackageJson(root, "husky", husky);
@@ -382,11 +384,9 @@ export function buildLauncher(root: string, appName: string, icon: string, types
     writeFile(path.resolve(launcherSrcModifiedLocation), replaceAppNamePlaceholder(readResource(launcherSrcResourceLocation), appName));
     if (typescript) {
         writeFile(path.resolve(root, "launcher", "launcherCompiler.ts"), readResource(tsLauncherCompilerLocation));
-        writeFile(path.resolve(root, "launcher", "launcherCompilerRun.ts"), readResource(tsLauncherCompilerRunLocation));
     }
     else {
         writeFile(path.resolve(root, "launcher", "launcherCompiler.js"), readResource(jsLauncherCompilerLocation));
-        writeFile(path.resolve(root, "launcher", "launcherCompilerRun.js"), readResource(jsLauncherCompilerRunLocation));
     }
 
     // Resolve icon

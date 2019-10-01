@@ -15,14 +15,8 @@ if (isNaN(major) || major < 8) {
 }
 
 // Check for csc.exe in %PATH%
-checkCscInPath()
-    .then(exist => {
-        if (exist) {
-            // noinspection JSIgnoredPromiseFromCall
-            createWindowlessApp();
-        }
-        else {
-            console.error(`You need "csc.exe" (C# compiler) in your path in order to compile the launcher.exe.`);
-            process.exit(1);
-        }
+checkCscInPath(true)
+    .then(() => {
+        // noinspection JSIgnoredPromiseFromCall
+        createWindowlessApp();
     });

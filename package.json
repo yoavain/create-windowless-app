@@ -52,6 +52,7 @@
     "@types/jest": "^24.x.x",
     "@types/node": "^12.x.x",
     "@types/request": "^2.x.x",
+    "@types/semver": "^6.0.2",
     "@types/semver-compare": "^1.x.x",
     "@types/validate-npm-package-name": "^3.0.0",
     "global-npm": "^0.x.x",
@@ -69,6 +70,7 @@
     "fs-extra": "^8.x.x",
     "inquirer": "^7.x.x",
     "request": "^2.x.x",
+    "semver": "^6.3.0",
     "semver-compare": "^1.x.x",
     "validate-npm-package-name": "^3.0.0"
   }

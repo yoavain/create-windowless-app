@@ -2,13 +2,22 @@ const fs = require("fs-extra");
 const path = require("path");
 const spawn = require("cross-spawn");
 
-function checkCscInPath() {
+function checkCscInPath(exit) {
     // Check for csc.exe in %PATH%
     const promises = process.env.path.split(";").map(p => fs.pathExists(path.resolve(p, "csc.exe")));
     return Promise.all(promises)
         .then(results => {
             return results.find(result => !!result);
-        });
+        })
+        .then(result => {
+            if (exit && !result) {
+                console.error(`You need "csc.exe" (C# compiler) in your path in order to compile the launcher.exe.`);
+                process.exit(1);
+            }
+            else {
+                return result
+            }
+        })
 }
 
 function compileLauncher(sourceLocation, iconLocation, outputLocation) {
@@ -28,4 +37,4 @@ function compileLauncher(sourceLocation, iconLocation, outputLocation) {
     }))
 }
 
-exports = { checkCscInPath, compileLauncher };
+module.exports = { checkCscInPath, compileLauncher };
