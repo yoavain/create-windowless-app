@@ -27,7 +27,7 @@ const logger = winston.createLogger({
 });
 
 // Notifier init
-const snoreToastPath = executable.endsWith(".exe")  ? path.resolve(executable, "../", "SnoreToast.exe") : null;
+const snoreToastPath = executable.endsWith(".exe")  ? path.resolve(executable, "../", "snoretoast-x64.exe") : null;
 let notifierOptions = { withFallback: false, customPath: snoreToastPath };
 const notifier = new WindowsToaster(notifierOptions);
 

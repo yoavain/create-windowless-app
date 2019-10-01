@@ -3,8 +3,7 @@
 'use strict';
 
 import { createWindowlessApp } from './createWindowlessApp';
-import * as path from "path";
-import * as fs from "fs-extra";
+import { checkCscInPath } from "../templates/typescript/launcher/launcherCompiler";
 
 const currentNodeVersion: string = process.versions.node;
 const semver: string[] = currentNodeVersion.split('.');
@@ -16,15 +15,8 @@ if (isNaN(major) || major < 8) {
 }
 
 // Check for csc.exe in %PATH%
-const promises = process.env.path.split(";").map(p => fs.pathExists(path.resolve(p, "csc.exe")));
-Promise.all(promises)
-    .then(results => {
-        if (results.find(result => !!result)) {
-            // noinspection JSIgnoredPromiseFromCall
-            createWindowlessApp();
-        }
-        else {
-            console.error(`You need "csc.exe" (C# compiler) in your path in order to compile the launcher.exe.`);
-            process.exit(1);
-        }
+checkCscInPath(true)
+    .then(() => {
+        // noinspection JSIgnoredPromiseFromCall
+        createWindowlessApp();
     });

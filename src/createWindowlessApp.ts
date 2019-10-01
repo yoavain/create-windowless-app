@@ -4,11 +4,14 @@ import chalk from "chalk";
 import * as envinfo from "envinfo";
 import * as path from "path";
 import * as fs from "fs-extra";
-import validateProjectName from 'validate-npm-package-name';
+import validateProjectName, { Result } from 'validate-npm-package-name';
 import * as os from "os";
 import spawn from "cross-spawn";
+import semver from "semver";
 import semverCompare from "semver-compare";
 import inquirer from "inquirer";
+import { compileLauncher } from "../templates/typescript/launcher/launcherCompiler";
+import { PathLike } from "fs";
 import request = require("request");
 
 const packageJsonFilename = "package.json";
@@ -22,14 +25,16 @@ const WebpackConfigFilename = "webpack.config.js";
 const tsWebpackConfigResourceLocation = `../templates/typescript/${WebpackConfigFilename}`;
 const tsConfigResourceLocation = `../templates/typescript/${tsConfigFilename}`;
 const tsIndexResourceLocation = "../templates/typescript/src/index.ts";
+const tsLauncherCompilerLocation = "../templates/typescript/launcher/launcherCompiler.ts";
 
 // JavaScript
 const jsWebpackConfigResourceLocation = `../templates/javascript/${WebpackConfigFilename}`;
 const jsIndexResourceLocation = "../templates/javascript/src/index.js";
+const jsLauncherCompilerLocation = "../templates/javascript/launcher/launcherCompiler.js";
 
 // Launcher Source
 const launcherSrcResourceLocation = "../templates/common/src/launcher.cs";
-const launcherSrcModifiedLocation = "launcher-dist/launcher.cs";
+const launcherSrcModifiedLocation = "launcher/launcher.cs";
 
 // Default icon location
 const defaultLauncherIconLocation = "../templates/common/resources/windows-launcher.ico";
@@ -53,11 +58,8 @@ function interactiveMode(): Promise<ProgramConfig> {
             message: "Project Name:",
             name: "projectName",
             validate: value => {
-                let result = validateProjectName(value);
-                return result.validForNewPackages ||
-                    (validateProjectName(value).errors && validateProjectName(value).errors[0]) ||
-                    (validateProjectName(value).warnings && validateProjectName(value).warnings[0]) ||
-                    "Invalid project name";
+                const result: Result = validateProjectName(value);
+                return result.validForNewPackages || (result.errors && result.errors[0]) || (result.warnings && result.warnings[0]) || "Invalid project name";
             }
         },
         {
@@ -73,14 +75,15 @@ function interactiveMode(): Promise<ProgramConfig> {
         },
         {
             type: "confirm",
-            message: "Skip Install:",
+            message: "Skip NPM Install:",
             name: "skipInstall",
             default: false
         },
         {
             type: "input",
             message: "Node Version:",
-            name: "nodeVersion"
+            name: "nodeVersion",
+            validate: value => !value || !!semver.valid(value) || "Invalid node version"
         },
         {
             type: "confirm",
@@ -189,7 +192,7 @@ function createApp(programConfig: ProgramConfig) {
         private: true,
         main: "_build/index.js"
     };
-    fs.writeFileSync(path.join(root, 'package.json'), JSON.stringify(packageJson, null, 2) + os.EOL);
+    writeJson(path.join(root, 'package.json'), packageJson);
 
     const originalDirectory = process.cwd();
     process.chdir(root);
@@ -226,7 +229,7 @@ function run(root: string, appName: string, originalDirectory: string, programCo
         .then(() => {
             // Launcher
             fs.ensureDirSync(path.resolve(root, "resources", "bin"));
-            return buildLauncher(root, appName, icon);
+            return buildLauncher(root, appName, icon, typescript);
         })
         .then(() => console.log("Done"))
         .catch(reason => {
@@ -321,9 +324,20 @@ function buildTypeScriptProject(root: string, appName: string, nodeVersion: stri
             "tsc": "tsc",
             "webpack": "webpack",
             "nexe": getNexeCommand(appName, nodeVersion),
-            "build": "npm run tsc && npm run webpack && npm run nexe"
+            "build": "npm run tsc && npm run webpack && npm run nexe",
+            "check-csc": "ts-node -e \"require(\"\"./launcher/launcherCompiler\"\").checkCscInPath(true)\"",
+            "rebuild-launcher": `csc /t:winexe /out:resources/bin/${appName}-launcher.exe /win32icon:launcher/launcher.ico launcher/launcher.cs`
         };
         mergeIntoPackageJson(root, "scripts", scripts);
+
+        // Add husky
+        const husky = {
+            hooks: {
+                "pre-commit": `git diff HEAD --exit-code --stat launcher.cs || npm run check-csc && npm run rebuild-launcher && git add resources/bin/${appName}-launcher.exe`
+            }
+        };
+        mergeIntoPackageJson(root, "husky", husky);
+
         resolve();
     })
 }
@@ -336,50 +350,59 @@ function buildJavaScriptProject(root: string, appName: string, nodeVersion: stri
         writeFile(path.resolve(root, WebpackConfigFilename), replaceAppNamePlaceholder(readResource(jsWebpackConfigResourceLocation), appName));
         fs.ensureDirSync(path.resolve(root, "src"));
         writeFile(path.resolve(root, "src", "index.js"), replaceAppNamePlaceholder(readResource(jsIndexResourceLocation), appName));
+
         // Add scripts
         const scripts: { [key: string]: string } = {
             "start": "node src/index.js",
             "webpack": "webpack",
             "nexe": getNexeCommand(appName, nodeVersion),
-            "build": "npm run webpack && npm run nexe"
+            "build": "npm run webpack && npm run nexe",
+            "check-csc": "node -e \"require(\"\"./launcher/launcherCompiler\"\").checkCscInPath(true)\"",
+            "rebuild-launcher": `csc /t:winexe /out:resources/bin/${appName}-launcher.exe /win32icon:launcher/launcher.ico launcher/launcher.cs`
         };
         mergeIntoPackageJson(root, "scripts", scripts);
+
+        // Add husky
+        const husky = {
+            hooks: {
+                "pre-commit": `git diff HEAD --exit-code --stat launcher.cs || npm run check-csc && npm run rebuild-launcher && git add resources/bin/${appName}-launcher.exe`
+            }
+        };
+        mergeIntoPackageJson(root, "husky", husky);
+
         resolve();
     })
 }
 
-function buildLauncher(root: string, appName: string, icon: string): Promise<void> {
-    return new Promise(((resolve, reject) => {
-        console.log(`Building project ${chalk.green("launcher")}.`);
-        console.log();
+export function buildLauncher(root: string, appName: string, icon: string, typescript: boolean): Promise<void> {
+    console.log(`Building project ${chalk.green("launcher")}.`);
+    console.log();
 
-        fs.ensureDirSync(path.resolve("launcher-dist"));
-        writeFile(path.resolve(launcherSrcModifiedLocation), replaceAppNamePlaceholder(readResource(launcherSrcResourceLocation), appName));
-        const command = 'csc.exe';
+    fs.ensureDirSync(path.resolve("launcher"));
+    writeFile(path.resolve(launcherSrcModifiedLocation), replaceAppNamePlaceholder(readResource(launcherSrcResourceLocation), appName));
+    if (typescript) {
+        copyFile(tsLauncherCompilerLocation, path.resolve(root, "launcher", "launcherCompiler.ts"));
+    }
+    else {
+        copyFile(jsLauncherCompilerLocation, path.resolve(root, "launcher", "launcherCompiler.js"));
+    }
 
-        // Resolve icon
-        let iconLocation: string;
-        if (icon) {
-            iconLocation = path.resolve(icon);
-            console.log(`Building launcher with icon: ${chalk.green(icon)}.`);
-        }
-        else {
-            iconLocation = path.resolve(__dirname, defaultLauncherIconLocation);
-            console.log(`Building launcher with ${chalk.green("default")} icon.`);
-        }
+    // Resolve icon
+    let iconLocation: string;
+    if (icon) {
+        iconLocation = path.resolve(icon);
+        console.log(`Building launcher with icon: ${chalk.green(icon)}.`);
+    }
+    else {
+        iconLocation = path.resolve(__dirname, defaultLauncherIconLocation);
+        console.log(`Building launcher with ${chalk.green("default")} icon.`);
+    }
+    copyFile(iconLocation, path.resolve(root, "launcher", "launcher.ico"));
 
-        let args = ["/t:winexe", `/out:${path.resolve(root, "resources", "bin", `${appName}-launcher.exe`)}`, `/win32icon:${iconLocation}`, `${launcherSrcModifiedLocation}`];
-        const child = spawn(command, args, { stdio: 'inherit' });
-        child.on('close', code => {
-            if (code !== 0) {
-                reject({
-                    command: `${command} ${args.join(' ')}`,
-                });
-                return;
-            }
-            resolve();
-        });
-    }))
+    // Compiled file location
+    const outputLocation: string = path.resolve(root, "resources", "bin", `${appName}-launcher.exe`);
+
+    return compileLauncher(launcherSrcModifiedLocation, outputLocation, iconLocation);
 }
 
 function checkAppName(appName) {
@@ -531,6 +554,10 @@ function writeFile(fileName: string, data: string) {
     fs.writeFileSync(fileName, data.replace(/\r/g, "").replace(/\n/g, os.EOL));
 }
 
+function copyFile(source: PathLike, destination: PathLike) {
+    fs.copyFileSync(source, destination);
+}
+
 
 function mergeIntoPackageJson(root: string, field: string, data: any) {
     const packageJsonPath = path.resolve(root, packageJsonFilename);
@@ -543,7 +570,7 @@ function mergeIntoPackageJson(root: string, field: string, data: any) {
         packageJson[field] = Object.keys(list);
     }
     else {
-        packageJson[field] = Object.assign(packageJson.scripts || {}, data);
+        packageJson[field] = Object.assign(packageJson[field] || {}, data);
     }
     writeJson(packageJsonPath, packageJson);
 }

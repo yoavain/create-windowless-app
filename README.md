@@ -33,14 +33,29 @@ create-windowless-app my-app
 <img src='https://raw.githubusercontent.com/yoavain/create-windowless-app/master/resources/docs/usage.gif' width='957' alt='npx create-windowless-app my-app'>
 </p>
 
+Or in interactive mode:
+```
+create-windowless-app --interactive
+```
+
+<p align='center'>
+<img src='https://raw.githubusercontent.com/yoavain/create-windowless-app/master/resources/docs/interactive.gif' width='957' alt='npx create-windowless-app --interactive'>
+</p>
+
+
+## Project Structure
+
 create-windowless-app creates the following files:
 ```
 my-app
 ├── node_modules
 ├── package.json
+├── tsconfig.json
 ├── webpack.config.js
-├── launcher-dist
+├── launcher
 │   ├── launcher.cs
+|   ├── launcher.ico
+|   └── launcherCompiler.ts
 ├── resources
 │   └── bin
 │       └── my-app-launcher.exe
@@ -61,10 +76,10 @@ Then you can find in your my-app\dist folder the following files:
 <img src='https://raw.githubusercontent.com/yoavain/create-windowless-app/master/resources/docs/dist.png' width='157' alt='dist files'>
 </p>
 
-* my-app.exe is the compiled app, with NodeJS bundled (using [nexe](https://github.com/nexe/nexe))
-* my-app-launcher is the compiled launcher.cs file that executes my-app.exe without a console window
-* SnoreToast.exe allows windows notification (using [node-notifier](https://github.com/mikaelbr/node-notifier))
-* my-app.log will be generated on first run (using [winston logger](https://github.com/winstonjs/winston))
+* *my-app.exe* is the compiled app, with NodeJS bundled (using [nexe](https://github.com/nexe/nexe))
+* *my-app-launcher.exe* is the compiled launcher.cs file that executes my-app.exe without a console window
+* *snoretoast-x64.exe* allows windows notification (using [node-notifier](https://github.com/mikaelbr/node-notifier))
+* *my-app.log* will be generated on first run (using [winston logger](https://github.com/winstonjs/winston))
 
 ## create-windowless-app CLI
 
@@ -76,6 +91,8 @@ Options:
     --skip-install                  writes dependencies to package.json without installing them
     --icon <icon>                   override default launcher icon file
     --node-version <nodeVersion>    override node version to bundle
+
+    --interactive                   interactive mode
 
 Only <project-directory> is required.
 ```
