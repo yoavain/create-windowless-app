@@ -33,6 +33,15 @@ create-windowless-app my-app
 <img src='https://raw.githubusercontent.com/yoavain/create-windowless-app/master/resources/docs/usage.gif' width='957' alt='npx create-windowless-app my-app'>
 </p>
 
+Or in interactive mode:
+```
+create-windowless-app --interactive
+```
+
+<p align='center'>
+<img src='https://raw.githubusercontent.com/yoavain/create-windowless-app/rebuild-launcher/resources/docs/interactive.gif' width='957' alt='npx create-windowless-app --interactive'>
+</p>
+
 create-windowless-app creates the following files:
 ```
 my-app
