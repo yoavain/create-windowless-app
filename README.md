@@ -39,7 +39,7 @@ create-windowless-app --interactive
 ```
 
 <p align='center'>
-<img src='https://raw.githubusercontent.com/yoavain/create-windowless-app/rebuild-launcher/resources/docs/interactive.gif' width='957' alt='npx create-windowless-app --interactive'>
+<img src='https://raw.githubusercontent.com/yoavain/create-windowless-app/master/resources/docs/interactive.gif' width='957' alt='npx create-windowless-app --interactive'>
 </p>
 
 
