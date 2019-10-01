@@ -64,10 +64,10 @@ Then you can find in your my-app\dist folder the following files:
 <img src='https://raw.githubusercontent.com/yoavain/create-windowless-app/master/resources/docs/dist.png' width='157' alt='dist files'>
 </p>
 
-* my-app.exe is the compiled app, with NodeJS bundled (using [nexe](https://github.com/nexe/nexe))
-* my-app-launcher is the compiled launcher.cs file that executes my-app.exe without a console window
-* SnoreToast.exe allows windows notification (using [node-notifier](https://github.com/mikaelbr/node-notifier))
-* my-app.log will be generated on first run (using [winston logger](https://github.com/winstonjs/winston))
+* *my-app.exe* is the compiled app, with NodeJS bundled (using [nexe](https://github.com/nexe/nexe))
+* *my-app-launcher.exe* is the compiled launcher.cs file that executes my-app.exe without a console window
+* *snoretoast-x64.exe* allows windows notification (using [node-notifier](https://github.com/mikaelbr/node-notifier))
+* *my-app.log* will be generated on first run (using [winston logger](https://github.com/winstonjs/winston))
 
 ## create-windowless-app CLI
 
