@@ -38,9 +38,12 @@ create-windowless-app creates the following files:
 my-app
 ├── node_modules
 ├── package.json
+├── tsconfig.json
 ├── webpack.config.js
-├── launcher-dist
+├── launcher
 │   ├── launcher.cs
+|   ├── launcher.ico
+|   └── launcherCompiler.ts
 ├── resources
 │   └── bin
 │       └── my-app-launcher.exe
