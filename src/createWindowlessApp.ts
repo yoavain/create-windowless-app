@@ -327,7 +327,7 @@ function buildTypeScriptProject(root: string, appName: string, nodeVersion: stri
             "webpack": "webpack",
             "nexe": getNexeCommand(appName, nodeVersion),
             "build": "npm run tsc && npm run webpack && npm run nexe",
-            "check-csc": "node -e \"require(\\\"./launcher/launcherCompiler\\\").checkCscInPath(true)\"",
+            "check-csc": "ts-node -e \"require(\"\"./launcher/launcherCompiler\"\").checkCscInPath(true)\"",
             "rebuild-launcher": `csc /t:winexe /out:resources/bin/${appName}-launcher.exe launcher/launcher.cs`
         };
         mergeIntoPackageJson(root, "scripts", scripts);
@@ -359,7 +359,7 @@ function buildJavaScriptProject(root: string, appName: string, nodeVersion: stri
             "webpack": "webpack",
             "nexe": getNexeCommand(appName, nodeVersion),
             "build": "npm run webpack && npm run nexe",
-            "check-csc": "node -e \"require(\\\"./launcher/launcherCompiler\\\").checkCscInPath(true)\"",
+            "check-csc": "node -e \"require(\"\"./launcher/launcherCompiler\"\").checkCscInPath(true)\"",
             "rebuild-launcher": `csc /t:winexe /out:resources/bin/${appName}-launcher.exe launcher/launcher.cs`
         };
         mergeIntoPackageJson(root, "scripts", scripts);
