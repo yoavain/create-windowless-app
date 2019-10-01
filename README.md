@@ -42,6 +42,9 @@ create-windowless-app --interactive
 <img src='https://raw.githubusercontent.com/yoavain/create-windowless-app/rebuild-launcher/resources/docs/interactive.gif' width='957' alt='npx create-windowless-app --interactive'>
 </p>
 
+
+## Project Structure
+
 create-windowless-app creates the following files:
 ```
 my-app
