@@ -4,7 +4,7 @@ import chalk from "chalk";
 import * as envinfo from "envinfo";
 import * as path from "path";
 import * as fs from "fs-extra";
-import validateProjectName from 'validate-npm-package-name';
+import validateProjectName, { Result } from 'validate-npm-package-name';
 import * as os from "os";
 import spawn from "cross-spawn";
 import semver from "semver";
@@ -58,7 +58,7 @@ function interactiveMode(): Promise<ProgramConfig> {
             message: "Project Name:",
             name: "projectName",
             validate: value => {
-                const result = validateProjectName(value);
+                const result: Result = validateProjectName(value);
                 return result.validForNewPackages || (result.errors && result.errors[0]) || (result.warnings && result.warnings[0]) || "Invalid project name";
             }
         },
