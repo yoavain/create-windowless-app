@@ -80,6 +80,8 @@ Options:
     --icon <icon>                   override default launcher icon file
     --node-version <nodeVersion>    override node version to bundle
 
+    --interactive                   interactive mode
+
 Only <project-directory> is required.
 ```
 
