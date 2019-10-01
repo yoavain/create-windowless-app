@@ -58,11 +58,8 @@ function interactiveMode(): Promise<ProgramConfig> {
             message: "Project Name:",
             name: "projectName",
             validate: value => {
-                let result = validateProjectName(value);
-                return result.validForNewPackages ||
-                    (validateProjectName(value).errors && validateProjectName(value).errors[0]) ||
-                    (validateProjectName(value).warnings && validateProjectName(value).warnings[0]) ||
-                    "Invalid project name";
+                const result = validateProjectName(value);
+                return result.validForNewPackages || (result.errors && result.errors[0]) || (result.warnings && result.warnings[0]) || "Invalid project name";
             }
         },
         {
