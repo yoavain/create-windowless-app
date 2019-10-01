@@ -78,7 +78,7 @@ function interactiveMode(): Promise<ProgramConfig> {
         },
         {
             type: "confirm",
-            message: "Skip Install:",
+            message: "Skip NPM Install:",
             name: "skipInstall",
             default: false
         },
