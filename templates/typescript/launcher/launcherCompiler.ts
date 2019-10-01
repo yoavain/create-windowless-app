@@ -16,7 +16,7 @@ export function checkCscInPath(exit?: boolean): Promise<boolean> {
                 process.exit(1);
             }
             else {
-                return result
+                return !!result
             }
         })
 }

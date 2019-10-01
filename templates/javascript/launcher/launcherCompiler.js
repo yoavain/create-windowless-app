@@ -15,7 +15,7 @@ function checkCscInPath(exit) {
                 process.exit(1);
             }
             else {
-                return result
+                return !!result
             }
         })
 }
