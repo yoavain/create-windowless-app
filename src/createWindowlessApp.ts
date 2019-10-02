@@ -10,7 +10,7 @@ import spawn from "cross-spawn";
 import semver from "semver";
 import semverCompare from "semver-compare";
 import inquirer from "inquirer";
-import { compileLauncher } from "../templates/typescript/launcher/launcherCompiler";
+import { compileLauncher } from "./launcherCompiler";
 import { PathLike } from "fs";
 import request = require("request");
 
