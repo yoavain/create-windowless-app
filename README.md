@@ -35,7 +35,7 @@ create-windowless-app my-app
 
 Or in interactive mode:
 ```
-create-windowless-app --interactive
+npx create-windowless-app --interactive
 ```
 
 <p align='center'>
