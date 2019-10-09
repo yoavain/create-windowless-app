@@ -87,7 +87,8 @@ Then you can find in your my-app\dist folder the following files:
 create-windowless-app <project-directory> [options]
 
 Options:
-    --typescript                    creates a project with typescript
+    --no-typescript                 use javascript rather than typescript
+    --no-husky                      do not install husky pre-commit hook for building launcher
     --skip-install                  writes dependencies to package.json without installing them
     --icon <icon>                   override default launcher icon file
     --node-version <nodeVersion>    override node version to bundle

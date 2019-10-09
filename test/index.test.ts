@@ -103,7 +103,7 @@ function testFilesExists(root: string, typescript: boolean = true, husky: boolea
     expect(Object.keys(packageJson.devDependencies).sort()).toEqual(expectedDevDependencies.sort());
 
     // scripts
-    expect(!!packageJson?.husky?.hooks?.["pre-commit"]).toEqual(husky);
+    expect(!!(packageJson && packageJson.husky && packageJson.husky.hooks && packageJson.husky.hooks["pre-commit"])).toEqual(husky);
 }
 
 
