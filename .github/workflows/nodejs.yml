@@ -40,12 +40,6 @@ jobs:
         CI: true
         NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
-    - name: Test
-      run: npm run start:test:all
-      env:
-        CI: true
-        NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
-
     - name: Publish
       if: startsWith(github.ref, 'refs/tags/')
       run: npm publish

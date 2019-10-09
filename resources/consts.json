@@ -10,8 +10,10 @@
     "webpack-cli",
     "copy-webpack-plugin",
     "clean-webpack-plugin",
-    "husky",
     "cross-spawn"
+  ],
+  "huskyDependencies": [
+    "husky"
   ],
   "tsDevDependencies": [
     "@types/jest",

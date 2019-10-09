@@ -1,6 +1,6 @@
 {
   "name": "create-windowless-app",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "Create a windowless NodeJS app",
   "main": "dist/index.js",
   "bin": {
@@ -12,11 +12,6 @@
     "start": "ts-node src/index.ts",
     "start:help": "npm run start -- --help",
     "start:info": "npm run start -- --info",
-    "start:test:all": "npm run start:test:javascript && npm run start:test:typescript && npm run start:test:javascript:skip-install && npm run start:test:typescript:skip-install",
-    "start:test:javascript": "rimraf test-out-js && npm run start -- test-out-js --verbose",
-    "start:test:typescript": "rimraf test-out-ts && npm run start -- test-out-ts --verbose --typescript",
-    "start:test:javascript:skip-install": "rimraf test-out-js-noinst && npm run start -- test-out-js-noinst --verbose --skip-install",
-    "start:test:typescript:skip-install": "rimraf test-out-ts-noinst && npm run start -- test-out-ts-noinst --verbose --typescript --skip-install",
     "package": "npm pack",
     "build": "npm run test && npm run compile && npm run package"
   },
@@ -50,20 +45,23 @@
     "@types/fs-extra": "^8.x.x",
     "@types/inquirer": "^6.x.x",
     "@types/jest": "^24.x.x",
-    "@types/mock-fs": "^3.6.30",
+    "@types/mock-fs": "^3.x.x",
     "@types/node": "^12.x.x",
     "@types/request": "^2.x.x",
-    "@types/semver": "^6.0.2",
+    "@types/semver": "^6.x.x",
     "@types/semver-compare": "^1.x.x",
-    "@types/validate-npm-package-name": "^3.0.0",
+    "@types/uuid": "^3.x.x",
+    "@types/validate-npm-package-name": "^3.x.x",
+    "del": "^5.x.x",
     "global-npm": "^0.x.x",
     "jest": "^24.x.x",
-    "mock-fs": "^4.10.1",
-    "mocked-env": "^1.3.1",
+    "mock-fs": "^4.x.x",
+    "mocked-env": "^1.x.x",
     "rimraf": "^3.x.x",
     "ts-jest": "^24.x.x",
     "ts-node": "^8.x.x",
-    "typescript": "^3.x.x"
+    "typescript": "3.6.3",
+    "uuid": "^3.x.x"
   },
   "dependencies": {
     "chalk": "^2.x.x",
@@ -73,8 +71,8 @@
     "fs-extra": "^8.x.x",
     "inquirer": "^7.x.x",
     "request": "^2.x.x",
-    "semver": "^6.3.0",
+    "semver": "^6.x.x",
     "semver-compare": "^1.x.x",
-    "validate-npm-package-name": "^3.0.0"
+    "validate-npm-package-name": "^3.x.x"
   }
 }
