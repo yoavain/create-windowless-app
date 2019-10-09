@@ -51,7 +51,7 @@
     "tsconfig.json",
     "src",
     "resources",
-    "node_modules",
-    "launcher-dist"
+    "launcher",
+    "node_modules"
   ]
 }
