@@ -397,10 +397,10 @@ export function buildLauncher(root: string, appName: string, icon: string, types
     fs.ensureDirSync(path.resolve("launcher"));
     writeFile(path.resolve(launcherSrcModifiedLocation), replaceAppNamePlaceholder(readResource(launcherSrcResourceLocation), appName));
     if (typescript) {
-        copyFile(tsLauncherCompilerLocation, path.resolve(root, "launcher", "launcherCompiler.ts"));
+        copyFile(path.resolve(__dirname, tsLauncherCompilerLocation), path.resolve(root, "launcher", "launcherCompiler.ts"));
     }
     else {
-        copyFile(jsLauncherCompilerLocation, path.resolve(root, "launcher", "launcherCompiler.js"));
+        copyFile(path.resolve(__dirname, jsLauncherCompilerLocation), path.resolve(root, "launcher", "launcherCompiler.js"));
     }
 
     // Resolve icon
