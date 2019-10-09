@@ -46,6 +46,7 @@ type ProgramConfig = {
     projectName: string
     icon?: string
     typescript: boolean
+    husky: boolean
     skipInstall: boolean
     nodeVersion: string
     verbose: boolean
@@ -71,6 +72,12 @@ function interactiveMode(): Promise<ProgramConfig> {
             type: "confirm",
             message: "TypeScript:",
             name: "typescript",
+            default: true
+        },
+        {
+            type: "confirm",
+            message: "Install Husky:",
+            name: "husky",
             default: true
         },
         {
@@ -121,7 +128,8 @@ export async function createWindowlessApp(): Promise<void> {
         .option('--verbose', 'print additional logs')
         .option('--info', 'print environment debug info')
         .option('--interactive', 'interactive mode')
-        .option('--typescript')
+        .option('--no-typescript', 'use javascript rather than typescript')
+        .option('--no-husky', 'do not install husky pre-commit hook for building launcher')
         .option('--skip-install', 'write dependencies to package.json without installing')
         .option('--icon <icon>', 'override default launcher icon file')
         .option('--node-version <nodeVersion>', 'override node version to bundle')
@@ -161,6 +169,7 @@ export async function createWindowlessApp(): Promise<void> {
             projectName,
             verbose: program.verbose,
             typescript: program.typescript,
+            husky: program.husky,
             skipInstall: program.skipInstall,
             icon: program.icon,
             nodeVersion: program.nodeVersion
@@ -204,11 +213,14 @@ function createApp(programConfig: ProgramConfig) {
 }
 
 function run(root: string, appName: string, originalDirectory: string, programConfig: ProgramConfig): Promise<void> {
-    const { typescript, icon, nodeVersion } = programConfig;
+    const { typescript, husky, icon, nodeVersion } = programConfig;
     const dependencies = [...consts.dependencies];
     const devDependencies = [...consts.devDependencies];
     if (typescript) {
         devDependencies.push(...consts.tsDevDependencies);
+    }
+    if (husky) {
+        devDependencies.push(...consts.huskyDependencies);
     }
 
     return install(root, dependencies, false, programConfig)
@@ -220,10 +232,10 @@ function run(root: string, appName: string, originalDirectory: string, programCo
         })
         .then((checkedNodeVersion: string) => {
             if (typescript) {
-                return buildTypeScriptProject(root, appName, checkedNodeVersion);
+                return buildTypeScriptProject(root, appName, checkedNodeVersion, husky);
             }
             else {
-                return buildJavaScriptProject(root, appName, checkedNodeVersion);
+                return buildJavaScriptProject(root, appName, checkedNodeVersion, husky);
             }
         })
         .then(() => {
@@ -308,7 +320,7 @@ function install(root: string, dependencies: string[], isDev: boolean, programCo
     });
 }
 
-function buildTypeScriptProject(root: string, appName: string, nodeVersion: string) {
+function buildTypeScriptProject(root: string, appName: string, nodeVersion: string, husky: boolean) {
     return new Promise((resolve, reject) => {
         console.log(`Building project ${chalk.green("files")}.`);
         console.log();
@@ -331,18 +343,20 @@ function buildTypeScriptProject(root: string, appName: string, nodeVersion: stri
         mergeIntoPackageJson(root, "scripts", scripts);
 
         // Add husky
-        const husky = {
-            hooks: {
-                "pre-commit": `git diff HEAD --exit-code --stat launcher.cs || npm run check-csc && npm run rebuild-launcher && git add resources/bin/${appName}-launcher.exe`
-            }
-        };
-        mergeIntoPackageJson(root, "husky", husky);
+        if (husky) {
+            const husky = {
+                hooks: {
+                    "pre-commit": `git diff HEAD --exit-code --stat launcher.cs || npm run check-csc && npm run rebuild-launcher && git add resources/bin/${appName}-launcher.exe`
+                }
+            };
+            mergeIntoPackageJson(root, "husky", husky);
+        }
 
         resolve();
     })
 }
 
-function buildJavaScriptProject(root: string, appName: string, nodeVersion: string) {
+function buildJavaScriptProject(root: string, appName: string, nodeVersion: string, husky: boolean) {
     return new Promise((resolve, reject) => {
         console.log(`Building project ${chalk.green("files")}.`);
         console.log();
@@ -363,12 +377,14 @@ function buildJavaScriptProject(root: string, appName: string, nodeVersion: stri
         mergeIntoPackageJson(root, "scripts", scripts);
 
         // Add husky
-        const husky = {
-            hooks: {
-                "pre-commit": `git diff HEAD --exit-code --stat launcher.cs || npm run check-csc && npm run rebuild-launcher && git add resources/bin/${appName}-launcher.exe`
-            }
-        };
-        mergeIntoPackageJson(root, "husky", husky);
+        if (husky) {
+            const husky = {
+                hooks: {
+                    "pre-commit": `git diff HEAD --exit-code --stat launcher.cs || npm run check-csc && npm run rebuild-launcher && git add resources/bin/${appName}-launcher.exe`
+                }
+            };
+            mergeIntoPackageJson(root, "husky", husky);
+        }
 
         resolve();
     })
@@ -530,7 +546,7 @@ function readFile(fileName: string) {
     return fs.readFileSync(fileName, "utf8");
 }
 
-function readJsonFile(jsonFileName: string) {
+export function readJsonFile(jsonFileName: string) {
     return JSON.parse(readFile(jsonFileName));
 }
 
