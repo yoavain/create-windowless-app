@@ -42,7 +42,7 @@ jobs:
 
     - name: Pre-Publish
       run: |
-        FOR /F "tokens=*" %g IN ('node -e "console.log(require(""./package.json"").version)"') do (SET VERSION=%g)
+        FOR /F "tokens=*" %%g IN ('node -e "console.log(require(""./package.json"").version)"') do (SET VERSION=%%g)
         npm i -g create-windowless-app-%VERSION%.tgz
         create-windowless-app pre-commit-test-app
       shell: cmd
