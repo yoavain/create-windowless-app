@@ -40,6 +40,15 @@ jobs:
         CI: true
         NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
+    - name: Pre-Publish
+      run: |
+        FOR /F "tokens=*" %g IN ('node -e "console.log(require(""./package.json"").version)"') do (SET VERSION=%g)
+        npm i -g create-windowless-app-%VERSION%.tgz
+        create-windowless-app pre-commit-test-app
+      shell: cmd
+      env:
+        NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+
     - name: Publish
       if: startsWith(github.ref, 'refs/tags/')
       run: npm publish
