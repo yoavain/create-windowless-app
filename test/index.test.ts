@@ -1,7 +1,7 @@
 import path from "path";
 import fs from "fs-extra";
 import uuid from "uuid/v4";
-import { exec } from "child_process";
+import { exec, ExecException } from "child_process";
 import * as del from "del";
 import { readJsonFile } from "../src/createWindowlessApp";
 
@@ -15,7 +15,7 @@ type CliResult = {
     code: number
     stdout?: string
     stderr?: string
-    error?: any
+    error?: ExecException
 }
 
 describe("Test CLI", () => {
