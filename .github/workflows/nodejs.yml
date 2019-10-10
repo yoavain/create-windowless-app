@@ -40,10 +40,16 @@ jobs:
         CI: true
         NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
-    - name: Pre-Publish
+    - name: Pre-Publish - install package globally
       run: |
         FOR /F "tokens=*" %%g IN ('node -e "console.log(require(""./package.json"").version)"') do (SET VERSION=%%g)
         npm i -g create-windowless-app-%VERSION%.tgz
+      shell: cmd
+      env:
+        NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+
+    - name: Pre-Publish - test package globally
+      run: |
         create-windowless-app pre-commit-test-app
       shell: cmd
       env:
