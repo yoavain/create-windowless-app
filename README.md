@@ -1,3 +1,4 @@
+![](https://raw.githubusercontent.com/yoavain/create-windowless-app/master/resources/docs/logo.gif)
 # Create Windowless App ![node](https://img.shields.io/node/v/create-windowless-app.svg) ![types](https://img.shields.io/npm/types/typescript.svg) ![commit](https://img.shields.io/github/last-commit/yoavain/create-windowless-app.svg) ![license](https://img.shields.io/npm/l/create-windowless-app.svg) [![Known Vulnerabilities](https://snyk.io//test/github/yoavain/create-windowless-app/badge.svg?targetFile=package.json)](https://snyk.io//test/github/yoavain/create-windowless-app?targetFile=package.json) ![dependabot](https://api.dependabot.com/badges/status?host=github&repo=yoavain/create-windowless-app)
 Create a windowless NodeJS app.
 
