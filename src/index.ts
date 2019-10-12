@@ -18,5 +18,5 @@ if (isNaN(major) || major < 8) {
 checkCscInPath(true)
     .then(() => {
         // noinspection JSIgnoredPromiseFromCall
-        createWindowlessApp();
+        createWindowlessApp(process.argv);
     });
