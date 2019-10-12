@@ -115,7 +115,7 @@ function validateInput(programConfig: ProgramConfig, program: Command) {
     }
 }
 
-export async function createWindowlessApp(): Promise<void> {
+export async function createWindowlessApp(argv: string[]): Promise<void> {
     let projectName: string = undefined;
 
     const program: Command = new commander.Command(packageJson.name)
@@ -141,7 +141,7 @@ export async function createWindowlessApp(): Promise<void> {
             console.log(`      ${chalk.cyan('https://github.com/yoavain/create-windowless-app/issues/new')}`);
             console.log();
         })
-        .parse(process.argv);
+        .parse(argv);
 
     if (program.info) {
         console.log(chalk.bold('\nEnvironment Info:'));
@@ -178,7 +178,9 @@ export async function createWindowlessApp(): Promise<void> {
 
     validateInput(programConfig, program);
 
-    return createApp(programConfig);
+    if (programConfig.projectName) {
+        return createApp(programConfig);
+    }
 }
 
 function createApp(programConfig: ProgramConfig) {
