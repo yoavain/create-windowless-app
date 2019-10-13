@@ -18,6 +18,32 @@ type CliResult = {
     error?: ExecException
 }
 
+describe("Test index flow", () => {
+    it("test flow - all ok", async () => {
+        const mockCheckCscInPath = jest.fn(() => Promise.resolve(true));
+        jest.mock("../src/launcherCompiler", () => {
+            return {
+                checkCscInPath: mockCheckCscInPath
+            }
+        });
+
+        const mockCreateWindowlessApp = jest.fn(() => Promise.resolve());
+        jest.mock("../src/createWindowlessApp", () => {
+            return {
+                createWindowlessApp: mockCreateWindowlessApp
+            }
+        });
+
+        // Run index
+        await require("../src/index");
+
+        expect(mockCheckCscInPath.mock.calls.length).toEqual(1);
+        expect(mockCheckCscInPath.mock.calls[0]).toEqual([true]);
+
+        expect(mockCreateWindowlessApp.mock.calls.length).toEqual(1);
+    });
+});
+
 describe("Test CLI", () => {
     afterAll(() => {
         SANDBOXES.forEach(sandbox => {

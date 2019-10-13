@@ -8,5 +8,10 @@ module.exports = {
     "json",
     "node"
   ],
-  verbose: true
+  verbose: true,
+  collectCoverage: true,
+  collectCoverageFrom: [
+    "src/**/*.ts",
+    "!**/node_modules/**"
+  ]
 };

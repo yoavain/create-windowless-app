@@ -1,13 +1,13 @@
 {
   "name": "create-windowless-app",
-  "version": "2.2.4",
+  "version": "2.2.5",
   "description": "Create a windowless NodeJS app",
   "main": "dist/index.js",
   "bin": {
     "create-windowless-app": "./dist/index.js"
   },
   "scripts": {
-    "test": "jest --coverage",
+    "test": "jest",
     "compile": "rimraf dist && tsc",
     "start": "ts-node src/index.ts",
     "start:help": "npm run start -- --help",
