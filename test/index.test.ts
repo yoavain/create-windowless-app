@@ -17,7 +17,7 @@ type CliResult = {
     stderr?: string
     error?: ExecException
 }
-
+/*
 describe("Test index flow", () => {
     it("test flow - all ok", async () => {
         const mockCheckCscInPath = jest.fn(() => Promise.resolve(true));
@@ -43,6 +43,7 @@ describe("Test index flow", () => {
         expect(mockCreateWindowlessApp.mock.calls.length).toEqual(1);
     });
 });
+*/
 
 describe("Test CLI", () => {
     afterAll(() => {
