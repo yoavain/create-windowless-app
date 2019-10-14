@@ -57,7 +57,7 @@ jobs:
     - name: Pre-Publish - test package globally
       if: startsWith(github.ref, 'refs/tags/')
       run: |
-        create-windowless-app pre-commit-test-app
+        create-windowless-app pre-commit-test-app --verbose
       shell: cmd
       env:
         NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
