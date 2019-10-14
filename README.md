@@ -14,6 +14,8 @@ Pre-Requisites:
 ```sh
 npx create-windowsless-app my-app
 ```
+Note: There's a open issue regarding running npx on Windows when the user folder path contains a space.
+For more info and a workaround: [npx#146](https://github.com/zkat/npx/issues/146)
 
 <details><summary>Or with npm</summary>
 <p>
