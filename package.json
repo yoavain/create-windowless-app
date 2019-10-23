@@ -45,7 +45,7 @@
     "@types/fs-extra": "^8.x.x",
     "@types/inquirer": "^6.x.x",
     "@types/jest": "^24.x.x",
-    "@types/mock-fs": "^3.x.x",
+    "@types/mock-fs": "^4.x.x",
     "@types/node": "^12.x.x",
     "@types/request": "^2.x.x",
     "@types/semver": "^6.x.x",
