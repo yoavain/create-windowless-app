@@ -1,101 +1,101 @@
-import * as commander from "commander";
-import { Command } from "commander";
-import chalk from "chalk";
-import * as envinfo from "envinfo";
-import * as path from "path";
-import * as fs from "fs-extra";
+import * as commander from 'commander';
+import { Command } from 'commander';
+import chalk from 'chalk';
+import * as envinfo from 'envinfo';
+import * as path from 'path';
+import * as fs from 'fs-extra';
 import validateProjectName, { Result } from 'validate-npm-package-name';
-import * as os from "os";
-import spawn from "cross-spawn";
-import semver from "semver";
-import semverCompare from "semver-compare";
-import inquirer from "inquirer";
-import { compileLauncher } from "./launcherCompiler";
-import { PathLike } from "fs";
-import request = require("request");
+import * as os from 'os';
+import spawn from 'cross-spawn';
+import semver from 'semver';
+import semverCompare from 'semver-compare';
+import inquirer from 'inquirer';
+import { compileLauncher } from './launcherCompiler';
+import { PathLike } from 'fs';
+import request = require('request');
 
-const packageJsonFilename = "package.json";
+const packageJsonFilename = 'package.json';
 const packageJson = require(`../${packageJsonFilename}`);
 
 const consts = require('../resources/consts.json');
-const tsConfigFilename = "tsconfig.json";
-const WebpackConfigFilename = "webpack.config.js";
+const tsConfigFilename = 'tsconfig.json';
+const WebpackConfigFilename = 'webpack.config.js';
 
 // TypeScript
 const tsWebpackConfigResourceLocation = `../templates/typescript/${WebpackConfigFilename}`;
 const tsConfigResourceLocation = `../templates/typescript/${tsConfigFilename}`;
-const tsIndexResourceLocation = "../templates/typescript/src/index.ts";
-const tsLauncherCompilerLocation = "../templates/typescript/launcher/launcherCompiler.ts";
+const tsIndexResourceLocation = '../templates/typescript/src/index.ts';
+const tsLauncherCompilerLocation = '../templates/typescript/launcher/launcherCompiler.ts';
 
 // JavaScript
 const jsWebpackConfigResourceLocation = `../templates/javascript/${WebpackConfigFilename}`;
-const jsIndexResourceLocation = "../templates/javascript/src/index.js";
-const jsLauncherCompilerLocation = "../templates/javascript/launcher/launcherCompiler.js";
+const jsIndexResourceLocation = '../templates/javascript/src/index.js';
+const jsLauncherCompilerLocation = '../templates/javascript/launcher/launcherCompiler.js';
 
 // Launcher Source
-const launcherSrcResourceLocation = "../templates/common/src/launcher.cs";
-const launcherSrcModifiedLocation = "launcher/launcher.cs";
+const launcherSrcResourceLocation = '../templates/common/src/launcher.cs';
+const launcherSrcModifiedLocation = 'launcher/launcher.cs';
 
 // Default icon location
-const defaultLauncherIconLocation = "../templates/common/resources/windows-launcher.ico";
+const defaultLauncherIconLocation = '../templates/common/resources/windows-launcher.ico';
 
 // These files should be allowed to remain on a failed install, but then silently removed during the next create.
 const errorLogFilePatterns = consts.errorLogFilePatterns;
 
 type ProgramConfig = {
-    projectName: string
-    icon?: string
-    typescript: boolean
-    husky: boolean
-    skipInstall: boolean
-    nodeVersion: string
-    verbose: boolean
-}
+    projectName: string;
+    icon?: string;
+    typescript: boolean;
+    husky: boolean;
+    skipInstall: boolean;
+    nodeVersion: string;
+    verbose: boolean;
+};
 
 function interactiveMode(): Promise<ProgramConfig> {
     return inquirer.prompt([
         {
-            type: "input",
-            message: "Project Name:",
-            name: "projectName",
-            validate: value => {
+            type: 'input',
+            message: 'Project Name:',
+            name: 'projectName',
+            validate: (value) => {
                 const result: Result = validateProjectName(value);
-                return result.validForNewPackages || (result.errors && result.errors[0]) || (result.warnings && result.warnings[0]) || "Invalid project name";
+                return result.validForNewPackages || (result.errors && result.errors[0]) || (result.warnings && result.warnings[0]) || 'Invalid project name';
             }
         },
         {
-            type: "input",
-            message: "Icon:",
-            name: "icon"
+            type: 'input',
+            message: 'Icon:',
+            name: 'icon'
         },
         {
-            type: "confirm",
-            message: "TypeScript:",
-            name: "typescript",
+            type: 'confirm',
+            message: 'TypeScript:',
+            name: 'typescript',
             default: true
         },
         {
-            type: "confirm",
-            message: "Install Husky:",
-            name: "husky",
+            type: 'confirm',
+            message: 'Install Husky:',
+            name: 'husky',
             default: true
         },
         {
-            type: "confirm",
-            message: "Skip NPM Install:",
-            name: "skipInstall",
+            type: 'confirm',
+            message: 'Skip NPM Install:',
+            name: 'skipInstall',
             default: false
         },
         {
-            type: "input",
-            message: "Node Version:",
-            name: "nodeVersion",
-            validate: value => !value || !!semver.valid(value) || "Invalid node version"
+            type: 'input',
+            message: 'Node Version:',
+            name: 'nodeVersion',
+            validate: (value) => !value || !!semver.valid(value) || 'Invalid node version'
         },
         {
-            type: "confirm",
-            message: "Verbose:",
-            name: "verbose",
+            type: 'confirm',
+            message: 'Verbose:',
+            name: 'verbose',
             default: false
         }
     ]);
@@ -110,7 +110,7 @@ function validateInput(programConfig: ProgramConfig, program: Command) {
     }
 
     if (programConfig.icon && !fs.pathExistsSync(programConfig.icon)) {
-        console.log(`Cannot find icon in ${chalk.red(programConfig.icon)}. Switching to ${chalk.green("default")} icon.`);
+        console.log(`Cannot find icon in ${chalk.red(programConfig.icon)}. Switching to ${chalk.green('default')} icon.`);
         programConfig.icon = undefined;
     }
 }
@@ -122,7 +122,7 @@ export async function createWindowlessApp(argv: string[]): Promise<void> {
         .version(packageJson.version)
         .arguments('<project-directory>')
         .usage(`${chalk.green('<project-directory>')} [options]`)
-        .action(name => {
+        .action((name) => {
             projectName = name;
         })
         .option('--verbose', 'print additional logs')
@@ -137,7 +137,7 @@ export async function createWindowlessApp(argv: string[]): Promise<void> {
         .on('--help', () => {
             console.log(`    Only ${chalk.green('<project-directory>')} is required.`);
             console.log();
-            console.log(`    If you have any problems, do not hesitate to file an issue:`);
+            console.log('    If you have any problems, do not hesitate to file an issue:');
             console.log(`      ${chalk.cyan('https://github.com/yoavain/create-windowless-app/issues/new')}`);
             console.log();
         })
@@ -146,15 +146,16 @@ export async function createWindowlessApp(argv: string[]): Promise<void> {
     if (program.info) {
         console.log(chalk.bold('\nEnvironment Info:'));
         return envinfo
-            .run({
+            .run(
+                {
                     System: ['OS', 'CPU'],
                     Binaries: ['Node', 'npm'],
                     npmPackages: [...consts.dependencies, ...consts.devDependencies, ...consts.tsDevDependencies],
-                    npmGlobalPackages: ['create-windowless-app'],
+                    npmGlobalPackages: ['create-windowless-app']
                 },
                 {
                     duplicates: true,
-                    showNotFound: true,
+                    showNotFound: true
                 }
             )
             .then(console.log);
@@ -201,7 +202,7 @@ function createApp(programConfig: ProgramConfig) {
         name: appName,
         version: '0.1.0',
         private: true,
-        main: "_build/index.js"
+        main: '_build/index.js'
     };
     writeJson(path.join(root, 'package.json'), packageJson);
 
@@ -242,20 +243,18 @@ function run(root: string, appName: string, originalDirectory: string, programCo
         })
         .then(() => {
             // Launcher
-            fs.ensureDirSync(path.resolve(root, "resources", "bin"));
+            fs.ensureDirSync(path.resolve(root, 'resources', 'bin'));
             return buildLauncher(root, appName, icon, typescript);
         })
-        .then(() => console.log("Done"))
-        .catch(reason => {
+        .then(() => console.log('Done'))
+        .catch((reason) => {
             console.log();
             console.log('Aborting installation.');
             if (reason.command) {
                 console.log(`  ${chalk.cyan(reason.command)} has failed.`);
             }
             else {
-                console.log(
-                    chalk.red('Unexpected error. Please report it as a bug:')
-                );
+                console.log(chalk.red('Unexpected error. Please report it as a bug:'));
                 console.log(reason);
             }
             console.log();
@@ -263,8 +262,8 @@ function run(root: string, appName: string, originalDirectory: string, programCo
             // On 'exit' we will delete these files from target directory.
             const knownGeneratedFiles = [...consts.knownGeneratedFiles];
             const currentFiles = fs.readdirSync(path.join(root));
-            currentFiles.forEach(file => {
-                knownGeneratedFiles.forEach(fileToMatch => {
+            currentFiles.forEach((file) => {
+                knownGeneratedFiles.forEach((fileToMatch) => {
                     // This removes all knownGeneratedFiles.
                     if (file === fileToMatch) {
                         console.log(`Deleting generated file... ${chalk.cyan(file)}`);
@@ -288,20 +287,20 @@ function install(root: string, dependencies: string[], isDev: boolean, programCo
     const { verbose, skipInstall } = programConfig;
     return new Promise((resolve, reject) => {
         const command = 'npm';
-        let args = ['install', isDev ? '--save-dev' : '--save', '--save-exact', '--loglevel', 'error'].concat(dependencies);
+        const args = ['install', isDev ? '--save-dev' : '--save', '--save-exact', '--loglevel', 'error'].concat(dependencies);
         if (verbose) {
             args.push('--verbose');
         }
 
         if (!skipInstall) {
-            console.log(`Installing ${chalk.green(isDev ? "dev dependencies" : "dependencies")}.`);
+            console.log(`Installing ${chalk.green(isDev ? 'dev dependencies' : 'dependencies')}.`);
             console.log();
 
             const child = spawn(command, args, { stdio: 'inherit' });
-            child.on('close', code => {
+            child.on('close', (code) => {
                 if (code !== 0) {
                     reject({
-                        command: `${command} ${args.join(' ')}`,
+                        command: `${command} ${args.join(' ')}`
                     });
                     return;
                 }
@@ -309,14 +308,14 @@ function install(root: string, dependencies: string[], isDev: boolean, programCo
             });
         }
         else {
-            console.log(`Adding ${chalk.green(isDev ? "dev dependencies" : "dependencies")} to package.json (skipping installation)`);
+            console.log(`Adding ${chalk.green(isDev ? 'dev dependencies' : 'dependencies')} to package.json (skipping installation)`);
             console.log();
 
             const dependenciesObject = dependencies.reduce((acc, cur) => {
-                acc[cur] = "^x.x.x";
-                return acc
+                acc[cur] = '^x.x.x';
+                return acc;
             }, {});
-            mergeIntoPackageJson(root, isDev ? "devDependencies" : "dependencies", dependenciesObject);
+            mergeIntoPackageJson(root, isDev ? 'devDependencies' : 'dependencies', dependenciesObject);
             resolve();
         }
     });
@@ -324,85 +323,85 @@ function install(root: string, dependencies: string[], isDev: boolean, programCo
 
 function buildTypeScriptProject(root: string, appName: string, nodeVersion: string, husky: boolean) {
     return new Promise((resolve, reject) => {
-        console.log(`Building project ${chalk.green("files")}.`);
+        console.log(`Building project ${chalk.green('files')}.`);
         console.log();
 
         writeJson(path.resolve(root, tsConfigFilename), readJsonResource(tsConfigResourceLocation));
         writeFile(path.resolve(root, WebpackConfigFilename), replaceAppNamePlaceholder(readResource(tsWebpackConfigResourceLocation), appName));
-        fs.ensureDirSync(path.resolve(root, "src"));
-        writeFile(path.resolve(root, "src", "index.ts"), replaceAppNamePlaceholder(readResource(tsIndexResourceLocation), appName));
+        fs.ensureDirSync(path.resolve(root, 'src'));
+        writeFile(path.resolve(root, 'src', 'index.ts'), replaceAppNamePlaceholder(readResource(tsIndexResourceLocation), appName));
 
         // Add scripts
         const scripts: { [key: string]: string } = {
-            "start": "ts-node src/index.ts",
-            "tsc": "tsc",
-            "webpack": "webpack",
-            "nexe": getNexeCommand(appName, nodeVersion),
-            "build": "npm run tsc && npm run webpack && npm run nexe",
-            "check-csc": "ts-node -e \"require(\"\"./launcher/launcherCompiler\"\").checkCscInPath(true)\"",
-            "rebuild-launcher": `csc /t:winexe /out:resources/bin/${appName}-launcher.exe /win32icon:launcher/launcher.ico launcher/launcher.cs`
+            'start': 'ts-node src/index.ts',
+            'tsc': 'tsc',
+            'webpack': 'webpack',
+            'nexe': getNexeCommand(appName, nodeVersion),
+            'build': 'npm run tsc && npm run webpack && npm run nexe',
+            'check-csc': 'ts-node -e "require(""./launcher/launcherCompiler"").checkCscInPath(true)"',
+            'rebuild-launcher': `csc /t:winexe /out:resources/bin/${appName}-launcher.exe /win32icon:launcher/launcher.ico launcher/launcher.cs`
         };
-        mergeIntoPackageJson(root, "scripts", scripts);
+        mergeIntoPackageJson(root, 'scripts', scripts);
 
         // Add husky
         if (husky) {
             const husky = {
                 hooks: {
-                    "pre-commit": `git diff HEAD --exit-code --stat launcher.cs || npm run check-csc && npm run rebuild-launcher && git add resources/bin/${appName}-launcher.exe`
+                    'pre-commit': `git diff HEAD --exit-code --stat launcher.cs || npm run check-csc && npm run rebuild-launcher && git add resources/bin/${appName}-launcher.exe`
                 }
             };
-            mergeIntoPackageJson(root, "husky", husky);
+            mergeIntoPackageJson(root, 'husky', husky);
         }
 
         resolve();
-    })
+    });
 }
 
 function buildJavaScriptProject(root: string, appName: string, nodeVersion: string, husky: boolean) {
     return new Promise((resolve, reject) => {
-        console.log(`Building project ${chalk.green("files")}.`);
+        console.log(`Building project ${chalk.green('files')}.`);
         console.log();
 
         writeFile(path.resolve(root, WebpackConfigFilename), replaceAppNamePlaceholder(readResource(jsWebpackConfigResourceLocation), appName));
-        fs.ensureDirSync(path.resolve(root, "src"));
-        writeFile(path.resolve(root, "src", "index.js"), replaceAppNamePlaceholder(readResource(jsIndexResourceLocation), appName));
+        fs.ensureDirSync(path.resolve(root, 'src'));
+        writeFile(path.resolve(root, 'src', 'index.js'), replaceAppNamePlaceholder(readResource(jsIndexResourceLocation), appName));
 
         // Add scripts
         const scripts: { [key: string]: string } = {
-            "start": "node src/index.js",
-            "webpack": "webpack",
-            "nexe": getNexeCommand(appName, nodeVersion),
-            "build": "npm run webpack && npm run nexe",
-            "check-csc": "node -e \"require(\"\"./launcher/launcherCompiler\"\").checkCscInPath(true)\"",
-            "rebuild-launcher": `csc /t:winexe /out:resources/bin/${appName}-launcher.exe /win32icon:launcher/launcher.ico launcher/launcher.cs`
+            'start': 'node src/index.js',
+            'webpack': 'webpack',
+            'nexe': getNexeCommand(appName, nodeVersion),
+            'build': 'npm run webpack && npm run nexe',
+            'check-csc': 'node -e "require(""./launcher/launcherCompiler"").checkCscInPath(true)"',
+            'rebuild-launcher': `csc /t:winexe /out:resources/bin/${appName}-launcher.exe /win32icon:launcher/launcher.ico launcher/launcher.cs`
         };
-        mergeIntoPackageJson(root, "scripts", scripts);
+        mergeIntoPackageJson(root, 'scripts', scripts);
 
         // Add husky
         if (husky) {
             const husky = {
                 hooks: {
-                    "pre-commit": `git diff HEAD --exit-code --stat launcher.cs || npm run check-csc && npm run rebuild-launcher && git add resources/bin/${appName}-launcher.exe`
+                    'pre-commit': `git diff HEAD --exit-code --stat launcher.cs || npm run check-csc && npm run rebuild-launcher && git add resources/bin/${appName}-launcher.exe`
                 }
             };
-            mergeIntoPackageJson(root, "husky", husky);
+            mergeIntoPackageJson(root, 'husky', husky);
         }
 
         resolve();
-    })
+    });
 }
 
 export function buildLauncher(root: string, appName: string, icon: string, typescript: boolean): Promise<void> {
-    console.log(`Building project ${chalk.green("launcher")}.`);
+    console.log(`Building project ${chalk.green('launcher')}.`);
     console.log();
 
-    fs.ensureDirSync(path.resolve("launcher"));
+    fs.ensureDirSync(path.resolve('launcher'));
     writeFile(path.resolve(launcherSrcModifiedLocation), replaceAppNamePlaceholder(readResource(launcherSrcResourceLocation), appName));
     if (typescript) {
-        copyFile(path.resolve(__dirname, tsLauncherCompilerLocation), path.resolve(root, "launcher", "launcherCompiler.ts"));
+        copyFile(path.resolve(__dirname, tsLauncherCompilerLocation), path.resolve(root, 'launcher', 'launcherCompiler.ts'));
     }
     else {
-        copyFile(path.resolve(__dirname, jsLauncherCompilerLocation), path.resolve(root, "launcher", "launcherCompiler.js"));
+        copyFile(path.resolve(__dirname, jsLauncherCompilerLocation), path.resolve(root, 'launcher', 'launcherCompiler.js'));
     }
 
     // Resolve icon
@@ -413,12 +412,12 @@ export function buildLauncher(root: string, appName: string, icon: string, types
     }
     else {
         iconLocation = path.resolve(__dirname, defaultLauncherIconLocation);
-        console.log(`Building launcher with ${chalk.green("default")} icon.`);
+        console.log(`Building launcher with ${chalk.green('default')} icon.`);
     }
-    copyFile(iconLocation, path.resolve(root, "launcher", "launcher.ico"));
+    copyFile(iconLocation, path.resolve(root, 'launcher', 'launcher.ico'));
 
     // Compiled file location
-    const outputLocation: string = path.resolve(root, "resources", "bin", `${appName}-launcher.exe`);
+    const outputLocation: string = path.resolve(root, 'resources', 'bin', `${appName}-launcher.exe`);
 
     return compileLauncher(launcherSrcModifiedLocation, outputLocation, iconLocation);
 }
@@ -434,10 +433,12 @@ function checkAppName(appName) {
 
     const dependencies = [...consts.dependencies, ...consts.devDependencies].sort();
     if (dependencies.indexOf(appName) >= 0) {
-        console.error(chalk.red(`We cannot create a project called ${chalk.green(appName)} because a dependency with the same name exists.\n` +
-            `Due to the way npm works, the following names are not allowed:\n\n`) +
-            chalk.cyan(dependencies.map(depName => `  ${depName}`).join('\n')) +
-            chalk.red('\n\nPlease choose a different project name.')
+        console.error(
+            chalk.red(
+                `We cannot create a project called ${chalk.green(appName)} because a dependency with the same name exists.\n` + 'Due to the way npm works, the following names are not allowed:\n\n'
+            ) +
+                chalk.cyan(dependencies.map((depName) => `  ${depName}`).join('\n')) +
+                chalk.red('\n\nPlease choose a different project name.')
         );
         process.exit(1);
     }
@@ -445,7 +446,7 @@ function checkAppName(appName) {
 
 function printValidationResults(results) {
     if (typeof results !== 'undefined') {
-        results.forEach(error => {
+        results.forEach((error) => {
             console.error(chalk.red(`  *  ${error}`));
         });
     }
@@ -461,11 +462,11 @@ function isSafeToCreateProjectIn(root, name) {
 
     const conflicts = fs
         .readdirSync(root)
-        .filter(file => !validFiles.includes(file))
+        .filter((file) => !validFiles.includes(file))
         // IntelliJ IDEA creates module files before CRA is launched
-        .filter(file => !/\.iml$/.test(file))
+        .filter((file) => !/\.iml$/.test(file))
         // Don't treat log files from previous installation as conflicts
-        .filter(file => !errorLogFilePatterns.some(pattern => file.indexOf(pattern) === 0));
+        .filter((file) => !errorLogFilePatterns.some((pattern) => file.indexOf(pattern) === 0));
 
     if (conflicts.length > 0) {
         console.log(`The directory ${chalk.green(name)} contains files that could conflict:`);
@@ -481,8 +482,8 @@ function isSafeToCreateProjectIn(root, name) {
 
     // Remove any remnant files from a previous installation
     const currentFiles = fs.readdirSync(path.join(root));
-    currentFiles.forEach(file => {
-        errorLogFilePatterns.forEach(errorLogFilePattern => {
+    currentFiles.forEach((file) => {
+        errorLogFilePatterns.forEach((errorLogFilePattern) => {
             // This will catch `npm-debug.log*` files
             if (file.indexOf(errorLogFilePattern) === 0) {
                 fs.removeSync(path.join(root, file));
@@ -517,7 +518,7 @@ function checkThatNpmCanReadCwd() {
     // "; cwd = C:\path\to\current\dir" (unquoted)
     // I couldn't find an easier way to get it.
     const prefix = '; cwd = ';
-    const line = lines.find(line => line.indexOf(prefix) === 0);
+    const line = lines.find((line) => line.indexOf(prefix) === 0);
     if (typeof line !== 'string') {
         // Fail gracefully. They could remove it.
         return true;
@@ -527,25 +528,27 @@ function checkThatNpmCanReadCwd() {
         return true;
     }
     console.error(
-        chalk.red(`Could not start an npm process in the right directory.\n\n` +
-            `The current directory is: ${chalk.bold(cwd)}\n` +
-            `However, a newly started npm process runs in: ${chalk.bold(npmCWD)}\n\n` +
-            `This is probably caused by a misconfigured system terminal shell.`
+        chalk.red(
+            'Could not start an npm process in the right directory.\n\n' +
+                `The current directory is: ${chalk.bold(cwd)}\n` +
+                `However, a newly started npm process runs in: ${chalk.bold(npmCWD)}\n\n` +
+                'This is probably caused by a misconfigured system terminal shell.'
         )
     );
     if (process.platform === 'win32') {
-        console.error(chalk.red(`On Windows, this can usually be fixed by running:\n\n`) +
-            `  ${chalk.cyan('reg')} delete "HKCU\\Software\\Microsoft\\Command Processor" /v AutoRun /f\n` +
-            `  ${chalk.cyan('reg')} delete "HKLM\\Software\\Microsoft\\Command Processor" /v AutoRun /f\n\n` +
-            chalk.red(`Try to run the above two lines in the terminal.\n`) +
-            chalk.red(`To learn more about this problem, read: https://blogs.msdn.microsoft.com/oldnewthing/20071121-00/?p=24433/`)
+        console.error(
+            chalk.red('On Windows, this can usually be fixed by running:\n\n') +
+                `  ${chalk.cyan('reg')} delete "HKCU\\Software\\Microsoft\\Command Processor" /v AutoRun /f\n` +
+                `  ${chalk.cyan('reg')} delete "HKLM\\Software\\Microsoft\\Command Processor" /v AutoRun /f\n\n` +
+                chalk.red('Try to run the above two lines in the terminal.\n') +
+                chalk.red('To learn more about this problem, read: https://blogs.msdn.microsoft.com/oldnewthing/20071121-00/?p=24433/')
         );
     }
     return false;
 }
 
 function readFile(fileName: string) {
-    return fs.readFileSync(fileName, "utf8");
+    return fs.readFileSync(fileName, 'utf8');
 }
 
 export function readJsonFile(jsonFileName: string) {
@@ -561,7 +564,7 @@ function readJsonResource(resourceRelativePath) {
 }
 
 function replaceAppNamePlaceholder(str: string, appName: string): string {
-    return str.replace(/<APPNAME>/g, `${appName}`)
+    return str.replace(/<APPNAME>/g, `${appName}`);
 }
 
 function writeJson(fileName: string, object) {
@@ -569,19 +572,18 @@ function writeJson(fileName: string, object) {
 }
 
 function writeFile(fileName: string, data: string) {
-    fs.writeFileSync(fileName, data.replace(/\r/g, "").replace(/\n/g, os.EOL));
+    fs.writeFileSync(fileName, data.replace(/\r/g, '').replace(/\n/g, os.EOL));
 }
 
 function copyFile(source: PathLike, destination: PathLike) {
     fs.copyFileSync(source, destination);
 }
 
-
 function mergeIntoPackageJson(root: string, field: string, data: any) {
     const packageJsonPath = path.resolve(root, packageJsonFilename);
-    let packageJson = readJsonFile(packageJsonPath);
+    const packageJson = readJsonFile(packageJsonPath);
     if (Array.isArray(data)) {
-        let list = (packageJson[field] || []).concat(data).reduce((acc, cur) => {
+        const list = (packageJson[field] || []).concat(data).reduce((acc, cur) => {
             acc[cur] = cur;
             return acc;
         }, {});
@@ -594,29 +596,28 @@ function mergeIntoPackageJson(root: string, field: string, data: any) {
 }
 
 export function checkNodeVersion(nodeVersion?: string): Promise<string> {
-    return new Promise<string>(((resolve, reject) => {
-        const windowsPrefix: string = "windows-x64";
+    return new Promise<string>((resolve, reject) => {
+        const windowsPrefix = 'windows-x64';
         const windowsPrefixLength: number = windowsPrefix.length + 1;
         const options = {
             headers: {
                 'User-Agent': 'request'
             }
         };
-        request.get("https://api.github.com/repos/nexe/nexe/releases/latest", options,  (error, response, body) => {
-
+        request.get('https://api.github.com/repos/nexe/nexe/releases/latest', options, (error, response, body) => {
             const result = body && JSON.parse(body);
             const assets = result && result.assets;
 
             let nexeNodeVersion: string;
             if (nodeVersion) {
                 // Find exact
-                let split = nodeVersion.split(".");
-                const major: number = split.length > 0 && (Number(split[0]) || 0) || 0;
-                const minor: number = split.length > 1 && (Number(split[1]) || 0) || 0;
-                const patch: number = split.length > 2 && (Number(split[2]) || 0) || 0;
+                const split = nodeVersion.split('.');
+                const major: number = (split.length > 0 && (Number(split[0]) || 0)) || 0;
+                const minor: number = (split.length > 1 && (Number(split[1]) || 0)) || 0;
+                const patch: number = (split.length > 2 && (Number(split[2]) || 0)) || 0;
                 const lookupVersion = `${windowsPrefix}-${major}.${minor}.${patch}`;
 
-                const windowsVersion = assets && assets.find(asset => asset.name === lookupVersion);
+                const windowsVersion = assets && assets.find((asset) => asset.name === lookupVersion);
                 if (windowsVersion && windowsVersion.name) {
                     nexeNodeVersion = windowsVersion.name;
                     console.log(`Found version ${chalk.green(nodeVersion)} in nexe`);
@@ -628,21 +629,23 @@ export function checkNodeVersion(nodeVersion?: string): Promise<string> {
 
             if (!nexeNodeVersion) {
                 // Find latest
-                const windowsVersions = assets && assets.filter(asset => asset.name.startsWith(windowsPrefix)).map(asset => asset.name);
-                const latestWindowsVersion = windowsVersions && windowsVersions.reduce((acc, cur) => {
-                    let curSemVer: string = cur.substring(windowsPrefixLength);
-                    let accSemVer: string = acc.substring(windowsPrefixLength);
-                    acc = semverCompare(curSemVer, accSemVer) > 0 ? cur: acc;
-                    return acc;
-                }, `${windowsPrefix}-0.0.0`);
+                const windowsVersions = assets && assets.filter((asset) => asset.name.startsWith(windowsPrefix)).map((asset) => asset.name);
+                const latestWindowsVersion =
+                    windowsVersions &&
+                    windowsVersions.reduce((acc, cur) => {
+                        const curSemVer: string = cur.substring(windowsPrefixLength);
+                        const accSemVer: string = acc.substring(windowsPrefixLength);
+                        acc = semverCompare(curSemVer, accSemVer) > 0 ? cur : acc;
+                        return acc;
+                    }, `${windowsPrefix}-0.0.0`);
 
                 console.log(`Using latest nexe release: ${latestWindowsVersion}`);
                 nexeNodeVersion = latestWindowsVersion;
             }
 
             resolve(nexeNodeVersion);
-        })
-    }))
+        });
+    });
 }
 
 function getNexeCommand(appName: string, nodeVersion: string) {
