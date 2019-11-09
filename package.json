@@ -1,6 +1,6 @@
 {
     "name": "create-windowless-app",
-    "version": "2.3.5",
+    "version": "2.3.6",
     "description": "Create a windowless NodeJS app",
     "main": "dist/index.js",
     "bin": {
@@ -62,7 +62,7 @@
         "mock-fs": "^4.x.x",
         "mock-spawn": "^0.x.x",
         "mocked-env": "^1.x.x",
-        "prettier": "^1.19.0",
+        "prettier": "^1.19.1",
         "prettier-eslint-cli": "^5.0.0",
         "rimraf": "^3.x.x",
         "ts-jest": "^24.x.x",
@@ -71,7 +71,7 @@
         "uuid": "^3.x.x"
     },
     "dependencies": {
-        "chalk": "^2.x.x",
+        "chalk": "^3.x.x",
         "commander": "^4.x.x",
         "cross-spawn": "^7.x.x",
         "envinfo": "^7.x.x",
