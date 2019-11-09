@@ -7,7 +7,7 @@
         "create-windowless-app": "./dist/index.js"
     },
     "scripts": {
-        "prettier-eslint": "prettier-eslint --write *.json src/**/*.ts templates/**/*.ts templates/**/*.js templates/**/*.json",
+        "prettier-eslint": "prettier-eslint --write *.json *.js src/**/*.ts test/**/*.ts templates/**/*.ts templates/**/*.js templates/**/*.json",
         "test": "jest",
         "compile": "rimraf dist && tsc",
         "start": "ts-node src/index.ts",
