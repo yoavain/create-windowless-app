@@ -3,7 +3,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-    mode: "production",
+    mode: 'production',
     entry: './_compile/index.js',
     target: 'node',
     output: {
@@ -11,7 +11,7 @@ module.exports = {
         filename: 'index.js'
     },
     plugins: [
-		new CleanWebpackPlugin(),
+        new CleanWebpackPlugin(),
         new CopyWebpackPlugin([
             {
                 from: 'node_modules/node-notifier/vendor/snoreToast/snoretoast-x64.exe',
@@ -24,7 +24,6 @@ module.exports = {
                 toType: 'file'
             }
         ])
-
     ],
     devtool: 'sourcemap'
 };
