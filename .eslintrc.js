@@ -31,7 +31,7 @@ module.exports = {
         'max-len': [`error`, { code: 200 }],
         indent: ['error', 4],
         'linebreak-style': ['error', 'windows'],
-        quotes: ['error', 'single'],
+        quotes: ['error', 'double'],
         semi: ['error', 'always'],
         'brace-style': ['error', 'stroustrup'],
         'object-curly-spacing': ['error', 'always'],

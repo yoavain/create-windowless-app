@@ -12,3 +12,8 @@ update_configs:
       - match:
           dependency_type: "production"
           update_type: "semver:patch"
+    ignored_updates:
+      - match:
+          # Due to bug in 9.0.1
+          dependency_name: "prettier-eslint"
+          version_requirement: "9.0.0"
