@@ -1,14 +1,14 @@
-import { checkCscInPath } from '../templates/typescript/launcher/launcherCompiler';
-import mockedEnv from 'mocked-env';
-import mockFs from 'mock-fs';
+import { checkCscInPath } from "../templates/typescript/launcher/launcherCompiler";
+import mockedEnv from "mocked-env";
+import mockFs from "mock-fs";
 
-describe('Test checkCscInPath', () => {
-    it('Test CSC found', () => {
+describe("Test checkCscInPath", () => {
+    it("Test CSC found", () => {
         let restoreEnv = mockedEnv({
-            PATH: 'fakePath'
+            PATH: "fakePath"
         });
         mockFs({
-            'fakePath/csc.exe': 'exist'
+            "fakePath/csc.exe": "exist"
         });
 
         return checkCscInPath(false).then((result) => {
@@ -17,9 +17,9 @@ describe('Test checkCscInPath', () => {
             mockFs.restore();
         });
     });
-    it('Test CSC not found', () => {
+    it("Test CSC not found", () => {
         let restoreEnv = mockedEnv({
-            PATH: 'fakePath'
+            PATH: "fakePath"
         });
 
         return checkCscInPath(false).then((result) => {

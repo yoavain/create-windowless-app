@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
-'use strict';
+"use strict";
 
-import { createWindowlessApp } from './createWindowlessApp';
-import { checkCscInPath } from './launcherCompiler';
+import { createWindowlessApp } from "./createWindowlessApp";
+import { checkCscInPath } from "./launcherCompiler";
 
 const currentNodeVersion: string = process.versions.node;
-const semver: string[] = currentNodeVersion.split('.');
+const semver: string[] = currentNodeVersion.split(".");
 const major = Number(semver[0]);
 
 if (isNaN(major) || major < 8) {
