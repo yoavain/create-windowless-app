@@ -29,7 +29,7 @@ jobs:
       uses: yoavain/Setup-CSC@v5
 
     - name: Dependencies Install
-      run: npm install
+      run: npm ci
       env:
         CI: true
         NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
