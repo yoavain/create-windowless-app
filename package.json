@@ -45,7 +45,7 @@
         "@types/cross-spawn": "6.0.1",
         "@types/fs-extra": "8.0.1",
         "@types/inquirer": "6.5.0",
-        "@types/jest": "24.0.24",
+        "@types/jest": "24.0.25",
         "@types/mock-fs": "4.10.0",
         "@types/node": "13.1.1",
         "@types/request": "2.48.4",
