@@ -8,7 +8,7 @@ jest.mock("fs-extra", () => {
         ensureDirSync: jest.fn(),
         readdirSync: jest.fn(() => []),
         writeFileSync: jest.fn(),
-        readFileSync: jest.fn((...args) => "{}"),
+        readFileSync: jest.fn(() => "{}"),
         copyFileSync: jest.fn(),
         pathExistsSync: jest.fn()
     };

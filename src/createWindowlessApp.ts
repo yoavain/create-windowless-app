@@ -1,5 +1,4 @@
-import * as commander from "commander";
-import { Command } from "commander";
+import { default as commander, Command } from "commander";
 import chalk from "chalk";
 import * as envinfo from "envinfo";
 import * as path from "path";
@@ -322,7 +321,7 @@ function install(root: string, dependencies: string[], isDev: boolean, programCo
 }
 
 function buildTypeScriptProject(root: string, appName: string, nodeVersion: string, husky: boolean) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         console.log(`Building project ${chalk.green("files")}.`);
         console.log();
 
@@ -358,7 +357,7 @@ function buildTypeScriptProject(root: string, appName: string, nodeVersion: stri
 }
 
 function buildJavaScriptProject(root: string, appName: string, nodeVersion: string, husky: boolean) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         console.log(`Building project ${chalk.green("files")}.`);
         console.log();
 
@@ -596,7 +595,7 @@ function mergeIntoPackageJson(root: string, field: string, data: any) {
 }
 
 export function checkNodeVersion(nodeVersion?: string): Promise<string> {
-    return new Promise<string>((resolve, reject) => {
+    return new Promise<string>((resolve) => {
         const windowsPrefix = "windows-x64";
         const windowsPrefixLength: number = windowsPrefix.length + 1;
         const options = {
