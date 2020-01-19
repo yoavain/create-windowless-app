@@ -1,6 +1,6 @@
 {
     "name": "create-windowless-app",
-    "version": "2.3.11",
+    "version": "2.3.12",
     "description": "Create a windowless NodeJS app",
     "main": "dist/index.js",
     "bin": {
