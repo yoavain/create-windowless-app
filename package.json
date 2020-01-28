@@ -51,7 +51,7 @@
         "@types/mock-fs": "4.10.0",
         "@types/node": "13.5.0",
         "@types/request": "2.48.4",
-        "@types/semver": "6.2.0",
+        "@types/semver": "7.1.0",
         "@types/semver-compare": "1.0.1",
         "@types/uuid": "3.4.6",
         "@types/validate-npm-package-name": "3.0.0",
