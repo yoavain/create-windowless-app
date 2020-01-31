@@ -4,7 +4,7 @@ import mockFs from "mock-fs";
 
 describe("Test checkCscInPath", () => {
     it("Test CSC found", () => {
-        let restoreEnv = mockedEnv({
+        const restoreEnv = mockedEnv({
             PATH: "fakePath"
         });
         mockFs({
@@ -18,7 +18,7 @@ describe("Test checkCscInPath", () => {
         });
     });
     it("Test CSC not found", () => {
-        let restoreEnv = mockedEnv({
+        const restoreEnv = mockedEnv({
             PATH: "fakePath"
         });
 

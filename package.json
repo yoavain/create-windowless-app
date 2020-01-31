@@ -9,7 +9,7 @@
     "scripts": {
         "build": "npm run eslint && npm run test && npm run tsc && npm run package",
         "eslint": "eslint src/**/*.ts test/**/*.ts",
-        "eslint:fix": "npm run eslint --fix",
+        "eslint:fix": "npm run eslint -- --fix",
         "prettier": "prettier --write *.json templates/**/*.json",
         "test": "jest --coverage",
         "tsc": "rimraf dist && tsc",
