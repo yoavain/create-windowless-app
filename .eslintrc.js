@@ -42,7 +42,7 @@ module.exports = {
         "no-implied-eval": "error",
         "no-prototype-builtins": "error",
         "no-sync": 0,
-        "prefer-const": "warn",
+        "prefer-const": 0,
         "no-process-exit": 0,
         "node/exports-style": ["error", "module.exports"],
         "node/no-unpublished-require": 0,
@@ -96,6 +96,11 @@ module.exports = {
         "comma-dangle": ["error", "never"],
         "comma-style": ["error"],
         "no-extra-semi": "error",
-        "comma-spacing": "error"
+        "comma-spacing": "error",
+        "space-in-parens": ["error", "never"],
+        "space-before-blocks": "error",
+        "space-before-function-paren": ["error", { "anonymous": "never", "named": "never", "asyncArrow": "always" }],
+        "keyword-spacing": "error",
+        "one-var": ["error", "never"]
     }
 };
