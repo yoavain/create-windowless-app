@@ -83,7 +83,7 @@
         "envinfo": "7.5.0",
         "fs-extra": "8.1.0",
         "inquirer": "7.0.4",
-        "request": "2.88.0",
+        "request": "2.88.2",
         "semver": "7.1.2",
         "semver-compare": "1.0.0",
         "validate-npm-package-name": "3.0.0"
