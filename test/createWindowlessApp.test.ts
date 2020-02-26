@@ -24,7 +24,7 @@ require("child_process").spawn = mySpawn;
 
 // Imports should be after mocks
 import { checkNodeVersion, createWindowlessApp } from "../src/createWindowlessApp";
-import uuid from "uuid/v4";
+import { v4 as uuid } from "uuid";
 
 describe("Test createWindowlessApp", () => {
     it("should create a prototype project with default flags", async () => {

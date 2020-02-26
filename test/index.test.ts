@@ -1,6 +1,6 @@
 import path from "path";
 import fs from "fs-extra";
-import uuid from "uuid/v4";
+import { v4 as uuid } from "uuid";
 import { exec, ExecException } from "child_process";
 import * as del from "del";
 import { readJsonFile } from "../src/createWindowlessApp";
