@@ -1,4 +1,4 @@
-import { default as commander, Command } from "commander";
+import commander from "commander";
 import chalk from "chalk";
 import * as envinfo from "envinfo";
 import * as path from "path";
@@ -100,7 +100,7 @@ function interactiveMode(): Promise<ProgramConfig> {
     ]);
 }
 
-function validateInput(programConfig: ProgramConfig, program: Command) {
+function validateInput(programConfig: ProgramConfig, program: commander.Command) {
     if (!programConfig.projectName || typeof programConfig.projectName === "undefined") {
         console.error(`${chalk.red("Missing project name")}`);
         console.log();
@@ -117,7 +117,7 @@ function validateInput(programConfig: ProgramConfig, program: Command) {
 export async function createWindowlessApp(argv: string[]): Promise<void> {
     let projectName: string = undefined;
 
-    const program: Command = new commander.Command(packageJson.name)
+    const program: commander.Command = new commander.Command(packageJson.name)
         .version(packageJson.version)
         .arguments("<project-directory>")
         .usage(`${chalk.green("<project-directory>")} [options]`)
