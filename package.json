@@ -64,7 +64,7 @@
         "eslint-plugin-node": "11.0.0",
         "global-npm": "0.4.1",
         "husky": "4.2.3",
-        "jest": "25.1.0",
+        "jest": "25.2.0",
         "lint-staged": "10.0.9",
         "mock-fs": "4.11.0",
         "mock-spawn": "0.2.6",
