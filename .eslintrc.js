@@ -77,7 +77,7 @@ module.exports = {
         ],
         "import/named": "warn",
         "import/no-duplicates": "error",
-        "import/no-unresolved": ["warn"],
+        "import/no-unresolved": 0,
         "@typescript-eslint/no-unused-vars": "warn",
         "@typescript-eslint/no-inferrable-types": 0,
         "@typescript-eslint/no-use-before-define": "warn",

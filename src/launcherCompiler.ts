@@ -3,22 +3,18 @@ import * as path from "path";
 import spawn from "cross-spawn";
 import { ChildProcess } from "child_process";
 
-export function checkCscInPath(exit?: boolean): Promise<boolean> {
+export async function checkCscInPath(exit?: boolean): Promise<boolean> {
     // Check for csc.exe in %PATH%
     const promises = process.env.path.split(";").map((p) => fs.pathExists(path.resolve(p, "csc.exe")));
-    return Promise.all(promises)
-        .then((results) => {
-            return results.find((result) => !!result);
-        })
-        .then((result) => {
-            if (exit && !result) {
-                console.error("You need \"csc.exe\" (C# compiler) in your path in order to compile the launcher.exe.");
-                process.exit(1);
-            }
-            else {
-                return !!result;
-            }
-        });
+    const results: boolean[] = await Promise.all(promises);
+    const cscFound: boolean = results.find((result) => !!result);
+    if (exit && !cscFound) {
+        console.error("You need \"csc.exe\" (C# compiler) in your path in order to compile the launcher.exe.");
+        process.exit(1);
+    }
+    else {
+        return cscFound;
+    }
 }
 
 export function compileLauncher(sourceLocation: string, outputLocation: string, iconLocation: string): Promise<void> {
