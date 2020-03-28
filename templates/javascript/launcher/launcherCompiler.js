@@ -22,7 +22,7 @@ const compileLauncher = async (sourceLocation, outputLocation, iconLocation) => 
 
     const spawnResult = spawn.sync(command, args, { stdio: "inherit" });
     if (spawnResult.status !== 0) {
-        throw new Error(`${command} ${args.join(" ")}`);
+        return Promise.reject({ command: `${command} ${args.join(" ")}` });
     }
 };
 

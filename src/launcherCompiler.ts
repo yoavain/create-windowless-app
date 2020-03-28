@@ -24,6 +24,6 @@ export const compileLauncher = async (sourceLocation: string, outputLocation: st
 
     const spawnResult: SpawnSyncReturns<Buffer> = spawn.sync(command, args, { stdio: "inherit" });
     if (spawnResult.status !== 0) {
-        throw new Error(`${command} ${args.join(" ")}`);
+        return Promise.reject({ command: `${command} ${args.join(" ")}` });
     }
 };
