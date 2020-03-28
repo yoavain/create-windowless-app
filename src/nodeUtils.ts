@@ -5,7 +5,6 @@ import spawn from "cross-spawn";
 import { SpawnSyncReturns } from "child_process";
 
 export const checkNodeVersion = async (nodeVersion?: string): Promise<string> => {
-
     const windowsPrefix = "windows-x64";
     const windowsPrefixLength: number = windowsPrefix.length + 1;
     const options = {
