@@ -112,13 +112,13 @@ const validateInput = (programConfig: ProgramConfig, program: Command): void => 
 
 const install = async (root: string, dependencies: string[], isDev: boolean, programConfig: ProgramConfig): Promise<void> => {
     const { verbose, skipInstall } = programConfig;
-    const command = "npm";
-    const args = ["install", isDev ? "--save-dev" : "--save", "--save-exact", "--loglevel", "error"].concat(dependencies);
-    if (verbose) {
-        args.push("--verbose");
-    }
 
     if (!skipInstall) {
+        const command = "npm";
+        const args = ["install", isDev ? "--save-dev" : "--save", "--save-exact", "--loglevel", "error"].concat(dependencies);
+        if (verbose) {
+            args.push("--verbose");
+        }
         console.log(`Installing ${chalk.green(isDev ? "dev dependencies" : "dependencies")}.`);
         console.log();
 
