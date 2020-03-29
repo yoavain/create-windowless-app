@@ -1,5 +1,15 @@
 // Mocks Should be first
-import mockSpawn from "mock-spawn";
+jest.mock("cross-spawn", () => ({
+    sync: (command: string, args?: ReadonlyArray<string>) => {
+        if (command === "npm" && args.length === 2 && args[0] === "config" && args[1] === "list") {
+            return { status: 0, output: [`; cwd = ${process.cwd()}`] };
+        }
+        else {
+            return { status: 0 };
+        }
+    }
+}));
+
 // Imports should be after mocks
 import { createWindowlessApp } from "../src/createWindowlessApp";
 import { v4 as uuid } from "uuid";
@@ -23,8 +33,6 @@ jest.mock("envinfo", () => {
         run: () => Promise.resolve({})
     };
 });
-const mySpawn = mockSpawn();
-require("child_process").spawn = mySpawn;
 
 describe("Test createWindowlessApp", () => {
     it("should create a prototype project with default flags", async () => {
