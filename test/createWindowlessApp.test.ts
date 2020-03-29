@@ -1,4 +1,19 @@
 // Mocks Should be first
+jest.mock("cross-spawn", () => ({
+    sync: (command: string, args?: ReadonlyArray<string>) => {
+        if (command === "npm" && args.length === 2 && args[0] === "config" && args[1] === "list") {
+            return { status: 0, output: [`; cwd = ${process.cwd()}`] };
+        }
+        else {
+            return { status: 0 };
+        }
+    }
+}));
+
+// Imports should be after mocks
+import { createWindowlessApp } from "../src/createWindowlessApp";
+import { v4 as uuid } from "uuid";
+
 process.chdir = jest.fn();
 
 jest.setTimeout(15000);
@@ -18,13 +33,6 @@ jest.mock("envinfo", () => {
         run: () => Promise.resolve({})
     };
 });
-import mockSpawn from "mock-spawn";
-const mySpawn = mockSpawn();
-require("child_process").spawn = mySpawn;
-
-// Imports should be after mocks
-import { checkNodeVersion, createWindowlessApp } from "../src/createWindowlessApp";
-import { v4 as uuid } from "uuid";
 
 describe("Test createWindowlessApp", () => {
     it("should create a prototype project with default flags", async () => {
@@ -81,23 +89,5 @@ describe("Test createWindowlessApp", () => {
             expect(code).toEqual(1);
         });
         await createWindowlessApp(["node.exe", "dummy.ts"]);
-    });
-});
-
-describe("Test checkNodeVersion", () => {
-    it("test checkNodeVersion - available", () => {
-        return checkNodeVersion("12.9.1").then((version: string) => {
-            expect(version).toEqual("windows-x64-12.9.1");
-        });
-    });
-    it("test checkNodeVersion - not available", () => {
-        return checkNodeVersion("12.11.0").then((version: string) => {
-            expect(version).toBeDefined();
-        });
-    });
-    it("test checkNodeVersion - not given", () => {
-        return checkNodeVersion().then((version: string) => {
-            expect(version).toBeDefined();
-        });
     });
 });
