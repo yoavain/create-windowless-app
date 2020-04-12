@@ -12,8 +12,9 @@ const argv = process.argv.slice(2);
 
 // Logger init
 const { combine, timestamp, printf, label } = winston.format;
+const filename = `${AppName}.log`;
 const transports = {
-    file: new winston.transports.File({ filename: `${AppName}.log` })
+    file: new winston.transports.File({ filename })
 };
 transports.file.level = "debug";
 const logger = winston.createLogger({
@@ -36,4 +37,9 @@ logger.log("info", `"${AppName}" started with ${argv ? argv.join("; ") : "no arg
 logger.log("info", `Notifier started with options ${JSON.stringify(notifierOptions)}`);
 
 // Notify
-notifier.notify({ title: `${AppName}`, message: "Hello World" });
+const notification = { title: `${AppName}`, message: "Hello World", actions: ["Log", "Close"] };
+notifier.notify(notification);
+notifier.on("log", () => {
+    const file = path.join(__dirname, "..", filename);
+    execFile(file, { shell: "powershell" });
+});
