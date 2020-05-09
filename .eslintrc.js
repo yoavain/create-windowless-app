@@ -1,8 +1,8 @@
 module.exports = {
     env: {
-        es6: true,
-        node: true,
-        jest: true,
+        "es6": true,
+        "node": true,
+        "jest": true,
         "jest/globals": true
     },
     globals: {
@@ -41,8 +41,8 @@ module.exports = {
         "no-eval": "error",
         "no-implied-eval": "error",
         "no-prototype-builtins": "error",
-        "no-sync": 0,
         "prefer-const": 0,
+        "node/no-sync": 0,
         "no-process-exit": 0,
         "node/exports-style": ["error", "module.exports"],
         "node/no-unpublished-require": 0,
@@ -63,7 +63,7 @@ module.exports = {
         "node/no-unpublished-import": 0,
         "node/no-unsupported-features/es-syntax": 0,
         "node/shebang": ["warn", {
-            "convertPath": {
+            convertPath: {
                 "src/index.ts": ["^src/index.ts$", "./dist/index.js"]
             }
         }],
@@ -84,11 +84,11 @@ module.exports = {
         "@typescript-eslint/no-var-requires": "warn",
 
         // Style
-        "max-len": [`error`, { code: 200 }],
-        indent: ["error", 4, { SwitchCase: 1 }],
+        "max-len": ["error", { code: 200 }],
+        "indent": ["error", 4, { SwitchCase: 1 }],
         "linebreak-style": ["error", "windows"],
-        quotes: ["error", "double"],
-        semi: ["error", "always"],
+        "quotes": ["error", "double"],
+        "semi": ["error", "always"],
         "brace-style": ["error", "stroustrup"],
         "object-curly-spacing": ["error", "always"],
         "no-mixed-spaces-and-tabs": "error",
@@ -99,7 +99,7 @@ module.exports = {
         "comma-spacing": "error",
         "space-in-parens": ["error", "never"],
         "space-before-blocks": "error",
-        "space-before-function-paren": ["error", { "anonymous": "never", "named": "never", "asyncArrow": "always" }],
+        "space-before-function-paren": ["error", { anonymous: "never", named: "never", asyncArrow: "always" }],
         "keyword-spacing": "error",
         "one-var": ["error", "never"]
     }
