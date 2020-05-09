@@ -8,5 +8,5 @@
         "lib": ["es6", "es2017"],
         "noEmit": true
     },
-    "include": ["./src/**/*", "./test/**/*"]
+    "include": ["./src/**/*", "./test/**/*", ".eslintrc.js"]
 }
