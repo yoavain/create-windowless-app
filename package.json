@@ -53,7 +53,7 @@
         "@types/node-fetch": "2.5.7",
         "@types/node-notifier": "6.0.1",
         "@types/request": "2.48.4",
-        "@types/semver": "7.1.0",
+        "@types/semver": "7.2.0",
         "@types/semver-compare": "1.0.1",
         "@types/uuid": "7.0.3",
         "@types/validate-npm-package-name": "3.0.0",
