@@ -13,4 +13,9 @@ describe("Test checkNodeVersion", () => {
         const version: string = await checkNodeVersion();
         expect(version).toBeDefined();
     });
+    it("test checkNodeVersion - reject 14.x versions", async () => {
+        const version: string = await checkNodeVersion("14.2.0");
+        expect(version).toBeDefined();
+        expect(version).not.toEqual("windows-x64-14.2.0");
+    });
 });

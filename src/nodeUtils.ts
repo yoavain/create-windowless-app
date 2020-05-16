@@ -27,8 +27,13 @@ export const checkNodeVersion = async (nodeVersion?: string): Promise<string> =>
 
         const windowsVersion = assets && assets.find((asset) => asset.name === lookupVersion);
         if (windowsVersion && windowsVersion.name) {
-            nexeNodeVersion = windowsVersion.name;
-            console.log(`Found version ${chalk.green(nodeVersion)} in nexe`);
+            if (major <= 12) {
+                nexeNodeVersion = windowsVersion.name;
+                console.log(`Found version ${chalk.green(nodeVersion)} in nexe`);
+            }
+            else {
+                console.log(`Version ${chalk.green(nodeVersion)} found in nexe, but known to have issues. Looking for latest working nexe release`);
+            }
         }
         else {
             console.log(`Can't find node version ${chalk.red(nodeVersion)} in nexe. Looking for latest nexe release`);
@@ -43,7 +48,9 @@ export const checkNodeVersion = async (nodeVersion?: string): Promise<string> =>
                 windowsVersions.reduce((acc, cur) => {
                     const curSemVer: string = cur.substring(windowsPrefixLength);
                     const accSemVer: string = acc.substring(windowsPrefixLength);
-                    acc = semverCompare(curSemVer, accSemVer) > 0 ? cur : acc;
+                    if (semverCompare(curSemVer, accSemVer) > 0 && semverCompare(curSemVer, "14.0.0") < 0) {
+                        acc = cur;
+                    }
                     return acc;
                 }, `${windowsPrefix}-0.0.0`);
 
