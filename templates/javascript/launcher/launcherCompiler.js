@@ -9,9 +9,10 @@ const checkCscInPath = async (exit) => {
     const cscFound = await results.find((result) => !!result);
 
     if (exit && !cscFound) {
-        console.error(`You need "csc.exe" (C# compiler) in your path in order to compile the launcher.exe.`);
+        console.error("You need \"csc.exe\" (C# compiler) in your path in order to compile the launcher.exe.");
         process.exit(1);
-    } else {
+    }
+    else {
         return cscFound;
     }
 };

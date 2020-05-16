@@ -9,6 +9,11 @@ module.exports = {
         Atomics: "readonly",
         SharedArrayBuffer: "readonly"
     },
+    overrides: [
+        {
+            files: [".js", ".ts"]
+        }
+    ],
     parser: "@typescript-eslint/parser",
     parserOptions: {
         project: "tsconfig.all.json",
@@ -51,7 +56,8 @@ module.exports = {
         "node/no-missing-require": [
             "error",
             {
-                tryExtensions: [".ts", ".js", ".d.ts", ".json", ".node"]
+                tryExtensions: [".ts", ".js", ".d.ts", ".json", ".node"],
+                allowModules: ["clean-webpack-plugin", "copy-webpack-plugin"]
             }
         ],
         "node/no-missing-import": [
