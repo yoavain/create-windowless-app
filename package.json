@@ -1,6 +1,6 @@
 {
     "name": "create-windowless-app",
-    "version": "3.1.2",
+    "version": "3.2.0",
     "description": "Create a windowless NodeJS app",
     "main": "dist/index.js",
     "bin": {
@@ -8,7 +8,7 @@
     },
     "scripts": {
         "build": "npm run eslint && npm run test && npm run tsc && npm run package",
-        "eslint": "eslint src/**/*.ts test/**/*.ts",
+        "eslint": "eslint src/ test/ templates/",
         "eslint:fix": "npm run eslint -- --fix",
         "prettier": "prettier --write *.json templates/**/*.json",
         "test": "jest --coverage",
@@ -74,7 +74,7 @@
         "node-notifier": "7.0.0",
         "prettier": "2.0.5",
         "rimraf": "3.0.2",
-        "ts-jest": "25.5.1",
+        "ts-jest": "26.0.0",
         "ts-node": "8.10.1",
         "typescript": "3.9.2",
         "uuid": "8.0.0",

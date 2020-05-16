@@ -1,6 +1,7 @@
 const path = require("path");
 const winston = require("winston");
 const { WindowsToaster } = require("node-notifier");
+const { execFile } = require("child_process");
 
 // App Name
 const AppName = "<APPNAME>";

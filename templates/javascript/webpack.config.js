@@ -12,18 +12,20 @@ module.exports = {
     },
     plugins: [
         new CleanWebpackPlugin(),
-        new CopyWebpackPlugin([
-            {
-                from: "node_modules/node-notifier/vendor/snoreToast/snoretoast-x64.exe",
-                to: "../dist/snoretoast-x64.exe",
-                toType: "file"
-            },
-            {
-                from: "resources/bin/<APPNAME>-launcher.exe",
-                to: "../dist/<APPNAME>-launcher.exe",
-                toType: "file"
-            }
-        ])
+        new CopyWebpackPlugin({
+            patterns: [
+                {
+                    from: "node_modules/node-notifier/vendor/snoreToast/snoretoast-x64.exe",
+                    to: "../dist/snoretoast-x64.exe",
+                    toType: "file"
+                },
+                {
+                    from: "resources/bin/<APPNAME>-launcher.exe",
+                    to: "../dist/<APPNAME>-launcher.exe",
+                    toType: "file"
+                }
+            ]
+        })
     ],
     devtool: "source-map"
 };
