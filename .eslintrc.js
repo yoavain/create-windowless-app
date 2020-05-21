@@ -22,7 +22,6 @@ module.exports = {
     },
     plugins: ["node", "@typescript-eslint", "import", "jest"],
     extends: [
-        "eslint:recommended",
         "plugin:node/recommended",
         "plugin:import/errors",
         "plugin:import/warnings",
@@ -36,7 +35,7 @@ module.exports = {
         "max-statements-per-line": ["error", { max: 1 }],
         "max-lines": ["error", { max: 1000, skipBlankLines: true, skipComments: true }],
         "max-lines-per-function": ["warn", { max: 50, skipBlankLines: true, skipComments: true }],
-        "@typescript-eslint/ban-ts-ignore": ["warn"],
+        "@typescript-eslint/ban-ts-comment": ["warn"],
         "@typescript-eslint/interface-name-prefix": [0, "never"],
         "arrow-parens": ["error"],
         "quote-props": ["error", "consistent-as-needed", { numbers: true }],
