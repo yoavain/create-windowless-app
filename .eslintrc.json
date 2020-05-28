@@ -1,44 +1,38 @@
-module.exports = {
-    env: {
+{
+    "env": {
         "es6": true,
         "node": true,
         "jest": true,
         "jest/globals": true
     },
-    globals: {
-        Atomics: "readonly",
-        SharedArrayBuffer: "readonly"
+    "globals": {
+        "Atomics": "readonly",
+        "SharedArrayBuffer": "readonly"
     },
-    overrides: [
+    "overrides": [
         {
-            files: [".js", ".ts"]
+            "files": [".js", ".ts"]
         }
     ],
-    parser: "@typescript-eslint/parser",
-    parserOptions: {
-        project: "tsconfig.all.json",
-        ecmaVersion: 2018,
-        sourceType: "module"
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "project": "tsconfig.all.json",
+        "ecmaVersion": 2018,
+        "sourceType": "module"
     },
-    plugins: ["node", "@typescript-eslint", "import", "jest"],
-    extends: [
-        "plugin:node/recommended",
-        "plugin:import/errors",
-        "plugin:import/warnings",
-        "plugin:@typescript-eslint/eslint-recommended",
-        "plugin:@typescript-eslint/recommended"
-    ],
-    rules: {
+    "plugins": ["node", "@typescript-eslint", "import", "jest"],
+    "extends": ["plugin:node/recommended", "plugin:import/errors", "plugin:import/warnings", "plugin:@typescript-eslint/eslint-recommended", "plugin:@typescript-eslint/recommended"],
+    "rules": {
         // code
         "max-params": ["warn", 3],
         "max-depth": ["error", 3],
-        "max-statements-per-line": ["error", { max: 1 }],
-        "max-lines": ["error", { max: 1000, skipBlankLines: true, skipComments: true }],
-        "max-lines-per-function": ["warn", { max: 50, skipBlankLines: true, skipComments: true }],
+        "max-statements-per-line": ["error", { "max": 1 }],
+        "max-lines": ["error", { "max": 1000, "skipBlankLines": true, "skipComments": true }],
+        "max-lines-per-function": ["warn", { "max": 50, "skipBlankLines": true, "skipComments": true }],
         "@typescript-eslint/ban-ts-comment": ["warn"],
         "@typescript-eslint/interface-name-prefix": [0, "never"],
         "arrow-parens": ["error"],
-        "quote-props": ["error", "consistent-as-needed", { numbers: true }],
+        "quote-props": ["error", "consistent-as-needed", { "numbers": true }],
         "no-unused-vars": "error",
         "no-useless-escape": "error",
         "no-empty-pattern": "error",
@@ -55,29 +49,32 @@ module.exports = {
         "node/no-missing-require": [
             "error",
             {
-                tryExtensions: [".ts", ".js", ".d.ts", ".json", ".node"],
-                allowModules: ["clean-webpack-plugin", "copy-webpack-plugin"]
+                "tryExtensions": [".ts", ".js", ".d.ts", ".json", ".node"],
+                "allowModules": ["clean-webpack-plugin", "copy-webpack-plugin"]
             }
         ],
         "node/no-missing-import": [
             "error",
             {
-                tryExtensions: [".ts", ".js", ".d.ts", ".json", ".node"]
+                "tryExtensions": [".ts", ".js", ".d.ts", ".json", ".node"]
             }
         ],
         "node/no-unpublished-import": 0,
         "node/no-unsupported-features/es-syntax": 0,
-        "node/shebang": ["warn", {
-            convertPath: {
-                "src/index.ts": ["^src/index.ts$", "./dist/index.js"]
+        "node/shebang": [
+            "warn",
+            {
+                "convertPath": {
+                    "src/index.ts": ["^src/index.ts$", "./dist/index.js"]
+                }
             }
-        }],
+        ],
         "import/extensions": [
             "error",
             {
-                ts: "never",
-                js: "never",
-                json: "always"
+                "ts": "never",
+                "js": "never",
+                "json": "always"
             }
         ],
         "import/named": "warn",
@@ -89,8 +86,8 @@ module.exports = {
         "@typescript-eslint/no-var-requires": "warn",
 
         // Style
-        "max-len": ["error", { code: 200 }],
-        "indent": ["error", 4, { SwitchCase: 1 }],
+        "max-len": ["error", { "code": 200 }],
+        "indent": ["error", 4, { "SwitchCase": 1 }],
         "linebreak-style": ["error", "windows"],
         "quotes": ["error", "double"],
         "semi": ["error", "always"],
@@ -104,8 +101,8 @@ module.exports = {
         "comma-spacing": "error",
         "space-in-parens": ["error", "never"],
         "space-before-blocks": "error",
-        "space-before-function-paren": ["error", { anonymous: "never", named: "never", asyncArrow: "always" }],
+        "space-before-function-paren": ["error", { "anonymous": "never", "named": "never", "asyncArrow": "always" }],
         "keyword-spacing": "error",
         "one-var": ["error", "never"]
     }
-};
+}
