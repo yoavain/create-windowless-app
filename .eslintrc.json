@@ -20,8 +20,15 @@
         "ecmaVersion": 2018,
         "sourceType": "module"
     },
-    "plugins": ["node", "@typescript-eslint", "import", "jest"],
-    "extends": ["plugin:node/recommended", "plugin:import/errors", "plugin:import/warnings", "plugin:@typescript-eslint/eslint-recommended", "plugin:@typescript-eslint/recommended"],
+    "plugins": ["node", "@typescript-eslint", "import", "jest", "security"],
+    "extends": [
+        "plugin:node/recommended",
+        "plugin:import/errors",
+        "plugin:import/warnings",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:security/recommended"
+    ],
     "rules": {
         // code
         "max-params": ["warn", 3],
