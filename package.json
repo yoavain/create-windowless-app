@@ -65,6 +65,7 @@
         "eslint-plugin-import": "2.21.2",
         "eslint-plugin-jest": "23.13.2",
         "eslint-plugin-node": "11.1.0",
+        "eslint-plugin-security": "1.4.0",
         "global-npm": "0.4.1",
         "husky": "4.2.5",
         "jest": "26.0.1",
