@@ -79,7 +79,7 @@
         "ts-node": "8.10.2",
         "typescript": "3.9.5",
         "uuid": "8.1.0",
-        "winston": "3.3.1"
+        "winston": "3.3.2"
     },
     "dependencies": {
         "chalk": "4.1.0",
