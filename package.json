@@ -77,7 +77,7 @@
         "rimraf": "3.0.2",
         "ts-jest": "26.1.2",
         "ts-node": "8.10.2",
-        "typescript": "3.9.6",
+        "typescript": "3.9.7",
         "uuid": "8.2.0",
         "winston": "3.3.3"
     },
