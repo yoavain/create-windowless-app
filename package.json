@@ -85,7 +85,7 @@
         "chalk": "4.1.0",
         "commander": "4.1.1",
         "cross-spawn": "7.0.3",
-        "envinfo": "7.7.0",
+        "envinfo": "7.7.2",
         "fs-extra": "9.0.1",
         "inquirer": "7.3.2",
         "node-fetch": "2.6.0",
