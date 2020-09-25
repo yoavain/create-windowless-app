@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 import { createWindowlessApp } from "./createWindowlessApp";
 import { checkCscInPath } from "./launcherCompiler";
 
