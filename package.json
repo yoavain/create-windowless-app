@@ -7,12 +7,13 @@
         "create-windowless-app": "./dist/index.js"
     },
     "scripts": {
-        "build": "npm run eslint && npm run test && npm run tsc && npm run package",
+        "build": "npm run eslint && npm run test && npm run tsc && npm run add-shebang && npm run package",
         "eslint": "eslint src/ test/ templates/",
         "eslint:fix": "npm run eslint -- --fix",
         "prettier": "prettier --write *.json templates/**/*.json",
         "test": "jest --coverage",
         "tsc": "rimraf dist && tsc",
+        "add-shebang": "add-shebang",
         "start": "ts-node src/index.ts",
         "start:help": "npm run start -- --help",
         "start:info": "npm run start -- --info",
@@ -60,6 +61,7 @@
         "@types/winston": "2.4.4",
         "@typescript-eslint/eslint-plugin": "4.2.0",
         "@typescript-eslint/parser": "4.2.0",
+        "add-shebang": "0.1.0",
         "del": "5.1.0",
         "eslint": "7.9.0",
         "eslint-plugin-import": "2.22.0",
