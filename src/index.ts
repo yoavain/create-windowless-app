@@ -1,7 +1,4 @@
 #!/usr/bin/env node
-
-"use strict";
-
 import { createWindowlessApp } from "./createWindowlessApp";
 import { checkCscInPath } from "./launcherCompiler";
 
