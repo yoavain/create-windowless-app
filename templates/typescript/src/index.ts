@@ -1,7 +1,8 @@
 import * as path from "path";
 import * as winston from "winston";
-import { Option, WindowsToaster } from "node-notifier";
+import { WindowsToaster } from "node-notifier";
 import { execFile } from "child_process";
+import type { Option } from "node-notifier";
 
 // App Name
 const AppName: string = "<APPNAME>";

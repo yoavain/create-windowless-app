@@ -1,10 +1,11 @@
 import path from "path";
 import fs from "fs-extra";
 import { v4 as uuid } from "uuid";
-import { exec, ExecException } from "child_process";
+import { exec } from "child_process";
 import * as del from "del";
 import { readJsonFile } from "../src/fileUtils";
 import consts from "../src/consts";
+import type { ExecException } from "child_process";
 
 jest.setTimeout(300000);
 

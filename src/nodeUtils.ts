@@ -2,7 +2,7 @@ import chalk from "chalk";
 import semverCompare from "semver-compare";
 import fetch from "node-fetch";
 import spawn from "cross-spawn";
-import { SpawnSyncReturns } from "child_process";
+import type { SpawnSyncReturns } from "child_process";
 
 export const checkNodeVersion = async (nodeVersion?: string): Promise<string> => {
     const windowsPrefix = "windows-x64";
