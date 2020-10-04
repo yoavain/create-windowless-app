@@ -1,9 +1,9 @@
-import { Command, default as commander } from "commander";
+import { default as commander } from "commander";
 import chalk from "chalk";
 import * as envinfo from "envinfo";
 import * as path from "path";
 import * as fs from "fs-extra";
-import validateProjectName, { Result } from "validate-npm-package-name";
+import validateProjectName from "validate-npm-package-name";
 import spawn from "cross-spawn";
 import semver from "semver";
 import inquirer from "inquirer";
@@ -12,6 +12,8 @@ import consts from "./consts";
 import { checkAppName, getNexeCommand, isSafeToCreateProjectIn, mergeIntoPackageJson, PACKAGE_JSON_FILENAME, replaceAppNamePlaceholder } from "./createWindowlessAppUtils";
 import { copyFile, readJsonResource, readResource, writeFile, writeJson } from "./fileUtils";
 import { checkNodeVersion, checkThatNpmCanReadCwd } from "./nodeUtils";
+import type { Command } from "commander";
+import type { Result } from "validate-npm-package-name";
 
 const packageJson = require(`../${PACKAGE_JSON_FILENAME}`);
 

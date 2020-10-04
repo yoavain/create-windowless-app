@@ -1,7 +1,7 @@
 import * as fs from "fs-extra";
 import path from "path";
 import os from "os";
-import { PathLike } from "fs";
+import type { PathLike } from "fs";
 
 export const readFile = (fileName: string): string => {
     return fs.readFileSync(fileName, "utf8");
