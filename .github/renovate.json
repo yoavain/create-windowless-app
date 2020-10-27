@@ -1,4 +1,9 @@
 {
+    "force": {
+        "constraints": {
+            "node": "< 15.0.0"
+        }
+    },
     "extends": ["config:base"],
     "labels": ["renovate", "dependencies"],
     "packageRules": [
