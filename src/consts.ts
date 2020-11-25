@@ -4,6 +4,7 @@ export const consts = {
         "winston"
     ],
     devDependencies: [
+        "fs-extra",
         "jest",
         "nexe",
         "webpack",
