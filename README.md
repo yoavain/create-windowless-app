@@ -9,7 +9,7 @@
 ![license](https://img.shields.io/npm/l/create-windowless-app.svg)
 [![Known Vulnerabilities](https://snyk.io//test/github/yoavain/create-windowless-app/badge.svg?targetFile=package.json)](https://snyk.io//test/github/yoavain/create-windowless-app?targetFile=package.json)
 [![codecov](https://codecov.io/gh/yoavain/create-windowless-app/branch/master/graph/badge.svg)](https://codecov.io/gh/yoavain/create-windowless-app)
-![renovate](https://badges.renovateapi.com/github/yoavain/create-windowless-app)
+[![Renovate](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://renovatebot.com)
 ![visitors](https://visitor-badge.glitch.me/badge?page_id=yoavain.create-windowless-app)
 ![Downloads](https://img.shields.io/npm/dm/create-windowless-app.svg)
 
