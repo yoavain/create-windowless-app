@@ -1,3 +1,4 @@
+import type { InvalidNames, LegacyNames } from "validate-npm-package-name";
 import validateProjectName from "validate-npm-package-name";
 import chalk from "chalk";
 import path from "path";
@@ -63,8 +64,8 @@ export const checkAppName = (appName) => {
     const validationResult = validateProjectName(appName);
     if (!validationResult.validForNewPackages) {
         console.error(`Could not create a project called ${chalk.red(`"${appName}"`)} because of npm naming restrictions:`);
-        printValidationResults(validationResult.errors);
-        printValidationResults(validationResult.warnings);
+        printValidationResults((validationResult as InvalidNames).errors);
+        printValidationResults((validationResult as LegacyNames).warnings);
         process.exit(1);
     }
 

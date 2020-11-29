@@ -3,6 +3,7 @@ import chalk from "chalk";
 import * as envinfo from "envinfo";
 import * as path from "path";
 import * as fs from "fs-extra";
+import type { InvalidNames, LegacyNames, ValidNames } from "validate-npm-package-name";
 import validateProjectName from "validate-npm-package-name";
 import spawn from "cross-spawn";
 import semver from "semver";
@@ -13,7 +14,6 @@ import { checkAppName, getNexeCommand, isSafeToCreateProjectIn, mergeIntoPackage
 import { copyFile, readJsonResource, readResource, writeFile, writeJson } from "./fileUtils";
 import { checkNodeVersion, checkThatNpmCanReadCwd } from "./nodeUtils";
 import type { Command } from "commander";
-import type { Result } from "validate-npm-package-name";
 
 const packageJson = require(`../${PACKAGE_JSON_FILENAME}`);
 
@@ -55,8 +55,8 @@ function interactiveMode(): Promise<ProgramConfig> {
             message: "Project Name:",
             name: "projectName",
             validate: (value) => {
-                const result: Result = validateProjectName(value);
-                return result.validForNewPackages || (result.errors && result.errors[0]) || (result.warnings && result.warnings[0]) || "Invalid project name";
+                const result: ValidNames | InvalidNames | LegacyNames = validateProjectName(value);
+                return result.validForNewPackages || ((result as InvalidNames)?.errors?.[0]) || ((result as LegacyNames)?.warnings?.[0]) || "Invalid project name";
             }
         },
         {
