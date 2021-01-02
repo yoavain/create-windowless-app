@@ -28,11 +28,6 @@ jest.mock("fs-extra", () => {
         pathExistsSync: jest.fn()
     };
 });
-jest.mock("envinfo", () => {
-    return {
-        run: () => Promise.resolve({})
-    };
-});
 
 describe("Test createWindowlessApp", () => {
     it("should create a prototype project with default flags", async () => {
@@ -68,10 +63,6 @@ describe("Test createWindowlessApp", () => {
     it("should create a prototype project with flags: --node-version", async () => {
         const sandbox: string = uuid();
         await createWindowlessApp(["node.exe", "dummy.ts", sandbox, "--node-version", "12.12.0"]);
-    });
-
-    it("should print info with flags: --info", async () => {
-        await createWindowlessApp(["node.exe", "dummy.ts", "--info"]);
     });
 
     it("should print help with flags: --help", async () => {

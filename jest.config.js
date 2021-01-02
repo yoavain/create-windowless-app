@@ -6,5 +6,12 @@ module.exports = {
     moduleFileExtensions: ["ts", "js", "json", "node"],
     verbose: true,
     collectCoverage: true,
+    coverageReporters: [
+        "text",
+        "text-summary",
+        "json",
+        "lcov",
+        "clover"
+    ],
     collectCoverageFrom: ["src/**/*.ts", "!src/index.ts", "!**/node_modules/**"]
 };

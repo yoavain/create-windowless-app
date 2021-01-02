@@ -1,18 +1,13 @@
-import type { Command } from "commander";
 import chalk from "chalk";
-import * as envinfo from "envinfo";
 import * as path from "path";
 import * as fs from "fs-extra";
-import type { InvalidNames, LegacyNames, ValidNames } from "validate-npm-package-name";
-import validateProjectName from "validate-npm-package-name";
 import spawn from "cross-spawn";
-import semver from "semver";
-import inquirer from "inquirer";
 import { compileLauncher } from "./launcherCompiler";
 import consts from "./consts";
 import { checkAppName, getNexeCommand, isSafeToCreateProjectIn, mergeIntoPackageJson, replaceAppNamePlaceholder } from "./createWindowlessAppUtils";
 import { copyFile, readJsonResource, readResource, writeFile, writeJson } from "./fileUtils";
 import { checkNodeVersion, checkThatNpmCanReadCwd } from "./nodeUtils";
+import type { ProgramConfig } from "./cliParser";
 import { parseCommand } from "./cliParser";
 
 const tsConfigFilename = "tsconfig.json";
@@ -36,78 +31,6 @@ const launcherSrcModifiedLocation = "launcher/launcher.cs";
 // Default icon location
 const defaultLauncherIconLocation = "../templates/common/resources/windows-launcher.ico";
 
-type ProgramConfig = {
-    projectName: string;
-    icon?: string;
-    typescript: boolean;
-    husky: boolean;
-    skipInstall: boolean;
-    nodeVersion: string;
-    verbose: boolean;
-};
-
-function interactiveMode(): Promise<ProgramConfig> {
-    return inquirer.prompt([
-        {
-            type: "input",
-            message: "Project Name:",
-            name: "projectName",
-            validate: (value) => {
-                const result: ValidNames | InvalidNames | LegacyNames = validateProjectName(value);
-                return result.validForNewPackages || ((result as InvalidNames)?.errors?.[0]) || ((result as LegacyNames)?.warnings?.[0]) || "Invalid project name";
-            }
-        },
-        {
-            type: "input",
-            message: "Icon:",
-            name: "icon"
-        },
-        {
-            type: "confirm",
-            message: "TypeScript:",
-            name: "typescript",
-            default: true
-        },
-        {
-            type: "confirm",
-            message: "Install Husky:",
-            name: "husky",
-            default: true
-        },
-        {
-            type: "confirm",
-            message: "Skip NPM Install:",
-            name: "skipInstall",
-            default: false
-        },
-        {
-            type: "input",
-            message: "Node Version:",
-            name: "nodeVersion",
-            validate: (value) => !value || !!semver.valid(value) || "Invalid node version"
-        },
-        {
-            type: "confirm",
-            message: "Verbose:",
-            name: "verbose",
-            default: false
-        }
-    ]);
-}
-
-const validateInput = (programConfig: ProgramConfig, command: Command): void => {
-    if (!programConfig.projectName || typeof programConfig.projectName === "undefined") {
-        console.error(`${chalk.red("Missing project name")}`);
-        console.log();
-        command.outputHelp();
-        process.exit(1);
-    }
-
-    if (programConfig.icon && !fs.pathExistsSync(programConfig.icon)) {
-        console.log(`Cannot find icon in ${chalk.red(programConfig.icon)}. Switching to ${chalk.green("default")} icon.`);
-        programConfig.icon = undefined;
-    }
-};
 
 
 const install = async (root: string, dependencies: string[], isDev: boolean, programConfig: ProgramConfig): Promise<void> => {
@@ -325,43 +248,7 @@ const createApp = (programConfig: ProgramConfig): Promise<void> => {
 };
 
 export const createWindowlessApp = async (argv: string[]): Promise<void> => {
-    const { projectName, command } = parseCommand(argv);
-
-    if (command.info) {
-        console.log(chalk.bold("\nEnvironment Info:"));
-        return envinfo
-            .run(
-                {
-                    System: ["OS", "CPU"],
-                    Binaries: ["Node", "npm"],
-                    npmPackages: [...consts.dependencies, ...consts.devDependencies, ...consts.tsDevDependencies],
-                    npmGlobalPackages: ["create-windowless-app"]
-                },
-                {
-                    duplicates: true,
-                    showNotFound: true
-                }
-            )
-            .then(console.log);
-    }
-
-    let programConfig: ProgramConfig;
-    if (command.interactive) {
-        programConfig = await interactiveMode();
-    }
-    else {
-        programConfig = {
-            projectName,
-            verbose: command.verbose,
-            typescript: command.typescript,
-            husky: command.husky,
-            skipInstall: command.skipInstall,
-            icon: command.icon,
-            nodeVersion: command.nodeVersion
-        };
-    }
-
-    validateInput(programConfig, command);
+    const programConfig: ProgramConfig = await parseCommand(argv);
 
     if (programConfig.projectName) {
         return createApp(programConfig);
