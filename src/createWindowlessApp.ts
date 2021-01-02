@@ -1,4 +1,4 @@
-import type { Command } from "commander";
+import type commander from "commander";
 import chalk from "chalk";
 import * as envinfo from "envinfo";
 import * as path from "path";
@@ -95,7 +95,7 @@ function interactiveMode(): Promise<ProgramConfig> {
     ]);
 }
 
-const validateInput = (programConfig: ProgramConfig, command: Command): void => {
+const validateInput = (programConfig: ProgramConfig, command: commander.Command): void => {
     if (!programConfig.projectName || typeof programConfig.projectName === "undefined") {
         console.error(`${chalk.red("Missing project name")}`);
         console.log();

@@ -70,10 +70,6 @@ describe("Test createWindowlessApp", () => {
         await createWindowlessApp(["node.exe", "dummy.ts", sandbox, "--node-version", "12.12.0"]);
     });
 
-    it("should print info with flags: --info", async () => {
-        await createWindowlessApp(["node.exe", "dummy.ts", "--info"]);
-    });
-
     it("should print help with flags: --help", async () => {
         // @ts-ignore
         jest.spyOn(process, "exit").mockImplementation((code: number) => {

@@ -1,12 +1,34 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Test cliParser should print help with flags: --help: command-help 1`] = `
+exports[`Test cliParser should error on missing project name: missing-project-name-stdout 1`] = `
+"  console.error
+    error: missing required argument 'project-directory'
+
+      34 |             console.log();
+      35 |         })
+    > 36 |         .parse(argv);
+         |          ^
+      37 |     return { projectName, command };
+      38 | };
+      39 | 
+
+      at Command.missingArgument (node_modules/commander/index.js:1198:13)
+      at node_modules/commander/index.js:996:18
+          at Array.forEach (<anonymous>)
+      at Command._parseCommand (node_modules/commander/index.js:994:20)
+      at Command.parse (node_modules/commander/index.js:801:10)
+      at Object.parseCommand (src/cliParser.ts:36:10)
+      at test/cliParser.test.ts:137:33
+
+"
+`;
+
+exports[`Test cliParser should print help with flags: --help: help-stdout 1`] = `
 "Usage: create-windowless-app <project-directory> [options]
 
 Options:
   -V, --version                 output the version number
   --verbose                     print additional logs
-  --info                        print environment debug info
   --interactive                 interactive mode
   --no-typescript               use javascript rather than typescript
   --no-husky                    do not install husky pre-commit hook for
@@ -15,6 +37,6 @@ Options:
                                 installing
   --icon <icon>                 override default launcher icon file
   --node-version <nodeVersion>  override node version to bundle
-  -h, --help                    output usage information
+  -h, --help                    display help for command
 "
 `;
