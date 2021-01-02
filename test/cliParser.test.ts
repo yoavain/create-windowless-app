@@ -1,3 +1,10 @@
+jest.mock("chalk", function() {
+    return {
+        cyan: (text: string) => text,
+        green: (text: string) => text
+    };
+});
+
 import { parseCommand } from "../src/cliParser";
 import { v4 as uuid } from "uuid";
 
