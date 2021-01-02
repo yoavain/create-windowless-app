@@ -28,11 +28,6 @@ jest.mock("fs-extra", () => {
         pathExistsSync: jest.fn()
     };
 });
-jest.mock("envinfo", () => {
-    return {
-        run: () => Promise.resolve({})
-    };
-});
 
 describe("Test createWindowlessApp", () => {
     it("should create a prototype project with default flags", async () => {
