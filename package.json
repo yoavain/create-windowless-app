@@ -1,22 +1,23 @@
 {
     "name": "create-windowless-app",
-    "version": "3.5.0",
+    "version": "4.0.0",
     "description": "Create a windowless NodeJS app",
     "main": "dist/index.js",
     "bin": {
         "create-windowless-app": "./dist/index.js"
     },
     "scripts": {
-        "build": "npm run eslint && npm run test && npm run tsc && npm run add-shebang && npm run package",
+        "build": "npm run test && npm run tsc && npm run add-shebang && npm run package",
+        "test": "npm run eslint && npm run type-check && npm run jest",
         "eslint": "eslint src/ test/ templates/",
         "eslint:fix": "npm run eslint -- --fix",
+        "type-check": "tsc --build tsconfig.all.json",
+        "jest": "cross-env FORCE_COLOR=0 jest",
         "prettier": "prettier --write *.json templates/**/*.json",
-        "test": "jest --coverage",
         "tsc": "rimraf dist && tsc",
         "add-shebang": "add-shebang",
         "start": "ts-node src/index.ts",
         "start:help": "npm run start -- --help",
-        "start:info": "npm run start -- --info",
         "package": "npm pack"
     },
     "repository": {
@@ -85,7 +86,7 @@
     },
     "dependencies": {
         "chalk": "4.1.0",
-        "commander": "4.1.1",
+        "commander": "6.2.1",
         "cross-spawn": "7.0.3",
         "envinfo": "7.7.3",
         "fs-extra": "9.0.1",
