@@ -2,6 +2,10 @@ import { parseCommand } from "../src/cliParser";
 import { v4 as uuid } from "uuid";
 
 describe("Test cliParser", () => {
+    afterEach(() => {
+        jest.restoreAllMocks();
+    });
+    
     it("should parse default flags", async () => {
         const sandbox: string = uuid();
         const { projectName, command } = parseCommand(["node.exe", "dummy.ts", sandbox]);
