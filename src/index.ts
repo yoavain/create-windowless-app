@@ -1,5 +1,5 @@
-import { createWindowlessApp } from "~src/createWindowlessApp";
-import { checkCscInPath } from "~src/launcherCompiler";
+import { createWindowlessApp } from "./createWindowlessApp";
+import { checkCscInPath } from "./launcherCompiler";
 
 const currentNodeVersion: string = process.versions.node;
 const semver: string[] = currentNodeVersion.split(".");

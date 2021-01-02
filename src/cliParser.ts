@@ -1,6 +1,6 @@
 import commander from "commander";
 import chalk from "chalk";
-import { PACKAGE_JSON_FILENAME } from "~src/createWindowlessAppUtils";
+import { PACKAGE_JSON_FILENAME } from "./createWindowlessAppUtils";
 import * as fs from "fs-extra";
 import inquirer from "inquirer";
 import type { InvalidNames, LegacyNames, ValidNames } from "validate-npm-package-name";
