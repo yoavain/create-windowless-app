@@ -1,4 +1,4 @@
-import { checkNodeVersion } from "~src/nodeUtils";
+import { checkNodeVersion } from "../src/nodeUtils";
 
 describe("Test checkNodeVersion", () => {
     it("test checkNodeVersion - available", async () => {

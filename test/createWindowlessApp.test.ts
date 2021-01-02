@@ -11,7 +11,7 @@ jest.mock("cross-spawn", () => ({
 }));
 
 // Imports should be after mocks
-import { createWindowlessApp } from "~src/createWindowlessApp";
+import { createWindowlessApp } from "../src/createWindowlessApp";
 import { v4 as uuid } from "uuid";
 
 process.chdir = jest.fn();
