@@ -60,12 +60,7 @@
                 "allowModules": ["clean-webpack-plugin", "copy-webpack-plugin"]
             }
         ],
-        "node/no-missing-import": [
-            "error",
-            {
-                "tryExtensions": [".ts", ".js", ".d.ts", ".json", ".node"]
-            }
-        ],
+        "node/no-missing-import": 0,
         "node/no-unpublished-import": 0,
         "node/no-unsupported-features/es-syntax": 0,
         "import/extensions": [

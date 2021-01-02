@@ -1,4 +1,4 @@
-import { parseCommand } from "../src/cliParser";
+import { parseCommand } from "~src/cliParser";
 import { v4 as uuid } from "uuid";
 import * as path from "path";
 

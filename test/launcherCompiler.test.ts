@@ -1,4 +1,4 @@
-import { checkCscInPath } from "../src/launcherCompiler";
+import { checkCscInPath } from "~src/launcherCompiler";
 import mockedEnv from "mocked-env";
 import mockFs from "mock-fs";
 
