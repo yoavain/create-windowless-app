@@ -1,4 +1,4 @@
-import { default as commander } from "commander";
+import type { Command } from "commander";
 import chalk from "chalk";
 import * as envinfo from "envinfo";
 import * as path from "path";
@@ -10,12 +10,10 @@ import semver from "semver";
 import inquirer from "inquirer";
 import { compileLauncher } from "./launcherCompiler";
 import consts from "./consts";
-import { checkAppName, getNexeCommand, isSafeToCreateProjectIn, mergeIntoPackageJson, PACKAGE_JSON_FILENAME, replaceAppNamePlaceholder } from "./createWindowlessAppUtils";
+import { checkAppName, getNexeCommand, isSafeToCreateProjectIn, mergeIntoPackageJson, replaceAppNamePlaceholder } from "./createWindowlessAppUtils";
 import { copyFile, readJsonResource, readResource, writeFile, writeJson } from "./fileUtils";
 import { checkNodeVersion, checkThatNpmCanReadCwd } from "./nodeUtils";
-import type { Command } from "commander";
-
-const packageJson = require(`../${PACKAGE_JSON_FILENAME}`);
+import { parseCommand } from "./cliParser";
 
 const tsConfigFilename = "tsconfig.json";
 const WebpackConfigFilename = "webpack.config.js";
@@ -97,11 +95,11 @@ function interactiveMode(): Promise<ProgramConfig> {
     ]);
 }
 
-const validateInput = (programConfig: ProgramConfig, program: Command): void => {
+const validateInput = (programConfig: ProgramConfig, command: Command): void => {
     if (!programConfig.projectName || typeof programConfig.projectName === "undefined") {
         console.error(`${chalk.red("Missing project name")}`);
         console.log();
-        program.outputHelp();
+        command.outputHelp();
         process.exit(1);
     }
 
@@ -327,34 +325,9 @@ const createApp = (programConfig: ProgramConfig): Promise<void> => {
 };
 
 export const createWindowlessApp = async (argv: string[]): Promise<void> => {
-    let projectName: string = undefined;
+    const { projectName, command } = parseCommand(argv);
 
-    const program: Command = new commander.Command(packageJson.name)
-        .version(packageJson.version)
-        .arguments("<project-directory>")
-        .usage(`${chalk.green("<project-directory>")} [options]`)
-        .action((name) => {
-            projectName = name;
-        })
-        .option("--verbose", "print additional logs")
-        .option("--info", "print environment debug info")
-        .option("--interactive", "interactive mode")
-        .option("--no-typescript", "use javascript rather than typescript")
-        .option("--no-husky", "do not install husky pre-commit hook for building launcher")
-        .option("--skip-install", "write dependencies to package.json without installing")
-        .option("--icon <icon>", "override default launcher icon file")
-        .option("--node-version <nodeVersion>", "override node version to bundle")
-        .allowUnknownOption()
-        .on("--help", () => {
-            console.log(`    Only ${chalk.green("<project-directory>")} is required.`);
-            console.log();
-            console.log("    If you have any problems, do not hesitate to file an issue:");
-            console.log(`      ${chalk.cyan("https://github.com/yoavain/create-windowless-app/issues/new")}`);
-            console.log();
-        })
-        .parse(argv);
-
-    if (program.info) {
+    if (command.info) {
         console.log(chalk.bold("\nEnvironment Info:"));
         return envinfo
             .run(
@@ -373,22 +346,22 @@ export const createWindowlessApp = async (argv: string[]): Promise<void> => {
     }
 
     let programConfig: ProgramConfig;
-    if (program.interactive) {
+    if (command.interactive) {
         programConfig = await interactiveMode();
     }
     else {
         programConfig = {
             projectName,
-            verbose: program.verbose,
-            typescript: program.typescript,
-            husky: program.husky,
-            skipInstall: program.skipInstall,
-            icon: program.icon,
-            nodeVersion: program.nodeVersion
+            verbose: command.verbose,
+            typescript: command.typescript,
+            husky: command.husky,
+            skipInstall: command.skipInstall,
+            icon: command.icon,
+            nodeVersion: command.nodeVersion
         };
     }
 
-    validateInput(programConfig, program);
+    validateInput(programConfig, command);
 
     if (programConfig.projectName) {
         return createApp(programConfig);

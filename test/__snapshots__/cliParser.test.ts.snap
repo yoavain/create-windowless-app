@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test cliParser should print help with flags: --help: command-help 1`] = `
+"Usage: create-windowless-app <project-directory> [options]
+
+Options:
+  -V, --version                 output the version number
+  --verbose                     print additional logs
+  --info                        print environment debug info
+  --interactive                 interactive mode
+  --no-typescript               use javascript rather than typescript
+  --no-husky                    do not install husky pre-commit hook for
+                                building launcher
+  --skip-install                write dependencies to package.json without
+                                installing
+  --icon <icon>                 override default launcher icon file
+  --node-version <nodeVersion>  override node version to bundle
+  -h, --help                    output usage information
+"
+`;
