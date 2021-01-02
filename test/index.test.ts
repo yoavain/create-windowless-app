@@ -51,7 +51,7 @@ const testFilesExists = (root: string, typescript: boolean = true, husky: boolea
 
 const cli = (args: string[], cwd?: string): Promise<CliResult> => {
     return new Promise((resolve) => {
-        const command: string = `node -r ts-node/register -r tsconfig-paths/register ${path.resolve("src/index.ts")} ${args.join(" ")}`;
+        const command: string = `node -r ts-node/register ${path.resolve("src/index.ts")} ${args.join(" ")}`;
         console.log(`Testing command: ${command}`);
         exec(command, { cwd }, (error, stdout, stderr) => {
             if (error) {
