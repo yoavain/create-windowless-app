@@ -1,6 +1,5 @@
 import type commander from "commander";
 import chalk from "chalk";
-import * as envinfo from "envinfo";
 import * as path from "path";
 import * as fs from "fs-extra";
 import type { InvalidNames, LegacyNames, ValidNames } from "validate-npm-package-name";
@@ -326,24 +325,6 @@ const createApp = (programConfig: ProgramConfig): Promise<void> => {
 
 export const createWindowlessApp = async (argv: string[]): Promise<void> => {
     const { projectName, command } = parseCommand(argv);
-
-    if (command.info) {
-        console.log(chalk.bold("\nEnvironment Info:"));
-        return envinfo
-            .run(
-                {
-                    System: ["OS", "CPU"],
-                    Binaries: ["Node", "npm"],
-                    npmPackages: [...consts.dependencies, ...consts.devDependencies, ...consts.tsDevDependencies],
-                    npmGlobalPackages: ["create-windowless-app"]
-                },
-                {
-                    duplicates: true,
-                    showNotFound: true
-                }
-            )
-            .then(console.log);
-    }
 
     let programConfig: ProgramConfig;
     if (command.interactive) {
