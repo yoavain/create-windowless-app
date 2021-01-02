@@ -1,5 +1,6 @@
 import { parseCommand } from "../src/cliParser";
 import { v4 as uuid } from "uuid";
+import * as path from "path";
 
 describe("Test cliParser", () => {
     afterEach(() => {
@@ -9,106 +10,100 @@ describe("Test cliParser", () => {
     it("should parse default flags", async () => {
         const sandbox: string = uuid();
 
-        const { projectName, command } = parseCommand(["node.exe", "dummy.ts", sandbox]);
+        const { projectName, verbose, typescript, husky, skipInstall, icon, nodeVersion } = await  parseCommand(["node.exe", "dummy.ts", sandbox]);
 
         expect(projectName).toEqual(sandbox);
-        expect(command.interactive).toBeUndefined();
-        expect(command.verbose).toBeUndefined();
-        expect(command.typescript).toEqual(true);
-        expect(command.husky).toEqual(true);
-        expect(command.skipInstall).toBeUndefined();
-        expect(command.icon).toBeUndefined();
-        expect(command.nodeVersion).toBeUndefined();
+        expect(verbose).toBeUndefined();
+        expect(typescript).toEqual(true);
+        expect(husky).toEqual(true);
+        expect(skipInstall).toBeUndefined();
+        expect(icon).toBeUndefined();
+        expect(nodeVersion).toBeUndefined();
     });
 
     it("should parse flags: --skip-install", async () => {
         const sandbox: string = uuid();
 
-        const { projectName, command } = parseCommand(["node.exe", "dummy.ts", sandbox, "--skip-install"]);
+        const { projectName, verbose, typescript, husky, skipInstall, icon, nodeVersion } = await parseCommand(["node.exe", "dummy.ts", sandbox, "--skip-install"]);
 
         expect(projectName).toEqual(sandbox);
-        expect(command.interactive).toBeUndefined();
-        expect(command.verbose).toBeUndefined();
-        expect(command.typescript).toEqual(true);
-        expect(command.husky).toEqual(true);
-        expect(command.skipInstall).toEqual(true);
-        expect(command.icon).toBeUndefined();
-        expect(command.nodeVersion).toBeUndefined();
+        expect(verbose).toBeUndefined();
+        expect(typescript).toEqual(true);
+        expect(husky).toEqual(true);
+        expect(skipInstall).toEqual(true);
+        expect(icon).toBeUndefined();
+        expect(nodeVersion).toBeUndefined();
     });
 
     it("should parse flags: --no-typescript", async () => {
         const sandbox: string = uuid();
 
-        const { projectName, command } = parseCommand(["node.exe", "dummy.ts", sandbox, "--no-typescript"]);
+        const { projectName, verbose, typescript, husky, skipInstall, icon, nodeVersion } = await  parseCommand(["node.exe", "dummy.ts", sandbox, "--no-typescript"]);
 
         expect(projectName).toEqual(sandbox);
-        expect(command.interactive).toBeUndefined();
-        expect(command.verbose).toBeUndefined();
-        expect(command.typescript).toEqual(false);
-        expect(command.husky).toEqual(true);
-        expect(command.skipInstall).toBeUndefined();
-        expect(command.icon).toBeUndefined();
-        expect(command.nodeVersion).toBeUndefined();
+        expect(verbose).toBeUndefined();
+        expect(typescript).toEqual(false);
+        expect(husky).toEqual(true);
+        expect(skipInstall).toBeUndefined();
+        expect(icon).toBeUndefined();
+        expect(nodeVersion).toBeUndefined();
     });
 
     it("should parse flags: --no-husky", async () => {
         const sandbox: string = uuid();
 
-        const { projectName, command } = parseCommand(["node.exe", "dummy.ts", sandbox, "--no-husky"]);
+        const { projectName, verbose, typescript, husky, skipInstall, icon, nodeVersion } = await  parseCommand(["node.exe", "dummy.ts", sandbox, "--no-husky"]);
 
         expect(projectName).toEqual(sandbox);
-        expect(command.interactive).toBeUndefined();
-        expect(command.verbose).toBeUndefined();
-        expect(command.typescript).toEqual(true);
-        expect(command.husky).toEqual(false);
-        expect(command.skipInstall).toBeUndefined();
-        expect(command.icon).toBeUndefined();
-        expect(command.nodeVersion).toBeUndefined();
+        expect(verbose).toBeUndefined();
+        expect(typescript).toEqual(true);
+        expect(husky).toEqual(false);
+        expect(skipInstall).toBeUndefined();
+        expect(icon).toBeUndefined();
+        expect(nodeVersion).toBeUndefined();
     });
 
     it("should parse flags: --verbose", async () => {
         const sandbox: string = uuid();
 
-        const { projectName, command } = parseCommand(["node.exe", "dummy.ts", sandbox, "--verbose"]);
+        const { projectName, verbose, typescript, husky, skipInstall, icon, nodeVersion } = await  parseCommand(["node.exe", "dummy.ts", sandbox, "--verbose"]);
 
         expect(projectName).toEqual(sandbox);
-        expect(command.interactive).toBeUndefined();
-        expect(command.verbose).toEqual(true);
-        expect(command.typescript).toEqual(true);
-        expect(command.husky).toEqual(true);
-        expect(command.skipInstall).toBeUndefined();
-        expect(command.icon).toBeUndefined();
-        expect(command.nodeVersion).toBeUndefined();
+        expect(verbose).toEqual(true);
+        expect(typescript).toEqual(true);
+        expect(husky).toEqual(true);
+        expect(skipInstall).toBeUndefined();
+        expect(icon).toBeUndefined();
+        expect(nodeVersion).toBeUndefined();
     });
 
     it("should parse flags: --icon", async () => {
         const sandbox: string = uuid();
 
-        const { projectName, command } = parseCommand(["node.exe", "dummy.ts", sandbox, "--icon", "someIcon"]);
+        const iconLocation: string = path.join(__dirname, "..", "templates", "common", "resources", "windows-launcher.ico");
+        const { projectName, verbose, typescript, husky, skipInstall, icon, nodeVersion } = await  parseCommand(["node.exe", "dummy.ts", sandbox, "--icon", iconLocation]);
 
         expect(projectName).toEqual(sandbox);
-        expect(command.interactive).toBeUndefined();
-        expect(command.verbose).toBeUndefined();
-        expect(command.typescript).toEqual(true);
-        expect(command.husky).toEqual(true);
-        expect(command.skipInstall).toBeUndefined();
-        expect(command.icon).toEqual("someIcon");
-        expect(command.nodeVersion).toBeUndefined();
+        expect(verbose).toBeUndefined();
+        expect(typescript).toEqual(true);
+        expect(husky).toEqual(true);
+        expect(skipInstall).toBeUndefined();
+        expect(icon).toEqual(iconLocation);
+        expect(nodeVersion).toBeUndefined();
     });
 
     it("should parse flags: --node-version", async () => {
         const sandbox: string = uuid();
 
-        const { projectName, command } = parseCommand(["node.exe", "dummy.ts", sandbox, "--node-version", "12.12.0"]);
+        const { projectName, verbose, typescript, husky, skipInstall, icon, nodeVersion } = await  parseCommand(["node.exe", "dummy.ts", sandbox, "--node-version", "12.12.0"]);
 
         expect(projectName).toEqual(sandbox);
-        expect(command.interactive).toBeUndefined();
-        expect(command.verbose).toBeUndefined();
-        expect(command.typescript).toEqual(true);
-        expect(command.husky).toEqual(true);
-        expect(command.skipInstall).toBeUndefined();
-        expect(command.icon).toBeUndefined();
-        expect(command.nodeVersion).toEqual("12.12.0");
+        expect(verbose).toBeUndefined();
+        expect(typescript).toEqual(true);
+        expect(husky).toEqual(true);
+        expect(skipInstall).toBeUndefined();
+        expect(icon).toBeUndefined();
+        expect(nodeVersion).toEqual("12.12.0");
     });
 
     it("should print help with flags: --help", async () => {
@@ -134,7 +129,7 @@ describe("Test cliParser", () => {
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         const mockStdout = jest.spyOn(process.stdout, "write").mockImplementation(() => {});
 
-        const { projectName } = parseCommand(["node.exe", "dummy.ts"]);
+        const { projectName } = await parseCommand(["node.exe", "dummy.ts"]);
 
         expect(projectName).toBeUndefined();
         expect(mockExit).toHaveBeenCalledWith(1);

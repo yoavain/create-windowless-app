@@ -4,21 +4,20 @@ exports[`Test cliParser should error on missing project name: missing-project-na
 "  console.error
     error: missing required argument 'project-directory'
 
-      34 |             console.log();
-      35 |         })
-    > 36 |         .parse(argv);
-         |          ^
-      37 |     return { projectName, command };
-      38 | };
-      39 | 
+      115 |             console.log();
+      116 |         })
+    > 117 |         .parse(argv);
+          |          ^
+      118 | 
+      119 |     let programConfig: ProgramConfig;
+      120 |     if (command.interactive) {
 
       at Command.missingArgument (node_modules/commander/index.js:1198:13)
       at node_modules/commander/index.js:996:18
           at Array.forEach (<anonymous>)
       at Command._parseCommand (node_modules/commander/index.js:994:20)
       at Command.parse (node_modules/commander/index.js:801:10)
-      at Object.parseCommand (src/cliParser.ts:36:10)
-      at test/cliParser.test.ts:137:33
+      at src/cliParser.ts:117:10
 
 "
 `;
