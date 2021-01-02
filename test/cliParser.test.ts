@@ -108,31 +108,29 @@ describe("Test cliParser", () => {
 
     it("should print help with flags: --help", async () => {
         // @ts-ignore
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        const mockExit = jest.spyOn(process, "exit").mockImplementation(() => {});
+        jest.spyOn(process, "exit").mockImplementation((code: number) => {
+            expect(code).toEqual(0);
+        });
         // @ts-ignore
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        const mockStdout = jest.spyOn(process.stdout, "write").mockImplementation(() => {});
+        const mockStdout = jest.spyOn(process.stdout, "write").mockImplementation(() => { /* do nothing */ });
         const sandbox: string = uuid();
 
         parseCommand(["node.exe", "dummy.ts", sandbox, "--help"]);
 
-        expect(mockExit).toHaveBeenCalledWith(0);
         expect(mockStdout.mock.calls[0][0]).toMatchSnapshot("help-stdout");
     });
 
     it("should error on missing project name", async () => {
         // @ts-ignore
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        const mockExit = jest.spyOn(process, "exit").mockImplementation(() => {});
+        jest.spyOn(process, "exit").mockImplementation((code: number) => {
+            expect(code).toEqual(1);
+        });
         // @ts-ignore
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        const mockStdout = jest.spyOn(process.stdout, "write").mockImplementation(() => {});
+        const mockStdout = jest.spyOn(process.stdout, "write").mockImplementation(() => { /* do nothing */ });
 
         const { projectName } = await parseCommand(["node.exe", "dummy.ts"]);
 
         expect(projectName).toBeUndefined();
-        expect(mockExit).toHaveBeenCalledWith(1);
         expect(mockStdout.mock.calls[0][0]).toMatchSnapshot("missing-project-name-stdout");
     });
 });
