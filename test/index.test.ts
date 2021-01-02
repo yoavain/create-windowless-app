@@ -3,8 +3,8 @@ import fs from "fs-extra";
 import { v4 as uuid } from "uuid";
 import { exec } from "child_process";
 import * as del from "del";
-import { readJsonFile } from "../src/fileUtils";
-import consts from "../src/consts";
+import { readJsonFile } from "~src/fileUtils";
+import consts from "~src/consts";
 import type { ExecException } from "child_process";
 
 jest.setTimeout(300000);
@@ -51,7 +51,7 @@ const testFilesExists = (root: string, typescript: boolean = true, husky: boolea
 
 const cli = (args: string[], cwd?: string): Promise<CliResult> => {
     return new Promise((resolve) => {
-        const command: string = `node -r ts-node/register ${path.resolve("src/index.ts")} ${args.join(" ")}`;
+        const command: string = `node -r ts-node/register -r tsconfig-paths/register ${path.resolve("src/index.ts")} ${args.join(" ")}`;
         console.log(`Testing command: ${command}`);
         exec(command, { cwd }, (error, stdout, stderr) => {
             if (error) {
