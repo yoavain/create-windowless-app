@@ -1,5 +1,6 @@
 import chalk from "chalk";
 import semverCompare from "semver-compare";
+import type { RequestInit } from "node-fetch";
 import fetch from "node-fetch";
 import spawn from "cross-spawn";
 import type { SpawnSyncReturns } from "child_process";
@@ -7,7 +8,7 @@ import type { SpawnSyncReturns } from "child_process";
 export const checkNodeVersion = async (nodeVersion?: string): Promise<string> => {
     const windowsPrefix = "windows-x64";
     const windowsPrefixLength: number = windowsPrefix.length + 1;
-    const options = {
+    const options: RequestInit = {
         headers: {
             "User-Agent": "request"
         }
@@ -19,11 +20,11 @@ export const checkNodeVersion = async (nodeVersion?: string): Promise<string> =>
     let nexeNodeVersion: string;
     if (nodeVersion) {
         // Find exact
-        const split = nodeVersion.split(".");
+        const split: string[] = nodeVersion.split(".");
         const major: number = (split.length > 0 && (Number(split[0]) || 0)) || 0;
         const minor: number = (split.length > 1 && (Number(split[1]) || 0)) || 0;
         const patch: number = (split.length > 2 && (Number(split[2]) || 0)) || 0;
-        const lookupVersion = `${windowsPrefix}-${major}.${minor}.${patch}`;
+        const lookupVersion: string = `${windowsPrefix}-${major}.${minor}.${patch}`;
 
         const windowsVersion = assets && assets.find((asset) => asset.name === lookupVersion);
         if (windowsVersion && windowsVersion.name) {
