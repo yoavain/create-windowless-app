@@ -71,8 +71,10 @@ const buildTypeScriptProject = (root: string, appName: string, nodeVersion: stri
     // Add scripts
     const scripts: { [key: string]: string } = {
         "start": "ts-node src/index.ts",
+        "pretsc": "rimraf _compile",
         "tsc": "tsc",
-        "webpack": "rimraf production && webpack",
+        "prewebpack": "rimraf production",
+        "webpack": "webpack",
         "nexe": getNexeCommand(appName, nodeVersion),
         "build": "npm run tsc && npm run webpack && npm run nexe",
         "check-csc": "ts-node -e \"require(\"\"./launcher/launcherCompiler\"\").checkCscInPath(true)\"",
@@ -102,7 +104,8 @@ const buildJavaScriptProject = (root: string, appName: string, nodeVersion: stri
     // Add scripts
     const scripts: { [key: string]: string } = {
         "start": "node src/index.js",
-        "webpack": "rimraf production && webpack",
+        "prewebpack": "rimraf production",
+        "webpack": "webpack",
         "nexe": getNexeCommand(appName, nodeVersion),
         "build": "npm run webpack && npm run nexe",
         "check-csc": "node -e \"require(\"\"./launcher/launcherCompiler\"\").checkCscInPath(true)\"",
