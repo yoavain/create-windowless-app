@@ -93,6 +93,13 @@ describe("Test cliParser", () => {
     });
 
     it("should error on non existing icon", async () => {
+        // @ts-ignore
+        jest.spyOn(process, "exit").mockImplementation((code: number) => {
+            expect(code).toEqual(1);
+        });
+        // @ts-ignore
+        const mockStdout = jest.spyOn(process.stdout, "write").mockImplementation(() => { /* do nothing */ });
+
         const sandbox: string = uuid();
 
         const iconLocation: string = path.join(__dirname, "..", "templates", "common", "resources", "not-exists.ico");
@@ -105,6 +112,7 @@ describe("Test cliParser", () => {
         expect(skipInstall).toBeUndefined();
         expect(icon).toBeUndefined();
         expect(nodeVersion).toBeUndefined();
+        expect(mockStdout.mock.calls[0][0]).toContain("Cannot find icon in");
     });
 
     it("should parse flags: --node-version", async () => {
