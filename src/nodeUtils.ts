@@ -16,7 +16,7 @@ const getWindowsReleases = async (): Promise<string[]> => {
             }
         };
         const result = await fetch("https://api.github.com/repos/nexe/nexe/releases/latest", options).then((res) => res.json());
-        releases = result && result.assets.map((asset) => asset.name).filter((asset) => asset.name.startsWith(WINDOWS_PREFIX));
+        releases = result && result.assets.map((asset) => asset.name).filter((name) => name.startsWith(WINDOWS_PREFIX));
     }
     return releases;
 };
