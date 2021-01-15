@@ -92,6 +92,21 @@ describe("Test cliParser", () => {
         expect(nodeVersion).toBeUndefined();
     });
 
+    it("should error on non existing icon", async () => {
+        const sandbox: string = uuid();
+
+        const iconLocation: string = path.join(__dirname, "..", "templates", "common", "resources", "not-exists.ico");
+        const { projectName, verbose, typescript, husky, skipInstall, icon, nodeVersion } = await  parseCommand(["node.exe", "dummy.ts", sandbox, "--icon", iconLocation]);
+
+        expect(projectName).toEqual(sandbox);
+        expect(verbose).toBeUndefined();
+        expect(typescript).toEqual(true);
+        expect(husky).toEqual(true);
+        expect(skipInstall).toBeUndefined();
+        expect(icon).toBeUndefined();
+        expect(nodeVersion).toBeUndefined();
+    });
+
     it("should parse flags: --node-version", async () => {
         const sandbox: string = uuid();
 

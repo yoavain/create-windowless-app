@@ -1,4 +1,3 @@
-import commander from "commander";
 import chalk from "chalk";
 import { PACKAGE_JSON_FILENAME } from "./createWindowlessAppUtils";
 import * as fs from "fs-extra";
@@ -6,13 +5,10 @@ import inquirer from "inquirer";
 import type { InvalidNames, LegacyNames, ValidNames } from "validate-npm-package-name";
 import validateProjectName from "validate-npm-package-name";
 import semver from "semver";
+import yargs from "yargs";
+import { hideBin } from "yargs/helpers";
 
 const packageJson = require(`../${PACKAGE_JSON_FILENAME}`);
-
-export type ParsedCommand = {
-    projectName: string,
-    command: commander.Command
-}
 
 export type ProgramConfig = {
     projectName: string;
@@ -73,48 +69,67 @@ function interactiveMode(): Promise<ProgramConfig> {
     ]);
 }
 
-const validateInput = (programConfig: ProgramConfig, command: commander.Command): ProgramConfig => {
-    const programConfigResult = { ...programConfig };
-    if (!programConfigResult.projectName || typeof programConfigResult.projectName === "undefined") {
-        console.error(`${chalk.red("Missing project name")}`);
-        console.log();
-        command.outputHelp();
-        process.exit(1);
+const validateInput = (argv): any => {
+    if (argv.icon && !fs.pathExistsSync(argv.icon)) {
+        console.log(`Cannot find icon in ${chalk.red(argv.icon)}. Switching to ${chalk.green("default")} icon.`);
+        delete argv.icon;
     }
 
-    if (programConfigResult.icon && !fs.pathExistsSync(programConfigResult.icon)) {
-        console.log(`Cannot find icon in ${chalk.red(programConfigResult.icon)}. Switching to ${chalk.green("default")} icon.`);
-        programConfigResult.icon = undefined;
-    }
-
-    return programConfigResult;
+    return argv;
 };
 
 export const parseCommand = async (argv: string[]): Promise<ProgramConfig> => {
-    let projectName: string = undefined;
-    const command: commander.Command = new commander.Command(packageJson.name)
-        .version(packageJson.version)
-        .arguments("<project-directory>")
-        .usage(`${chalk.green("<project-directory>")} [options]`)
-        .action((name) => {
-            projectName = name;
+    const command = yargs(hideBin(argv))
+        .command("* <projectName>", "project name",
+            (yargs) => {
+                return yargs.positional("projectName", {
+                    describe: "project name",
+                    type: "string"
+                });
+            },
+            () => {})
+        .option("verbose", {
+            alias: "v",
+            type: "boolean",
+            description: "print additional logs"
         })
-        .option("--verbose", "print additional logs")
-        .option("--interactive", "interactive mode")
-        .option("--no-typescript", "use javascript rather than typescript")
-        .option("--no-husky", "do not install husky pre-commit hook for building launcher")
-        .option("--skip-install", "write dependencies to package.json without installing")
-        .option("--icon <icon>", "override default launcher icon file")
-        .option("--node-version <nodeVersion>", "override node version to bundle")
-        .allowUnknownOption()
-        .on("--help", () => {
-            console.log(`    Only ${chalk.green("<project-directory>")} is required.`);
-            console.log();
-            console.log("    If you have any problems, do not hesitate to file an issue:");
-            console.log(`      ${chalk.cyan("https://github.com/yoavain/create-windowless-app/issues/new")}`);
-            console.log();
+        .option("interactive", {
+            type: "boolean",
+            alias: "i",
+            description: "interactive mode"
         })
-        .parse(argv);
+        .option("typescript", {
+            alias: "t",
+            type: "boolean",
+            description: "use typescript",
+            default: true
+        })
+        .option("husky", {
+            alias: "h",
+            type: "boolean",
+            description: "install husky pre-commit hook for building launcher",
+            default: true
+        })
+        .option("skip-install", {
+            alias: "s",
+            type: "boolean",
+            description: "write dependencies to package.json without installing"
+        })
+        .option("icon", {
+            alias: "c",
+            type: "string",
+            description: "override default launcher icon file"
+        })
+        .option("node-version", {
+            alias: "n",
+            type: "string",
+            description: "override node version to bundle"
+        })
+        .version("version", packageJson.version)
+        .help()
+        .middleware(validateInput)
+        .strict()
+        .argv;
 
     let programConfig: ProgramConfig;
     if (command.interactive) {
@@ -122,15 +137,15 @@ export const parseCommand = async (argv: string[]): Promise<ProgramConfig> => {
     }
     else {
         programConfig = {
-            projectName,
+            projectName : command.projectName,
             verbose: command.verbose,
             typescript: command.typescript,
             husky: command.husky,
-            skipInstall: command.skipInstall,
+            skipInstall: command["skip-install"],
             icon: command.icon,
-            nodeVersion: command.nodeVersion
+            nodeVersion: command["node-version"]
         };
     }
 
-    return validateInput(programConfig, command);
+    return programConfig;
 };

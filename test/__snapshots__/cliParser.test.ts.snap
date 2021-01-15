@@ -2,40 +2,61 @@
 
 exports[`Test cliParser should error on missing project name: missing-project-name-stdout 1`] = `
 "  console.error
-    error: missing required argument 'project-directory'
+    jest.js <projectName>
+    
+    project name
+    
+    Positionals:
+      projectName  project name                                             [string]
+    
+    Options:
+      -v, --verbose       print additional logs                            [boolean]
+      -i, --interactive   interactive mode                                 [boolean]
+      -t, --typescript    use typescript                   [boolean] [default: true]
+      -h, --husky         install husky pre-commit hook for building launcher
+                                                           [boolean] [default: true]
+      -s, --skip-install  write dependencies to package.json without installing
+                                                                           [boolean]
+      -c, --icon          override default launcher icon file               [string]
+      -n, --node-version  override node version to bundle                   [string]
+          --version       Show version number                              [boolean]
+          --help          Show help                                        [boolean]
 
-      115 |             console.log();
-      116 |         })
-    > 117 |         .parse(argv);
-          |          ^
-      118 | 
-      119 |     let programConfig: ProgramConfig;
-      120 |     if (command.interactive) {
-
-      at Command.missingArgument (node_modules/commander/index.js:1198:13)
-      at node_modules/commander/index.js:996:18
-          at Array.forEach (<anonymous>)
-      at Command._parseCommand (node_modules/commander/index.js:994:20)
-      at Command.parse (node_modules/commander/index.js:801:10)
-      at src/cliParser.ts:117:10
+      at error (node_modules/yargs/build/index.cjs:2625:25)
+      at Object.self.showHelp (node_modules/yargs/build/index.cjs:1100:9)
+      at Object.Yargs.self.showHelp (node_modules/yargs/build/index.cjs:2495:17)
+      at Object.fail (node_modules/yargs/build/index.cjs:701:27)
+      at Object.positionalCount (node_modules/yargs/build/index.cjs:1452:19)
+      at populatePositionals (node_modules/yargs/build/index.cjs:520:20)
+      at Object.runCommand (node_modules/yargs/build/index.cjs:427:29)
 
 "
 `;
 
 exports[`Test cliParser should print help with flags: --help: help-stdout 1`] = `
-"Usage: create-windowless-app <project-directory> [options]
+"  console.log
+    jest.js <projectName>
+    
+    project name
+    
+    Positionals:
+      projectName  project name                                             [string]
+    
+    Options:
+      -v, --verbose       print additional logs                            [boolean]
+      -i, --interactive   interactive mode                                 [boolean]
+      -t, --typescript    use typescript                   [boolean] [default: true]
+      -h, --husky         install husky pre-commit hook for building launcher
+                                                           [boolean] [default: true]
+      -s, --skip-install  write dependencies to package.json without installing
+                                                                           [boolean]
+      -c, --icon          override default launcher icon file               [string]
+      -n, --node-version  override node version to bundle                   [string]
+          --version       Show version number                              [boolean]
+          --help          Show help                                        [boolean]
 
-Options:
-  -V, --version                 output the version number
-  --verbose                     print additional logs
-  --interactive                 interactive mode
-  --no-typescript               use javascript rather than typescript
-  --no-husky                    do not install husky pre-commit hook for
-                                building launcher
-  --skip-install                write dependencies to package.json without
-                                installing
-  --icon <icon>                 override default launcher icon file
-  --node-version <nodeVersion>  override node version to bundle
-  -h, --help                    display help for command
+      at log (node_modules/yargs/build/index.cjs:2617:25)
+          at Array.forEach (<anonymous>)
+
 "
 `;
