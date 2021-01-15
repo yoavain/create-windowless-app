@@ -10,7 +10,7 @@ export const consts = {
         "webpack",
         "webpack-cli",
         "copy-webpack-plugin",
-        "clean-webpack-plugin",
+        "rimraf",
         "cross-spawn"
     ],
     huskyDependencies: [
