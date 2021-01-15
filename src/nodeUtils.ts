@@ -5,17 +5,25 @@ import fetch from "node-fetch";
 import spawn from "cross-spawn";
 import type { SpawnSyncReturns } from "child_process";
 
-export const checkNodeVersion = async (nodeVersion?: string): Promise<string> => {
-    const windowsPrefix = "windows-x64";
-    const windowsPrefixLength: number = windowsPrefix.length + 1;
-    const options: RequestInit = {
-        headers: {
-            "User-Agent": "request"
-        }
-    };
+const WINDOWS_PREFIX = "windows-x64";
 
-    const result = await fetch("https://api.github.com/repos/nexe/nexe/releases/latest", options).then((res) => res.json());
-    const assets = result && result.assets;
+let releases: string[];
+const getWindowsReleases = async (): Promise<string[]> => {
+    if (!releases) {
+        const options: RequestInit = {
+            headers: {
+                "User-Agent": "request"
+            }
+        };
+        const result = await fetch("https://api.github.com/repos/nexe/nexe/releases/latest", options).then((res) => res.json());
+        releases = result && result.assets.map((asset) => asset.name).filter((name) => name.startsWith(WINDOWS_PREFIX));
+    }
+    return releases;
+};
+
+export const checkNodeVersion = async (nodeVersion?: string): Promise<string> => {
+    const windowsPrefixLength: number = WINDOWS_PREFIX.length + 1;
+    const windowsVersions: string[] = await getWindowsReleases();
 
     let nexeNodeVersion: string;
     if (nodeVersion) {
@@ -24,12 +32,12 @@ export const checkNodeVersion = async (nodeVersion?: string): Promise<string> =>
         const major: number = (split.length > 0 && (Number(split[0]) || 0)) || 0;
         const minor: number = (split.length > 1 && (Number(split[1]) || 0)) || 0;
         const patch: number = (split.length > 2 && (Number(split[2]) || 0)) || 0;
-        const lookupVersion: string = `${windowsPrefix}-${major}.${minor}.${patch}`;
+        const lookupVersion: string = `${WINDOWS_PREFIX}-${major}.${minor}.${patch}`;
 
-        const windowsVersion = assets && assets.find((asset) => asset.name === lookupVersion);
-        if (windowsVersion && windowsVersion.name) {
+        const windowsVersion: string = windowsVersions && windowsVersions.find((asset) => asset === lookupVersion);
+        if (windowsVersion) {
             if (major <= 12) {
-                nexeNodeVersion = windowsVersion.name;
+                nexeNodeVersion = windowsVersion;
                 console.log(`Found version ${chalk.green(nodeVersion)} in nexe`);
             }
             else {
@@ -43,7 +51,6 @@ export const checkNodeVersion = async (nodeVersion?: string): Promise<string> =>
 
     if (!nexeNodeVersion) {
         // Find latest
-        const windowsVersions = assets && assets.filter((asset) => asset.name.startsWith(windowsPrefix)).map((asset) => asset.name);
         const latestWindowsVersion =
                 windowsVersions &&
                 windowsVersions.reduce((acc, cur) => {
@@ -53,7 +60,7 @@ export const checkNodeVersion = async (nodeVersion?: string): Promise<string> =>
                         acc = cur;
                     }
                     return acc;
-                }, `${windowsPrefix}-0.0.0`);
+                }, `${WINDOWS_PREFIX}-0.0.0`);
 
         console.log(`Using latest nexe release: ${latestWindowsVersion}`);
         nexeNodeVersion = latestWindowsVersion;

@@ -1,6 +1,6 @@
 {
     "name": "create-windowless-app",
-    "version": "4.0.2",
+    "version": "4.2.0",
     "description": "Create a windowless NodeJS app",
     "main": "dist/index.js",
     "bin": {
@@ -14,7 +14,8 @@
         "type-check": "tsc --build tsconfig.all.json",
         "jest": "cross-env FORCE_COLOR=0 jest",
         "prettier": "prettier --write *.json templates/**/*.json",
-        "tsc": "rimraf dist && tsc",
+        "pretsc": "rimraf dist",
+        "tsc": "tsc",
         "add-shebang": "add-shebang",
         "start": "ts-node src/index.ts",
         "start:help": "npm run start -- --help",
@@ -87,14 +88,14 @@
     },
     "dependencies": {
         "chalk": "4.1.0",
-        "commander": "6.2.1",
         "cross-spawn": "7.0.3",
         "fs-extra": "9.0.1",
         "inquirer": "7.3.3",
         "node-fetch": "2.6.1",
         "semver": "7.3.4",
         "semver-compare": "1.0.0",
-        "validate-npm-package-name": "3.0.0"
+        "validate-npm-package-name": "3.0.0",
+        "yargs": "16.2.0"
     },
     "husky": {
         "hooks": {
