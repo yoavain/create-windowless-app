@@ -12,7 +12,7 @@ export const checkMsbuildInPath = async (exit?: boolean): Promise<boolean> => {
     const compilerFound: boolean = await results.find((result) => !!result);
 
     if (exit && !compilerFound) {
-        console.error(`You need "${COMPILER}"in your %PATH% in order to compile the launcher executable.`);
+        console.error(`You need "${COMPILER}" in your %PATH% in order to compile the launcher executable.`);
         process.exit(1);
     }
     else {
