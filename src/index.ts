@@ -1,5 +1,5 @@
 import { createWindowlessApp } from "./createWindowlessApp";
-import { checkCscInPath } from "./launcherCompiler";
+import { checkMsbuildInPath } from "./launcherCompiler";
 
 const currentNodeVersion: string = process.versions.node;
 const semver: string[] = currentNodeVersion.split(".");
@@ -10,8 +10,8 @@ if (isNaN(major) || major < 10) {
     process.exit(1);
 }
 
-// Check for csc.exe in %PATH%
-checkCscInPath(true).then(() => {
+// Check for msbuild.exe in %PATH%
+checkMsbuildInPath(true).then(() => {
     // noinspection JSIgnoredPromiseFromCall
     createWindowlessApp(process.argv);
 });

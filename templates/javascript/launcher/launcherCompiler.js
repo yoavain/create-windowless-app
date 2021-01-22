@@ -2,28 +2,29 @@ const fs = require("fs-extra");
 const path = require("path");
 const spawn = require("cross-spawn");
 
-const checkCscInPath = async (exit) => {
-    // Check for csc.exe in %PATH%
-    const promises = process.env.path.split(";").map((p) => fs.pathExists(path.resolve(p, "csc.exe")));
-    const results = await Promise.all(promises);
-    const cscFound = await results.find((result) => !!result);
+const COMPILER = "msbuild.exe";
 
-    if (exit && !cscFound) {
-        console.error("You need \"csc.exe\" (C# compiler) in your path in order to compile the launcher.exe.");
+const checkCscInPath = async (exit) => {
+    // Check for compiler in %PATH%
+    const promises = process.env.path.split(";").map((p) => fs.pathExists(path.resolve(p, COMPILER)));
+    const results = await Promise.all(promises);
+    const compilerFound = await results.find((result) => !!result);
+
+    if (exit && !compilerFound) {
+        console.error(`You need "${COMPILER}" in your %PATH% in order to compile the launcher executable.`);
         process.exit(1);
     }
     else {
-        return cscFound;
+        return compilerFound;
     }
 };
 
-const compileLauncher = async (sourceLocation, outputLocation, iconLocation) => {
-    const command = "csc.exe";
-    const args = ["/t:winexe", `/out:${outputLocation}`, `/win32icon:${iconLocation}`, `${sourceLocation}`];
+const compileLauncher = async () => {
+    const args = ["./launcher/launcher.csproj"];
 
-    const spawnResult = spawn.sync(command, args, { stdio: "inherit" });
+    const spawnResult = spawn.sync(COMPILER, args, { stdio: "inherit" });
     if (spawnResult.status !== 0) {
-        return Promise.reject({ command: `${command} ${args.join(" ")}` });
+        return Promise.reject({ command: `${COMPILER} ${args.join(" ")}` });
     }
 };
 

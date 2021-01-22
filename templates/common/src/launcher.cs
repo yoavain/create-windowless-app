@@ -7,7 +7,7 @@ namespace MyProcessSample {
     class MyProcess {
         public static void Main(string[] args) {
             // App Name
-            const string AppName = "<APPNAME>";
+            const string AppName = "##APPNAME##";
 
             try {
                 using (Process myProcess = new Process()) {
