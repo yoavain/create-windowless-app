@@ -26,6 +26,7 @@ const testFilesExists = (root: string, typescript: boolean = true, husky: boolea
     expect(fs.existsSync(path.resolve(root, "tsconfig.json"))).toEqual(typescript);
     expect(fs.existsSync(path.resolve(root, "src", `index.${scriptExt}`))).toBeTruthy();
     expect(fs.existsSync(path.resolve(root, "launcher", "launcher.cs"))).toBeTruthy();
+    expect(fs.existsSync(path.resolve(root, "launcher", "launcher.csproj"))).toBeTruthy();
     expect(fs.existsSync(path.resolve(root, "launcher", "launcher.ico"))).toBeTruthy();
     expect(fs.existsSync(path.resolve(root, "launcher", `launcherCompiler.${scriptExt}`))).toBeTruthy();
     expect(fs.existsSync(path.resolve(root, "resources", "bin", `${root}-launcher.exe`))).toBeTruthy();
