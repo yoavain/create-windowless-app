@@ -4,7 +4,7 @@ const { WindowsToaster } = require("node-notifier");
 const { execFile } = require("child_process");
 
 // App Name
-const AppName = "<APPNAME>";
+const AppName = "##APPNAME##";
 
 const executable = process.argv[0];
 

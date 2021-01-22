@@ -5,7 +5,7 @@ import { execFile } from "child_process";
 import type { Option } from "node-notifier";
 
 // App Name
-const AppName: string = "<APPNAME>";
+const AppName: string = "##APPNAME##";
 
 const executable: string = process.argv[0];
 
