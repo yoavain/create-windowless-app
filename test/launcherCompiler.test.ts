@@ -8,12 +8,12 @@ describe("Test checkMsbuildInPath", () => {
         jest.restoreAllMocks();
     });
 
-    it("Test CSC found", async () => {
+    it("Test MSBuild found", async () => {
         const restoreEnv = mockedEnv({
             PATH: "fakePath"
         });
         mockFs({
-            "fakePath/csc.exe": "exist"
+            "fakePath/msbuild.exe": "exist"
         });
 
         const result: boolean = await checkMsbuildInPath(false);
@@ -21,7 +21,7 @@ describe("Test checkMsbuildInPath", () => {
         restoreEnv();
 
     });
-    it("Test CSC not found", async () => {
+    it("Test MSBuild not found", async () => {
         const restoreEnv = mockedEnv({
             PATH: "fakePath"
         });
