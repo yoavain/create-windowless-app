@@ -1,6 +1,6 @@
 <Project DefaultTargets="Compile" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="Current">
     <PropertyGroup>
-        <appname>$$APPNAME$$</appname>
+        <appname>##APPNAME##</appname>
     </PropertyGroup>
     <ItemGroup>
         <CSFile Include="./launcher.cs"/>
