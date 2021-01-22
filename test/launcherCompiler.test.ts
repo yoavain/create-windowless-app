@@ -1,8 +1,8 @@
-import { checkCscInPath } from "../src/launcherCompiler";
+import { checkMsbuildInPath } from "../src/launcherCompiler";
 import mockedEnv from "mocked-env";
 import mockFs from "mock-fs";
 
-describe("Test checkCscInPath", () => {
+describe("Test checkMsbuildInPath", () => {
     afterEach(() => {
         mockFs.restore();
         jest.restoreAllMocks();
@@ -16,7 +16,7 @@ describe("Test checkCscInPath", () => {
             "fakePath/csc.exe": "exist"
         });
 
-        const result: boolean = await checkCscInPath(false);
+        const result: boolean = await checkMsbuildInPath(false);
         expect(result).toBeTruthy();
         restoreEnv();
 
@@ -26,7 +26,7 @@ describe("Test checkCscInPath", () => {
             PATH: "fakePath"
         });
 
-        const result: boolean = await checkCscInPath(false);
+        const result: boolean = await checkMsbuildInPath(false);
         expect(result).toBeFalsy();
         restoreEnv();
     });

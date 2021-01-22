@@ -20,7 +20,7 @@ If something doesn't work, please [file an issue](https://github.com/yoavain/cre
 
 
 Pre-Requisites:
-* csc.exe (C# compiler) in the PATH environment variable
+* `MSBuild.exe` must be in the PATH environment variable
 
 ## Quick Overview
 

@@ -103,5 +103,5 @@ export const mergeIntoPackageJson = (root: string, field: string, data: any): vo
 };
 
 export const replaceAppNamePlaceholder = (str: string, appName: string): string => {
-    return str.replace(/<APPNAME>/g, `${appName}`);
+    return str.replace(/$$APPNAME$$/g, `${appName}`);
 };

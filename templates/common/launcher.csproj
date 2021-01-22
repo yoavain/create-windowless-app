@@ -1,0 +1,17 @@
+<Project DefaultTargets="Compile" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="Current">
+    <PropertyGroup>
+        <appname>$$APPNAME$$</appname>
+    </PropertyGroup>
+    <ItemGroup>
+        <CSFile Include="./launcher.cs"/>
+    </ItemGroup>
+    <ItemGroup>
+        <Content Include="./launcher.ico"/>
+    </ItemGroup>
+    <Target Name="Compile">
+        <CSC Sources="@(CSFile)" OutputAssembly="../resources/bin/$(appname).exe" TargetType="WinExe" Win32Icon="./launcher.ico">
+            <Output TaskParameter="OutputAssembly" ItemName="EXEFile"/>
+        </CSC>
+        <Message Text="The output file is @(EXEFile)"/>
+    </Target>
+</Project>

@@ -26,8 +26,8 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
-    - name: Setup csc.exe
-      uses: yoavain/Setup-CSC@v7
+    - name: setup-msbuild
+      uses: microsoft/setup-msbuild@v1.0.2
 
     - name: Dependencies Install
       run: npm ci

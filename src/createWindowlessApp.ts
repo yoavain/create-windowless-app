@@ -27,6 +27,8 @@ const jsLauncherCompilerLocation = "../templates/javascript/launcher/launcherCom
 // Launcher Source
 const launcherSrcResourceLocation = "../templates/common/src/launcher.cs";
 const launcherSrcModifiedLocation = "launcher/launcher.cs";
+const launcherProjResourceLocation = "../templates/common/launcher.csproj";
+const launcherProjModifiedLocation = "launcher/launcher.csproj";
 
 // Default icon location
 const defaultLauncherIconLocation = "../templates/common/resources/windows-launcher.ico";
@@ -77,8 +79,8 @@ const buildTypeScriptProject = (root: string, appName: string, nodeVersion: stri
         "webpack": "webpack",
         "nexe": getNexeCommand(appName, nodeVersion),
         "build": "npm run tsc && npm run webpack && npm run nexe",
-        "check-csc": "ts-node -e \"require(\"\"./launcher/launcherCompiler\"\").checkCscInPath(true)\"",
-        "rebuild-launcher": `csc /t:winexe /out:resources/bin/${appName}-launcher.exe /win32icon:launcher/launcher.ico launcher/launcher.cs`
+        "check-msbuild": "ts-node -e \"require(\"\"./launcher/launcherCompiler\"\").checkMsbuildInPath(true)\"",
+        "rebuild-launcher": "msbuild launcher/launcher.csproj"
     };
     mergeIntoPackageJson(root, "scripts", scripts);
 
@@ -86,7 +88,7 @@ const buildTypeScriptProject = (root: string, appName: string, nodeVersion: stri
     if (husky) {
         const husky = {
             hooks: {
-                "pre-commit": `git diff HEAD --exit-code --stat launcher.cs || npm run check-csc && npm run rebuild-launcher && git add resources/bin/${appName}-launcher.exe`
+                "pre-commit": `git diff HEAD --exit-code --stat launcher.cs || npm run check-msbuild && npm run rebuild-launcher && git add resources/bin/${appName}-launcher.exe`
             }
         };
         mergeIntoPackageJson(root, "husky", husky);
@@ -108,8 +110,8 @@ const buildJavaScriptProject = (root: string, appName: string, nodeVersion: stri
         "webpack": "webpack",
         "nexe": getNexeCommand(appName, nodeVersion),
         "build": "npm run webpack && npm run nexe",
-        "check-csc": "node -e \"require(\"\"./launcher/launcherCompiler\"\").checkCscInPath(true)\"",
-        "rebuild-launcher": `csc /t:winexe /out:resources/bin/${appName}-launcher.exe /win32icon:launcher/launcher.ico launcher/launcher.cs`
+        "check-msbuild": "node -e \"require(\"\"./launcher/launcherCompiler\"\").checkMsbuildInPath(true)\"",
+        "rebuild-launcher": "msbuild launcher/launcher.csproj"
     };
     mergeIntoPackageJson(root, "scripts", scripts);
 
@@ -117,7 +119,7 @@ const buildJavaScriptProject = (root: string, appName: string, nodeVersion: stri
     if (husky) {
         const husky = {
             hooks: {
-                "pre-commit": `git diff HEAD --exit-code --stat launcher.cs || npm run check-csc && npm run rebuild-launcher && git add resources/bin/${appName}-launcher.exe`
+                "pre-commit": `git diff HEAD --exit-code --stat launcher.cs || npm run check-msbuild && npm run rebuild-launcher && git add resources/bin/${appName}-launcher.exe`
             }
         };
         mergeIntoPackageJson(root, "husky", husky);
@@ -130,6 +132,7 @@ export const buildLauncher = (root: string, appName: string, icon: string, types
 
     fs.ensureDirSync(path.resolve("launcher"));
     writeFile(path.resolve(launcherSrcModifiedLocation), replaceAppNamePlaceholder(readResource(launcherSrcResourceLocation), appName));
+    writeFile(path.resolve(launcherProjModifiedLocation), replaceAppNamePlaceholder(readResource(launcherProjResourceLocation), appName));
     if (typescript) {
         copyFile(path.resolve(__dirname, tsLauncherCompilerLocation), path.resolve(root, "launcher", "launcherCompiler.ts"));
     }
@@ -149,10 +152,7 @@ export const buildLauncher = (root: string, appName: string, icon: string, types
     }
     copyFile(iconLocation, path.resolve(root, "launcher", "launcher.ico"));
 
-    // Compiled file location
-    const outputLocation: string = path.resolve(root, "resources", "bin", `${appName}-launcher.exe`);
-
-    return compileLauncher(launcherSrcModifiedLocation, outputLocation, iconLocation);
+    return compileLauncher();
 };
 
 const run = async (root: string, appName: string, originalDirectory: string, programConfig: ProgramConfig): Promise<void> => {
