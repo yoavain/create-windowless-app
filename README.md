@@ -70,6 +70,7 @@ my-app
 ├── webpack.config.js
 ├── launcher
 │   ├── launcher.cs
+│   ├── launcher.csproj
 |   ├── launcher.ico
 |   └── launcherCompiler.ts
 ├── resources
