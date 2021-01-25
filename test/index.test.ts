@@ -22,7 +22,7 @@ const testFilesExists = (root: string, typescript: boolean = true, husky: boolea
     // Files
     const scriptExt: string = typescript ? "ts" : "js";
     expect(fs.existsSync(path.resolve(root, "package.json"))).toBeTruthy();
-    expect(fs.existsSync(path.resolve(root, "webpack.config.js"))).toBeTruthy();
+    expect(fs.existsSync(path.resolve(root, `webpack.config.${scriptExt}`))).toBeTruthy();
     expect(fs.existsSync(path.resolve(root, "tsconfig.json"))).toEqual(typescript);
     expect(fs.existsSync(path.resolve(root, "src", `index.${scriptExt}`))).toBeTruthy();
     expect(fs.existsSync(path.resolve(root, "launcher", "launcher.cs"))).toBeTruthy();
