@@ -1,7 +1,8 @@
-const path = require("path");
-const CopyWebpackPlugin = require("copy-webpack-plugin");
+import type webpack from "webpack";
+import CopyWebpackPlugin from "copy-webpack-plugin";
+import path from "path";
 
-module.exports = {
+export const webpackConfig: webpack.Configuration = {
     mode: "production",
     entry: "./_compile/index.js",
     target: "node",
@@ -27,3 +28,5 @@ module.exports = {
     ],
     devtool: "source-map"
 };
+
+export default webpackConfig;

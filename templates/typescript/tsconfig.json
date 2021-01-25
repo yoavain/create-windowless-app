@@ -8,5 +8,5 @@
         "target": "es6",
         "lib": ["es6", "es2017"]
     },
-    "include": ["./src/**/*"]
+    "include": ["./src/**/*", "./webpack.config.ts"]
 }
