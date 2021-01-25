@@ -10,17 +10,14 @@ import { checkNodeVersion, checkThatNpmCanReadCwd } from "./nodeUtils";
 import type { ProgramConfig } from "./cliParser";
 import { parseCommand } from "./cliParser";
 
-const tsConfigFilename = "tsconfig.json";
-const WebpackConfigFilename = "webpack.config.js";
-
 // TypeScript
-const tsWebpackConfigResourceLocation = `../templates/typescript/${WebpackConfigFilename}`;
-const tsConfigResourceLocation = `../templates/typescript/${tsConfigFilename}`;
+const tsWebpackConfigResourceLocation = "../templates/typescript/webpack.config.ts";
+const tsConfigResourceLocation = "../templates/typescript/tsconfig.json";
 const tsIndexResourceLocation = "../templates/typescript/src/index.ts";
 const tsLauncherCompilerLocation = "../templates/typescript/launcher/launcherCompiler.ts";
 
 // JavaScript
-const jsWebpackConfigResourceLocation = `../templates/javascript/${WebpackConfigFilename}`;
+const jsWebpackConfigResourceLocation = "../templates/javascript/webpack.config.js";
 const jsIndexResourceLocation = "../templates/javascript/src/index.js";
 const jsLauncherCompilerLocation = "../templates/javascript/launcher/launcherCompiler.js";
 
@@ -65,8 +62,8 @@ const buildTypeScriptProject = (root: string, appName: string, nodeVersion: stri
     console.log(`Building project ${chalk.green("files")}.`);
     console.log();
 
-    writeJson(path.resolve(root, tsConfigFilename), readJsonResource(tsConfigResourceLocation));
-    writeFile(path.resolve(root, WebpackConfigFilename), replaceAppNamePlaceholder(readResource(tsWebpackConfigResourceLocation), appName));
+    writeJson(path.resolve(root, "tsconfig.json"), readJsonResource(tsConfigResourceLocation));
+    writeFile(path.resolve(root, "webpack.config.ts"), replaceAppNamePlaceholder(readResource(tsWebpackConfigResourceLocation), appName));
     fs.ensureDirSync(path.resolve(root, "src"));
     writeFile(path.resolve(root, "src", "index.ts"), replaceAppNamePlaceholder(readResource(tsIndexResourceLocation), appName));
 
@@ -99,7 +96,7 @@ const buildJavaScriptProject = (root: string, appName: string, nodeVersion: stri
     console.log(`Building project ${chalk.green("files")}.`);
     console.log();
 
-    writeFile(path.resolve(root, WebpackConfigFilename), replaceAppNamePlaceholder(readResource(jsWebpackConfigResourceLocation), appName));
+    writeFile(path.resolve(root, "webpack.config.js"), replaceAppNamePlaceholder(readResource(jsWebpackConfigResourceLocation), appName));
     fs.ensureDirSync(path.resolve(root, "src"));
     writeFile(path.resolve(root, "src", "index.js"), replaceAppNamePlaceholder(readResource(jsIndexResourceLocation), appName));
 
