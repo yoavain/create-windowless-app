@@ -37,7 +37,7 @@
     "license": "MIT",
     "engines": {
         "node": ">=10 <15",
-        "npm": "<7"
+        "npm": "<8"
     },
     "files": [
         "dist/**",
