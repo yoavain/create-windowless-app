@@ -36,7 +36,8 @@
     "author": "yoavain",
     "license": "MIT",
     "engines": {
-        "node": ">=10"
+        "node": ">=10 <15",
+        "npm": "<7"
     },
     "files": [
         "dist/**",
