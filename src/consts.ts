@@ -21,6 +21,7 @@ export const consts = {
         "@types/node",
         "@types/node-notifier",
         "@types/winston",
+        "ts-loader",
         "ts-node",
         "typescript",
         "@types/cross-spawn"
