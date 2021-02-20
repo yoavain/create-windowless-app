@@ -72,7 +72,7 @@ const buildTypeScriptProject = (root: string, appName: string, nodeVersion: stri
         "start": "ts-node src/index.ts",
         "pretsc": "rimraf _compile",
         "tsc": "tsc",
-        "prewebpack": "rimraf production",
+        "prewebpack": "rimraf build && rimraf dist",
         "webpack": "webpack",
         "nexe": getNexeCommand(appName, nodeVersion),
         "build": "npm run tsc && npm run webpack && npm run nexe",
@@ -103,7 +103,7 @@ const buildJavaScriptProject = (root: string, appName: string, nodeVersion: stri
     // Add scripts
     const scripts: { [key: string]: string } = {
         "start": "node src/index.js",
-        "prewebpack": "rimraf production",
+        "prewebpack": "rimraf build && rimraf dist",
         "webpack": "webpack",
         "nexe": getNexeCommand(appName, nodeVersion),
         "build": "npm run webpack && npm run nexe",
