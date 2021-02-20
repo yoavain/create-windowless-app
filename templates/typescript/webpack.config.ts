@@ -4,11 +4,20 @@ import path from "path";
 
 export const webpackConfig: webpack.Configuration = {
     mode: "production",
-    entry: "./_compile/index.js",
+    entry: "./src/index.ts",
     target: "node",
     output: {
         path: path.join(__dirname, "_build"),
         filename: "index.js"
+    },
+    module: {
+        rules: [
+            {
+                test: /\.ts$/,
+                use: "ts-loader",
+                exclude: /node_modules/
+            }
+        ]
     },
     plugins: [
         new CopyWebpackPlugin({

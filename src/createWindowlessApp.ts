@@ -13,6 +13,7 @@ import { parseCommand } from "./cliParser";
 // TypeScript
 const tsWebpackConfigResourceLocation = "../templates/typescript/webpack.config.ts";
 const tsConfigResourceLocation = "../templates/typescript/tsconfig.json";
+const tsConfigAllResourceLocation = "../templates/typescript/tsconfig.all.json";
 const tsIndexResourceLocation = "../templates/typescript/src/index.ts";
 const tsLauncherCompilerLocation = "../templates/typescript/launcher/launcherCompiler.ts";
 
@@ -63,19 +64,19 @@ const buildTypeScriptProject = (root: string, appName: string, nodeVersion: stri
     console.log();
 
     writeJson(path.resolve(root, "tsconfig.json"), readJsonResource(tsConfigResourceLocation));
+    writeJson(path.resolve(root, "tsconfig.all.json"), readJsonResource(tsConfigAllResourceLocation));
     writeFile(path.resolve(root, "webpack.config.ts"), replaceAppNamePlaceholder(readResource(tsWebpackConfigResourceLocation), appName));
     fs.ensureDirSync(path.resolve(root, "src"));
     writeFile(path.resolve(root, "src", "index.ts"), replaceAppNamePlaceholder(readResource(tsIndexResourceLocation), appName));
 
     // Add scripts
-    const scripts: { [key: string]: string } = {
+    const scripts: Record<string, string> = {
         "start": "ts-node src/index.ts",
-        "pretsc": "rimraf _compile",
-        "tsc": "tsc",
-        "prewebpack": "rimraf production",
+        "type-check": "tsc --build tsconfig.all.json",
+        "prewebpack": "rimraf build && rimraf dist",
         "webpack": "webpack",
         "nexe": getNexeCommand(appName, nodeVersion),
-        "build": "npm run tsc && npm run webpack && npm run nexe",
+        "build": "npm run type-check && npm run webpack && npm run nexe",
         "check-msbuild": "ts-node -e \"require(\"\"./launcher/launcherCompiler\"\").checkMsbuildInPath(true)\"",
         "rebuild-launcher": "msbuild launcher/launcher.csproj"
     };
@@ -85,7 +86,7 @@ const buildTypeScriptProject = (root: string, appName: string, nodeVersion: stri
     if (husky) {
         const husky = {
             hooks: {
-                "pre-commit": `git diff HEAD --exit-code --stat launcher.cs || npm run check-msbuild && npm run rebuild-launcher && git add resources/bin/${appName}-launcher.exe`
+                "pre-commit": `git diff HEAD --exit-code --stat launcher/* || npm run check-msbuild && npm run rebuild-launcher && git add resources/bin/${appName}-launcher.exe`
             }
         };
         mergeIntoPackageJson(root, "husky", husky);
@@ -101,9 +102,9 @@ const buildJavaScriptProject = (root: string, appName: string, nodeVersion: stri
     writeFile(path.resolve(root, "src", "index.js"), replaceAppNamePlaceholder(readResource(jsIndexResourceLocation), appName));
 
     // Add scripts
-    const scripts: { [key: string]: string } = {
+    const scripts: Record<string, string> = {
         "start": "node src/index.js",
-        "prewebpack": "rimraf production",
+        "prewebpack": "rimraf build && rimraf dist",
         "webpack": "webpack",
         "nexe": getNexeCommand(appName, nodeVersion),
         "build": "npm run webpack && npm run nexe",
@@ -116,7 +117,7 @@ const buildJavaScriptProject = (root: string, appName: string, nodeVersion: stri
     if (husky) {
         const husky = {
             hooks: {
-                "pre-commit": `git diff HEAD --exit-code --stat launcher.cs || npm run check-msbuild && npm run rebuild-launcher && git add resources/bin/${appName}-launcher.exe`
+                "pre-commit": `git diff HEAD --exit-code --stat launcher/* || npm run check-msbuild && npm run rebuild-launcher && git add resources/bin/${appName}-launcher.exe`
             }
         };
         mergeIntoPackageJson(root, "husky", husky);
