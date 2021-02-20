@@ -85,7 +85,7 @@ const buildTypeScriptProject = (root: string, appName: string, nodeVersion: stri
     if (husky) {
         const husky = {
             hooks: {
-                "pre-commit": `git diff HEAD --exit-code --stat launcher.cs || npm run check-msbuild && npm run rebuild-launcher && git add resources/bin/${appName}-launcher.exe`
+                "pre-commit": `git diff HEAD --exit-code --stat launcher/* || npm run check-msbuild && npm run rebuild-launcher && git add resources/bin/${appName}-launcher.exe`
             }
         };
         mergeIntoPackageJson(root, "husky", husky);
@@ -116,7 +116,7 @@ const buildJavaScriptProject = (root: string, appName: string, nodeVersion: stri
     if (husky) {
         const husky = {
             hooks: {
-                "pre-commit": `git diff HEAD --exit-code --stat launcher.cs || npm run check-msbuild && npm run rebuild-launcher && git add resources/bin/${appName}-launcher.exe`
+                "pre-commit": `git diff HEAD --exit-code --stat launcher/* || npm run check-msbuild && npm run rebuild-launcher && git add resources/bin/${appName}-launcher.exe`
             }
         };
         mergeIntoPackageJson(root, "husky", husky);
