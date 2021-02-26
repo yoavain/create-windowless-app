@@ -8,7 +8,7 @@ import type { SpawnSyncReturns } from "child_process";
 const WINDOWS_PREFIX = "windows-x64";
 
 let releases: string[];
-const getWindowsReleases = async (): Promise<string[]> => {
+export const getWindowsReleases = async (): Promise<string[]> => {
     if (!releases) {
         const options: RequestInit = {
             headers: {
@@ -36,7 +36,7 @@ export const checkNodeVersion = async (nodeVersion?: string): Promise<string> =>
 
         const windowsVersion: string = windowsVersions && windowsVersions.find((asset) => asset === lookupVersion);
         if (windowsVersion) {
-            if (major <= 12) {
+            if (major <= 14) {
                 nexeNodeVersion = windowsVersion;
                 console.log(`Found version ${chalk.green(nodeVersion)} in nexe`);
             }
@@ -56,7 +56,7 @@ export const checkNodeVersion = async (nodeVersion?: string): Promise<string> =>
                 windowsVersions.reduce((acc, cur) => {
                     const curSemVer: string = cur.substring(windowsPrefixLength);
                     const accSemVer: string = acc.substring(windowsPrefixLength);
-                    if (semverCompare(curSemVer, accSemVer) > 0 && semverCompare(curSemVer, "14.0.0") < 0) {
+                    if (semverCompare(curSemVer, accSemVer) > 0 && semverCompare(curSemVer, "15.0.0") < 0) {
                         acc = cur;
                     }
                     return acc;

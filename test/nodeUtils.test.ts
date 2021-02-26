@@ -1,21 +1,54 @@
-import { checkNodeVersion } from "../src/nodeUtils";
+import * as nodeUtils from "../src/nodeUtils";
 
-describe("Test checkNodeVersion", () => {
-    it("test checkNodeVersion - available", async () => {
-        const version: string = await checkNodeVersion("12.9.1");
-        expect(version).toEqual("windows-x64-12.9.1");
+describe("Test nodeUtils", () => {
+    describe("Test getWindowsReleases", () => {
+        it("Check getWindowsReleases - online", async () => {
+            const release = new Set<string>(await nodeUtils.getWindowsReleases());
+            expect(release).toContain("windows-x64-6.17.1");
+            expect(release).toContain("windows-x64-8.16.0");
+            expect(release).toContain("windows-x64-10.16.0");
+            expect(release).toContain("windows-x64-12.18.2");
+            expect(release).toContain("windows-x64-14.15.3");
+        });
     });
-    it("test checkNodeVersion - not available", async () => {
-        const version: string = await checkNodeVersion("12.11.0");
-        expect(version).toBeDefined();
-    });
-    it("test checkNodeVersion - not given", async () => {
-        const version: string = await checkNodeVersion();
-        expect(version).toBeDefined();
-    });
-    it("test checkNodeVersion - reject 14.x versions", async () => {
-        const version: string = await checkNodeVersion("14.2.0");
-        expect(version).toBeDefined();
-        expect(version).not.toEqual("windows-x64-14.2.0");
+    
+    describe("Test checkNodeVersion", () => {
+        beforeEach(() => {
+            jest.spyOn(nodeUtils, "getWindowsReleases").mockImplementation(async () => {
+                return [
+                    "windows-x64-10.16.0",
+                    "windows-x64-12.18.2",
+                    "windows-x64-14.15.3",
+                    "windows-x64-15.2.0",
+                    "windows-x64-6.17.1",
+                    "windows-x64-8.16.0"
+                ];
+            });
+        });
+        afterEach(() => {
+            jest.restoreAllMocks();
+        });
+        
+        it("test checkNodeVersion - available 12.x", async () => {
+            const version: string = await nodeUtils.checkNodeVersion("12.18.2");
+            expect(version).toEqual("windows-x64-12.18.2");
+        });
+        it("test checkNodeVersion - available 14.x", async () => {
+            const version: string = await nodeUtils.checkNodeVersion("14.15.3");
+            expect(version).toEqual("windows-x64-14.15.3");
+        });
+        it("test checkNodeVersion - not available", async () => {
+            const version: string = await nodeUtils.checkNodeVersion("12.20.0");
+            expect(version).toEqual("windows-x64-14.15.3");
+        });
+        it("test checkNodeVersion - not given", async () => {
+            const version: string = await nodeUtils.checkNodeVersion();
+            expect(version).toEqual("windows-x64-14.15.3");
+        });
+        it("test checkNodeVersion - reject 15.x versions", async () => {
+            const version: string = await nodeUtils.checkNodeVersion("15.2.0");
+            expect(version).toBeDefined();
+            expect(version).toEqual("windows-x64-14.15.3");
+        });
     });
 });
