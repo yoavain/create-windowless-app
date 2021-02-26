@@ -29,9 +29,13 @@ describe("Test nodeUtils", () => {
             jest.restoreAllMocks();
         });
         
-        it("test checkNodeVersion - available", async () => {
+        it("test checkNodeVersion - available 12.x", async () => {
             const version: string = await nodeUtils.checkNodeVersion("12.18.2");
             expect(version).toEqual("windows-x64-12.18.2");
+        });
+        it("test checkNodeVersion - available 14.x", async () => {
+            const version: string = await nodeUtils.checkNodeVersion("14.5.0");
+            expect(version).toEqual("windows-x64-14.5.0");
         });
         it("test checkNodeVersion - not available", async () => {
             const version: string = await nodeUtils.checkNodeVersion("12.20.0");

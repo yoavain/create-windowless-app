@@ -36,7 +36,7 @@ export const checkNodeVersion = async (nodeVersion?: string): Promise<string> =>
 
         const windowsVersion: string = windowsVersions && windowsVersions.find((asset) => asset === lookupVersion);
         if (windowsVersion) {
-            if (major <= 12) {
+            if (major <= 14) {
                 nexeNodeVersion = windowsVersion;
                 console.log(`Found version ${chalk.green(nodeVersion)} in nexe`);
             }
