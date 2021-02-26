@@ -1,6 +1,6 @@
 {
     "name": "create-windowless-app",
-    "version": "5.2.1",
+    "version": "6.0.0",
     "description": "Create a windowless NodeJS app",
     "main": "dist/index.js",
     "bin": {
@@ -36,7 +36,7 @@
     "author": "yoavain",
     "license": "MIT",
     "engines": {
-        "node": ">=10 <15",
+        "node": ">=12 <15",
         "npm": "<7"
     },
     "files": [
@@ -94,7 +94,7 @@
         "chalk": "4.1.0",
         "cross-spawn": "7.0.3",
         "fs-extra": "9.1.0",
-        "inquirer": "7.3.3",
+        "inquirer": "8.0.0",
         "node-fetch": "2.6.1",
         "semver": "7.3.4",
         "semver-compare": "1.0.0",
