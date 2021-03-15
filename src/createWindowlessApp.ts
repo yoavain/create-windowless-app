@@ -31,6 +31,8 @@ const launcherProjModifiedLocation = "launcher/launcher.csproj";
 // Default icon location
 const defaultLauncherIconLocation = "../templates/common/resources/windows-launcher.ico";
 
+// Husky config file
+const huskyConfigFileLocation = "../templates/common/husky/pre-commit";
 
 
 const install = async (root: string, dependencies: string[], isDev: boolean, programConfig: ProgramConfig): Promise<void> => {
@@ -80,17 +82,16 @@ const buildTypeScriptProject = (root: string, appName: string, nodeVersion: stri
         "check-msbuild": "ts-node -e \"require(\"\"./launcher/launcherCompiler\"\").checkMsbuildInPath(true)\"",
         "rebuild-launcher": "msbuild launcher/launcher.csproj"
     };
-    mergeIntoPackageJson(root, "scripts", scripts);
 
     // Add husky
     if (husky) {
-        const husky = {
-            hooks: {
-                "pre-commit": `git diff HEAD --exit-code --stat launcher/* || npm run check-msbuild && npm run rebuild-launcher && git add resources/bin/${appName}-launcher.exe`
-            }
-        };
-        mergeIntoPackageJson(root, "husky", husky);
+        scripts["pre-commit"] = `git diff HEAD --exit-code --stat launcher/* || npm run check-msbuild && npm run rebuild-launcher && git add resources/bin/${appName}-launcher.exe`;
+
+        fs.ensureDirSync(path.resolve(root, ".husky"));
+        writeFile(path.resolve(root, ".husky", "pre-commit"), readResource(huskyConfigFileLocation));
     }
+
+    mergeIntoPackageJson(root, "scripts", scripts);
 };
 
 const buildJavaScriptProject = (root: string, appName: string, nodeVersion: string, husky: boolean): void => {
@@ -111,17 +112,16 @@ const buildJavaScriptProject = (root: string, appName: string, nodeVersion: stri
         "check-msbuild": "node -e \"require(\"\"./launcher/launcherCompiler\"\").checkMsbuildInPath(true)\"",
         "rebuild-launcher": "msbuild launcher/launcher.csproj"
     };
-    mergeIntoPackageJson(root, "scripts", scripts);
 
     // Add husky
     if (husky) {
-        const husky = {
-            hooks: {
-                "pre-commit": `git diff HEAD --exit-code --stat launcher/* || npm run check-msbuild && npm run rebuild-launcher && git add resources/bin/${appName}-launcher.exe`
-            }
-        };
-        mergeIntoPackageJson(root, "husky", husky);
+        scripts["pre-commit"] = `git diff HEAD --exit-code --stat launcher/* || npm run check-msbuild && npm run rebuild-launcher && git add resources/bin/${appName}-launcher.exe`;
+
+        fs.ensureDirSync(path.resolve(root, ".husky"));
+        writeFile(path.resolve(root, ".husky", "pre-commit"), readResource(huskyConfigFileLocation));
     }
+
+    mergeIntoPackageJson(root, "scripts", scripts);
 };
 
 export const buildLauncher = (root: string, appName: string, icon: string, typescript: boolean): Promise<void> => {
