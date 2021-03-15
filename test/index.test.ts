@@ -32,6 +32,8 @@ const testFilesExists = (root: string, typescript: boolean = true, husky: boolea
     expect(fs.existsSync(path.resolve(root, "launcher", `launcherCompiler.${scriptExt}`))).toBeTruthy();
     expect(fs.existsSync(path.resolve(root, "resources", "bin", `${root}-launcher.exe`))).toBeTruthy();
     expect(fs.pathExistsSync(path.resolve(root, "node_modules"))).toEqual(nodeModules);
+    expect(fs.pathExistsSync(path.resolve(root, ".husky"))).toEqual(husky);
+    expect(fs.existsSync(path.resolve(root, ".husky", "pre-commit"))).toEqual(husky);
 
     const packageJson = readJsonFile(path.resolve(root, "package.json"));
 
@@ -46,9 +48,6 @@ const testFilesExists = (root: string, typescript: boolean = true, husky: boolea
     }
     expect(Object.keys(packageJson.dependencies).sort()).toEqual(expectedDependencies.sort());
     expect(Object.keys(packageJson.devDependencies).sort()).toEqual(expectedDevDependencies.sort());
-
-    // scripts
-    expect(!!(packageJson && packageJson.husky && packageJson.husky.hooks && packageJson.husky.hooks["pre-commit"])).toEqual(husky);
 };
 
 const cli = (args: string[], cwd?: string): Promise<CliResult> => {
