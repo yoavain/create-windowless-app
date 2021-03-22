@@ -15,5 +15,6 @@
             "automerge": true
         }
     ],
-    "prConcurrentLimit": 5
+    "prConcurrentLimit": 5,
+    "ignoreNpmrcFile": true
 }
