@@ -51,7 +51,7 @@
     "homepage": "https://github.com/yoavain/create-windowless-app#readme",
     "devDependencies": {
         "@types/cross-spawn": "6.0.2",
-        "@types/fs-extra": "9.0.8",
+        "@types/fs-extra": "9.0.9",
         "@types/inquirer": "7.3.1",
         "@types/jest": "26.0.22",
         "@types/mock-fs": "4.13.0",
