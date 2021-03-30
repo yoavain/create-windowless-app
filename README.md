@@ -1,4 +1,4 @@
-![](https://raw.githubusercontent.com/yoavain/create-windowless-app/master/resources/docs/logo.gif)
+![](https://raw.githubusercontent.com/yoavain/create-windowless-app/main/resources/docs/logo.gif)
 # Create Windowless App
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/yoavain/create-windowless-app.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/yoavain/create-windowless-app/alerts/)
 [![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/yoavain/create-windowless-app.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/yoavain/create-windowless-app/context:javascript)
@@ -8,7 +8,7 @@
 ![commit](https://img.shields.io/github/last-commit/yoavain/create-windowless-app.svg)
 ![license](https://img.shields.io/npm/l/create-windowless-app.svg)
 [![Known Vulnerabilities](https://snyk.io//test/github/yoavain/create-windowless-app/badge.svg?targetFile=package.json)](https://snyk.io//test/github/yoavain/create-windowless-app?targetFile=package.json)
-[![codecov](https://codecov.io/gh/yoavain/create-windowless-app/branch/master/graph/badge.svg)](https://codecov.io/gh/yoavain/create-windowless-app)
+[![codecov](https://codecov.io/gh/yoavain/create-windowless-app/branch/main/graph/badge.svg)](https://codecov.io/gh/yoavain/create-windowless-app)
 [![Renovate](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://renovatebot.com)
 ![visitors](https://visitor-badge.glitch.me/badge?page_id=yoavain.create-windowless-app)
 ![Downloads](https://img.shields.io/npm/dm/create-windowless-app.svg)
@@ -46,7 +46,7 @@ create-windowless-app my-app
 </details>
 
 <p align='center'>
-<img src='https://raw.githubusercontent.com/yoavain/create-windowless-app/master/resources/docs/usage.gif' width='957' alt='npx create-windowless-app my-app'>
+<img src='https://raw.githubusercontent.com/yoavain/create-windowless-app/main/resources/docs/usage.gif' width='957' alt='npx create-windowless-app my-app'>
 </p>
 
 Or in interactive mode:
@@ -55,7 +55,7 @@ npx create-windowless-app --interactive
 ```
 
 <p align='center'>
-<img src='https://raw.githubusercontent.com/yoavain/create-windowless-app/master/resources/docs/interactive.gif' width='957' alt='npx create-windowless-app --interactive'>
+<img src='https://raw.githubusercontent.com/yoavain/create-windowless-app/main/resources/docs/interactive.gif' width='957' alt='npx create-windowless-app --interactive'>
 </p>
 
 
@@ -90,7 +90,7 @@ npm run build
 
 Then you can find in your my-app\dist folder the following files:
 <p>
-<img src='https://raw.githubusercontent.com/yoavain/create-windowless-app/master/resources/docs/dist.png' width='157' alt='dist files'>
+<img src='https://raw.githubusercontent.com/yoavain/create-windowless-app/main/resources/docs/dist.png' width='157' alt='dist files'>
 </p>
 
 * *my-app.exe* is the compiled app, with NodeJS bundled (using [nexe](https://github.com/nexe/nexe))
