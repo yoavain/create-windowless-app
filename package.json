@@ -7,6 +7,7 @@
         "create-windowless-app": "./dist/index.js"
     },
     "scripts": {
+        "postinstall": "git config --get core.hookspath || husky install",
         "prebuild": "npm run test",
         "build": "npm run tsc && npm run add-shebang && npm run package",
         "test": "npm run eslint && npm run type-check && npm run jest",
