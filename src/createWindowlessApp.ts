@@ -85,7 +85,7 @@ const buildTypeScriptProject = (root: string, appName: string, nodeVersion: stri
 
     // Add husky
     if (husky) {
-        scripts["postinstall"] = "git config --get core.hookspath || husky install";
+        scripts["prepare"] = "git config --get core.hookspath || husky install";
         scripts["pre-commit"] = `git diff HEAD --exit-code --stat launcher/* || npm run check-msbuild && npm run rebuild-launcher && git add resources/bin/${appName}-launcher.exe`;
 
         fs.ensureDirSync(path.resolve(root, ".husky"));
@@ -116,7 +116,7 @@ const buildJavaScriptProject = (root: string, appName: string, nodeVersion: stri
 
     // Add husky
     if (husky) {
-        scripts["postinstall"] = "git config --get core.hookspath || husky install";
+        scripts["prepare"] = "git config --get core.hookspath || husky install";
         scripts["pre-commit"] = `git diff HEAD --exit-code --stat launcher/* || npm run check-msbuild && npm run rebuild-launcher && git add resources/bin/${appName}-launcher.exe`;
 
         fs.ensureDirSync(path.resolve(root, ".husky"));
