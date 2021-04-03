@@ -1,13 +1,13 @@
 {
     "name": "create-windowless-app",
-    "version": "7.0.4",
+    "version": "7.1.0",
     "description": "Create a windowless NodeJS app",
     "main": "dist/index.js",
     "bin": {
         "create-windowless-app": "./dist/index.js"
     },
     "scripts": {
-        "postinstall": "git config --get core.hookspath || husky install",
+        "prepare": "git config --get core.hookspath || husky install",
         "prebuild": "npm run test",
         "build": "npm run tsc && npm run add-shebang && npm run package",
         "test": "npm run eslint && npm run type-check && npm run jest",
