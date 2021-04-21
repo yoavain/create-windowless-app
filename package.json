@@ -93,7 +93,7 @@
         "winston": "3.3.3"
     },
     "dependencies": {
-        "chalk": "4.1.0",
+        "chalk": "4.1.1",
         "cross-spawn": "7.0.3",
         "fs-extra": "9.1.0",
         "inquirer": "8.0.0",
