@@ -21,15 +21,6 @@ exports[`Test cliParser should error on missing project name: missing-project-na
       -n, --node-version  override node version to bundle                   [string]
           --version       Show version number                              [boolean]
           --help          Show help                                        [boolean]
-
-      at error (node_modules/yargs/build/index.cjs:1:41250)
-      at Object.i.showHelp (node_modules/yargs/build/index.cjs:1:19216)
-      at Bt.showHelp (node_modules/yargs/build/index.cjs:1:38640)
-      at Object.i.fail (node_modules/yargs/build/index.cjs:1:13016)
-      at Object.positionalCount (node_modules/yargs/build/index.cjs:1:47357)
-      at _.populatePositionals (node_modules/yargs/build/index.cjs:1:9495)
-      at _.applyMiddlewareAndGetResult (node_modules/yargs/build/index.cjs:1:8586)
-
 "
 `;
 
@@ -54,8 +45,5 @@ exports[`Test cliParser should print help with flags: --help: help-stdout 1`] = 
       -n, --node-version  override node version to bundle                   [string]
           --version       Show version number                              [boolean]
           --help          Show help                                        [boolean]
-
-      at log (node_modules/yargs/build/index.cjs:1:41116)
-
 "
 `;

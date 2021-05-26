@@ -2,6 +2,16 @@ import { parseCommand } from "../src/cliParser";
 import { v4 as uuid } from "uuid";
 import * as path from "path";
 
+const cleanStdout = (stdout: string): string => {
+    let filter = false;
+    return stdout.split("\n").filter((line) => {
+        if (line.trim().startsWith("at ")) {
+            filter = true;
+        }
+        return !filter;
+    }).join("\n");
+};
+
 describe("Test cliParser", () => {
     afterEach(() => {
         jest.restoreAllMocks();
@@ -138,9 +148,9 @@ describe("Test cliParser", () => {
         const mockStdout = jest.spyOn(process.stdout, "write").mockImplementation(() => { /* do nothing */ });
         const sandbox: string = uuid();
 
-        parseCommand(["node.exe", "dummy.ts", sandbox, "--help"]);
+        await parseCommand(["node.exe", "dummy.ts", sandbox, "--help"]);
 
-        expect(mockStdout.mock.calls[0][0]).toMatchSnapshot("help-stdout");
+        expect(cleanStdout(mockStdout.mock.calls[0][0] as string)).toMatchSnapshot("help-stdout");
     });
 
     it("should error on missing project name", async () => {
@@ -154,6 +164,6 @@ describe("Test cliParser", () => {
         const { projectName } = await parseCommand(["node.exe", "dummy.ts"]);
 
         expect(projectName).toBeUndefined();
-        expect(mockStdout.mock.calls[0][0]).toMatchSnapshot("missing-project-name-stdout");
+        expect(cleanStdout(mockStdout.mock.calls[0][0] as string)).toMatchSnapshot("missing-project-name-stdout");
     });
 });
