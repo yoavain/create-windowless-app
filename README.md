@@ -15,6 +15,8 @@
 
 Create a windowless NodeJS app.
 
+You can also start from this template repository [create-windowless-app-template](https://github.com/yoavain/create-windowless-app-template)
+
 Create Windowless App works on Windows 64-bit only<br>
 If something doesn't work, please [file an issue](https://github.com/yoavain/create-windowless-app/issues/new). 
 
