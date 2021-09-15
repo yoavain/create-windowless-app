@@ -2,7 +2,7 @@
 
 exports[`Test cliParser should error on missing project name: missing-project-name-stdout 1`] = `
 "  console.error
-    jest.js <projectName>
+    processChild.js <projectName>
     
     project name
     
@@ -26,7 +26,7 @@ exports[`Test cliParser should error on missing project name: missing-project-na
 
 exports[`Test cliParser should print help with flags: --help: help-stdout 1`] = `
 "  console.log
-    jest.js <projectName>
+    processChild.js <projectName>
     
     project name
     
