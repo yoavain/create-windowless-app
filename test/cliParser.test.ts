@@ -5,6 +5,9 @@ import * as path from "path";
 const cleanStdout = (stdout: string): string => {
     let filter = false;
     return stdout.split("\n").filter((line) => {
+        if (line.includes("<projectName>")) {
+            return false;
+        }
         if (line.trim().startsWith("at ")) {
             filter = true;
         }
