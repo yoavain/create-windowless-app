@@ -53,7 +53,7 @@
     "devDependencies": {
         "@types/cross-spawn": "6.0.2",
         "@types/fs-extra": "9.0.13",
-        "@types/inquirer": "8.1.1",
+        "@types/inquirer": "8.1.2",
         "@types/jest": "27.0.2",
         "@types/mock-fs": "4.13.1",
         "@types/node": "14.17.17",
