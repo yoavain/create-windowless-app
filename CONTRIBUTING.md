@@ -25,4 +25,4 @@ npm run test
 
 ### Commit Guidelines
 
-The project uses the eslint for standardizing code style
+The project uses ESLint for standardizing code style
