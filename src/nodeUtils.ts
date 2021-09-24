@@ -1,22 +1,35 @@
 import chalk from "chalk";
 import semverCompare from "semver-compare";
-import type { RequestInit } from "node-fetch";
-import fetch from "node-fetch";
 import spawn from "cross-spawn";
 import type { SpawnSyncReturns } from "child_process";
+import type { OptionsOfJSONResponseBody } from "got";
+import got from "got";
+
+type Release = {
+    id: number
+    node_id: string
+    name: string
+    content_type: string
+    size: number
+    download_count: number
+    url: string
+    browser_download_url: string
+}
 
 const WINDOWS_PREFIX = "windows-x64";
 
 let releases: string[];
 export const getWindowsReleases = async (): Promise<string[]> => {
     if (!releases) {
-        const options: RequestInit = {
+        const options: OptionsOfJSONResponseBody = {
+            responseType: "json",
             headers: {
                 "User-Agent": "request"
             }
         };
-        const result = await fetch("https://api.github.com/repos/nexe/nexe/releases/latest", options).then((res) => res.json());
-        releases = result && result.assets.map((asset) => asset.name).filter((name) => name.startsWith(WINDOWS_PREFIX));
+        const response = await got.get<{ assets: Array<Release> }>("https://api.github.com/repos/nexe/nexe/releases/latest", options);
+        
+        releases = response?.statusCode  === 200 && response.body?.assets.map((asset) => asset.name).filter((name) => name.startsWith(WINDOWS_PREFIX));
     }
     return releases;
 };
