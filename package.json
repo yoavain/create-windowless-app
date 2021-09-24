@@ -1,6 +1,6 @@
 {
     "name": "create-windowless-app",
-    "version": "7.5.1",
+    "version": "7.6.0",
     "description": "Create a windowless NodeJS app",
     "main": "dist/index.js",
     "bin": {
@@ -57,7 +57,6 @@
         "@types/jest": "27.0.2",
         "@types/mock-fs": "4.13.1",
         "@types/node": "14.17.18",
-        "@types/node-fetch": "2.5.12",
         "@types/node-notifier": "8.0.1",
         "@types/request": "2.48.7",
         "@types/semver": "7.3.8",
@@ -96,8 +95,8 @@
         "chalk": "4.1.2",
         "cross-spawn": "7.0.3",
         "fs-extra": "10.0.0",
+        "got": "11.8.2",
         "inquirer": "8.1.5",
-        "node-fetch": "2.6.5",
         "semver": "7.3.5",
         "semver-compare": "1.0.0",
         "validate-npm-package-name": "3.0.0",
