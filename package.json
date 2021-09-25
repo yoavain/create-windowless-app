@@ -56,7 +56,7 @@
         "@types/inquirer": "8.1.2",
         "@types/jest": "27.0.2",
         "@types/mock-fs": "4.13.1",
-        "@types/node": "14.17.18",
+        "@types/node": "14.17.19",
         "@types/node-notifier": "8.0.1",
         "@types/request": "2.48.7",
         "@types/semver": "7.3.8",
