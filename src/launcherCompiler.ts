@@ -1,4 +1,4 @@
-import * as fs from "fs-extra";
+import { pathExists } from "fs-extra";
 import * as path from "path";
 import spawn from "cross-spawn";
 import type { SpawnSyncReturns } from "child_process";
@@ -7,9 +7,9 @@ const COMPILER: string = "msbuild.exe";
 
 export const checkMsbuildInPath = async (exit?: boolean): Promise<boolean> => {
     // Check for compiler in %PATH%
-    const promises = process.env.path.split(";").map((p) => fs.pathExists(path.resolve(p, COMPILER)));
+    const promises = process.env.path.split(";").map((p) => pathExists(path.resolve(p, COMPILER)));
     const results: boolean[] = await Promise.all(promises);
-    const compilerFound: boolean = await results.find((result) => !!result);
+    const compilerFound: boolean = results.find((result) => !!result);
 
     if (exit && !compilerFound) {
         console.error(`You need "${COMPILER}" in your %PATH% in order to compile the launcher executable.`);

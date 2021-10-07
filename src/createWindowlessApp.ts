@@ -1,6 +1,6 @@
 import chalk from "chalk";
 import * as path from "path";
-import * as fs from "fs-extra";
+import { ensureDirSync, readdirSync, removeSync } from "fs-extra";
 import spawn from "cross-spawn";
 import { compileLauncher } from "./launcherCompiler";
 import consts from "./consts";
@@ -68,7 +68,7 @@ const buildTypeScriptProject = (root: string, appName: string, nodeVersion: stri
     writeJson(path.resolve(root, "tsconfig.json"), readJsonResource(tsConfigResourceLocation));
     writeJson(path.resolve(root, "tsconfig.all.json"), readJsonResource(tsConfigAllResourceLocation));
     writeFile(path.resolve(root, "webpack.config.ts"), replaceAppNamePlaceholder(readResource(tsWebpackConfigResourceLocation), appName));
-    fs.ensureDirSync(path.resolve(root, "src"));
+    ensureDirSync(path.resolve(root, "src"));
     writeFile(path.resolve(root, "src", "index.ts"), replaceAppNamePlaceholder(readResource(tsIndexResourceLocation), appName));
 
     // Add scripts
@@ -88,7 +88,7 @@ const buildTypeScriptProject = (root: string, appName: string, nodeVersion: stri
         scripts["prepare"] = "git config --get core.hookspath || husky install";
         scripts["pre-commit"] = `git diff HEAD --exit-code --stat launcher/* || npm run check-msbuild && npm run rebuild-launcher && git add resources/bin/${appName}-launcher.exe`;
 
-        fs.ensureDirSync(path.resolve(root, ".husky"));
+        ensureDirSync(path.resolve(root, ".husky"));
         writeFile(path.resolve(root, ".husky", "pre-commit"), readResource(huskyConfigFileLocation));
     }
 
@@ -100,7 +100,7 @@ const buildJavaScriptProject = (root: string, appName: string, nodeVersion: stri
     console.log();
 
     writeFile(path.resolve(root, "webpack.config.js"), replaceAppNamePlaceholder(readResource(jsWebpackConfigResourceLocation), appName));
-    fs.ensureDirSync(path.resolve(root, "src"));
+    ensureDirSync(path.resolve(root, "src"));
     writeFile(path.resolve(root, "src", "index.js"), replaceAppNamePlaceholder(readResource(jsIndexResourceLocation), appName));
 
     // Add scripts
@@ -119,7 +119,7 @@ const buildJavaScriptProject = (root: string, appName: string, nodeVersion: stri
         scripts["prepare"] = "git config --get core.hookspath || husky install";
         scripts["pre-commit"] = `git diff HEAD --exit-code --stat launcher/* || npm run check-msbuild && npm run rebuild-launcher && git add resources/bin/${appName}-launcher.exe`;
 
-        fs.ensureDirSync(path.resolve(root, ".husky"));
+        ensureDirSync(path.resolve(root, ".husky"));
         writeFile(path.resolve(root, ".husky", "pre-commit"), readResource(huskyConfigFileLocation));
     }
 
@@ -130,7 +130,7 @@ export const buildLauncher = (root: string, appName: string, icon: string, types
     console.log(`Building project ${chalk.green("launcher")}.`);
     console.log();
 
-    fs.ensureDirSync(path.resolve("launcher"));
+    ensureDirSync(path.resolve("launcher"));
     writeFile(path.resolve(launcherSrcModifiedLocation), replaceAppNamePlaceholder(readResource(launcherSrcResourceLocation), appName));
     writeFile(path.resolve(launcherProjModifiedLocation), replaceAppNamePlaceholder(readResource(launcherProjResourceLocation), appName));
     if (typescript) {
@@ -178,7 +178,7 @@ const run = async (root: string, appName: string, originalDirectory: string, pro
         }
 
         // Launcher
-        fs.ensureDirSync(path.resolve(root, "resources", "bin"));
+        ensureDirSync(path.resolve(root, "resources", "bin"));
         await buildLauncher(root, appName, icon, typescript);
 
         console.log("Done");
@@ -197,22 +197,22 @@ const run = async (root: string, appName: string, originalDirectory: string, pro
 
         // On 'exit' we will delete these files from target directory.
         const knownGeneratedFiles = [...consts.knownGeneratedFiles];
-        const currentFiles = fs.readdirSync(path.join(root));
+        const currentFiles = readdirSync(path.join(root));
         currentFiles.forEach((file) => {
             knownGeneratedFiles.forEach((fileToMatch) => {
                 // This removes all knownGeneratedFiles.
                 if (file === fileToMatch) {
                     console.log(`Deleting generated file... ${chalk.cyan(file)}`);
-                    fs.removeSync(path.join(root, file));
+                    removeSync(path.join(root, file));
                 }
             });
         });
-        const remainingFiles = fs.readdirSync(path.join(root));
+        const remainingFiles = readdirSync(path.join(root));
         if (!remainingFiles.length) {
             // Delete target folder if empty
             console.log(`Deleting ${chalk.cyan(`${appName}/`)} from ${chalk.cyan(path.resolve(root, ".."))}`);
             process.chdir(path.resolve(root, ".."));
-            fs.removeSync(path.join(root));
+            removeSync(path.join(root));
         }
         console.log("Done (with errors).");
         process.exit(1);
@@ -225,7 +225,7 @@ const createApp = (programConfig: ProgramConfig): Promise<void> => {
     const appName: string = path.basename(root);
 
     checkAppName(appName);
-    fs.ensureDirSync(projectName);
+    ensureDirSync(projectName);
     if (!isSafeToCreateProjectIn(root, projectName)) {
         process.exit(1);
     }
