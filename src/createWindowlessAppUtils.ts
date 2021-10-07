@@ -4,7 +4,7 @@ import chalk from "chalk";
 import path from "path";
 import { readJsonFile, writeJson } from "./fileUtils";
 import consts from "./consts";
-import * as fs from "fs-extra";
+import { readdirSync, removeSync } from "fs-extra";
 
 // These files should be allowed to remain on a failed install, but then silently removed during the next create.
 const errorLogFilePatterns = consts.errorLogFilePatterns;
@@ -19,8 +19,7 @@ export const isSafeToCreateProjectIn = (root: string, name: string): boolean => 
     const validFiles: string[] = consts.validFiles;
     console.log();
 
-    const conflicts = fs
-        .readdirSync(root)
+    const conflicts = readdirSync(root)
         .filter((file) => !validFiles.includes(file))
         // IntelliJ IDEA creates module files before CRA is launched
         .filter((file) => !/\.iml$/.test(file))
@@ -40,12 +39,12 @@ export const isSafeToCreateProjectIn = (root: string, name: string): boolean => 
     }
 
     // Remove any remnant files from a previous installation
-    const currentFiles = fs.readdirSync(path.join(root));
+    const currentFiles = readdirSync(path.join(root));
     currentFiles.forEach((file) => {
         errorLogFilePatterns.forEach((errorLogFilePattern) => {
             // This will catch `npm-debug.log*` files
             if (file.indexOf(errorLogFilePattern) === 0) {
-                fs.removeSync(path.join(root, file));
+                removeSync(path.join(root, file));
             }
         });
     });

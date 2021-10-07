@@ -1,6 +1,6 @@
 import chalk from "chalk";
 import { PACKAGE_JSON_FILENAME } from "./createWindowlessAppUtils";
-import * as fs from "fs-extra";
+import { pathExistsSync } from "fs-extra";
 import inquirer from "inquirer";
 import type { InvalidNames, LegacyNames, ValidNames } from "validate-npm-package-name";
 import validateProjectName from "validate-npm-package-name";
@@ -70,7 +70,7 @@ function interactiveMode(): Promise<ProgramConfig> {
 }
 
 const validateInput = (argv): any => {
-    if (argv.icon && !fs.pathExistsSync(argv.icon)) {
+    if (argv.icon && !pathExistsSync(argv.icon)) {
         console.log(`Cannot find icon in ${chalk.red(argv.icon)}. Switching to ${chalk.green("default")} icon.`);
         delete argv.icon;
     }
