@@ -17,7 +17,7 @@ export const webpackConfig: webpack.Configuration = {
                 use: [{
                     loader: "ts-loader",
                     options: {
-                        configFile: "./tsconfig.build.json",
+                        configFile: "tsconfig.build.json",
                         transpileOnly: true
                     }
                 }],
