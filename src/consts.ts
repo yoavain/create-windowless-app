@@ -1,6 +1,6 @@
 export const consts = {
     dependencies: [
-        "node-notifier",
+        "node-notifier@9",
         "winston"
     ],
     devDependencies: [
