@@ -12,8 +12,8 @@ import { parseCommand } from "./cliParser";
 
 // TypeScript
 const tsWebpackConfigResourceLocation = "../templates/typescript/webpack.config.ts";
+const tsConfigBuildResourceLocation = "../templates/typescript/tsconfig.build.json";
 const tsConfigResourceLocation = "../templates/typescript/tsconfig.json";
-const tsConfigAllResourceLocation = "../templates/typescript/tsconfig.all.json";
 const tsIndexResourceLocation = "../templates/typescript/src/index.ts";
 const tsLauncherCompilerLocation = "../templates/typescript/launcher/launcherCompiler.ts";
 
@@ -53,7 +53,7 @@ const install = async (root: string, dependencies: string[], isDev: boolean, pro
         console.log(`Adding ${chalk.green(isDev ? "dev dependencies" : "dependencies")} to package.json (skipping installation)`);
         console.log();
 
-        const dependenciesObject = dependencies.reduce((acc, cur) => {
+        const dependenciesObject = dependencies.reduce<Record<string, string>>((acc, cur) => {
             acc[cur] = "^x.x.x";
             return acc;
         }, {});
@@ -65,8 +65,8 @@ const buildTypeScriptProject = (root: string, appName: string, nodeVersion: stri
     console.log(`Building project ${chalk.green("files")}.`);
     console.log();
 
+    writeJson(path.resolve(root, "tsconfig.build.json"), readJsonResource(tsConfigBuildResourceLocation));
     writeJson(path.resolve(root, "tsconfig.json"), readJsonResource(tsConfigResourceLocation));
-    writeJson(path.resolve(root, "tsconfig.all.json"), readJsonResource(tsConfigAllResourceLocation));
     writeFile(path.resolve(root, "webpack.config.ts"), replaceAppNamePlaceholder(readResource(tsWebpackConfigResourceLocation), appName));
     ensureDirSync(path.resolve(root, "src"));
     writeFile(path.resolve(root, "src", "index.ts"), replaceAppNamePlaceholder(readResource(tsIndexResourceLocation), appName));
@@ -74,7 +74,7 @@ const buildTypeScriptProject = (root: string, appName: string, nodeVersion: stri
     // Add scripts
     const scripts: Record<string, string> = {
         "start": "ts-node src/index.ts",
-        "type-check": "tsc --build tsconfig.all.json",
+        "type-check": "tsc --build tsconfig.json",
         "prewebpack": "rimraf build && rimraf dist",
         "webpack": "webpack",
         "nexe": getNexeCommand(appName, nodeVersion),

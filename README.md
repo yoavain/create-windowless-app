@@ -70,6 +70,7 @@ my-app
 ├── node_modules
 ├── package.json
 ├── tsconfig.json
+├── tsconfig.build.json
 ├── webpack.config.js
 ├── launcher
 │   ├── launcher.cs
