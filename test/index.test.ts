@@ -18,6 +18,9 @@ type CliResult = {
     error?: ExecException;
 };
 
+// Remove fixed type in list, i.e. "node-notifier@9" => "node-notifier"
+const cleanExpectedDependencies = (expectedDependencies: string[]): string[] => expectedDependencies.map((dep) => dep.split("@")[0]);
+
 const testFilesExists = (root: string, typescript: boolean = true, husky: boolean = true, nodeModules: boolean = true): void => {
     // Files
     const scriptExt: string = typescript ? "ts" : "js";
@@ -46,8 +49,8 @@ const testFilesExists = (root: string, typescript: boolean = true, husky: boolea
     if (husky) {
         expectedDevDependencies = expectedDevDependencies.concat(consts.huskyDependencies);
     }
-    expect(Object.keys(packageJson.dependencies).sort()).toEqual(expectedDependencies.sort());
-    expect(Object.keys(packageJson.devDependencies).sort()).toEqual(expectedDevDependencies.sort());
+    expect(Object.keys(packageJson.dependencies).sort()).toEqual(cleanExpectedDependencies(expectedDependencies).sort());
+    expect(Object.keys(packageJson.devDependencies).sort()).toEqual(cleanExpectedDependencies(expectedDevDependencies).sort());
 };
 
 const cli = (args: string[], cwd?: string): Promise<CliResult> => {
