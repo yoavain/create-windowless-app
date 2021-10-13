@@ -54,8 +54,8 @@ const install = async (root: string, dependencies: string[], isDev: boolean, pro
         console.log();
 
         const dependenciesObject = dependencies.reduce<Record<string, string>>((acc, dep) => {
-            let depName = dep;
-            let depVersion = "^x.x.x";
+            let depName: string = dep;
+            let depVersion: string = "^x.x.x";
             if (dep.lastIndexOf("@") > 0) {
                 depName = dep.substring(0, dep.lastIndexOf("@"));
                 const depVersionString: string[] = dep.substring(dep.lastIndexOf("@")).split(".");
