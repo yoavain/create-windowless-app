@@ -1,12 +1,12 @@
 {
+    "extends": "@tsconfig/node12/tsconfig.json",
     "compilerOptions": {
-        "moduleResolution": "node",
-        "outDir": "./_compile",
+        "strict": false,
         "esModuleInterop": true,
         "allowJs": true,
-        "module": "commonjs",
         "target": "es6",
-        "lib": ["es6", "es2017"]
+        "noEmit": true,
+        "importsNotUsedAsValues": "error"
     },
     "include": ["./src/**/*", "./webpack.config.ts"]
 }

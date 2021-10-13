@@ -1,4 +1,6 @@
-module.exports = {
+import type { Config } from "@jest/types";
+
+const config: Config.InitialOptions = {
     preset: "ts-jest",
     testEnvironment: "node",
     restoreMocks: true,
@@ -6,6 +8,7 @@ module.exports = {
     moduleFileExtensions: ["ts", "js", "json", "node"],
     verbose: true,
     collectCoverage: true,
+    coverageDirectory: "coverage",
     coverageReporters: [
         "text",
         "text-summary",
@@ -15,3 +18,5 @@ module.exports = {
     ],
     collectCoverageFrom: ["src/**/*.ts", "!src/index.ts", "!**/node_modules/**"]
 };
+
+export default config;

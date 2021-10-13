@@ -18,13 +18,16 @@ type CliResult = {
     error?: ExecException;
 };
 
+// Remove fixed type in list, i.e. "node-notifier@9" => "node-notifier"
+const cleanExpectedDependencies = (expectedDependencies: string[]): string[] => expectedDependencies.map((dep) => dep.lastIndexOf("@") > 0 ? dep.substring(0, dep.lastIndexOf("@")) : dep);
+
 const testFilesExists = (root: string, typescript: boolean = true, husky: boolean = true, nodeModules: boolean = true): void => {
     // Files
     const scriptExt: string = typescript ? "ts" : "js";
     expect(fs.existsSync(path.resolve(root, "package.json"))).toBeTruthy();
     expect(fs.existsSync(path.resolve(root, `webpack.config.${scriptExt}`))).toBeTruthy();
+    expect(fs.existsSync(path.resolve(root, "tsconfig.build.json"))).toEqual(typescript);
     expect(fs.existsSync(path.resolve(root, "tsconfig.json"))).toEqual(typescript);
-    expect(fs.existsSync(path.resolve(root, "tsconfig.all.json"))).toEqual(typescript);
     expect(fs.existsSync(path.resolve(root, "src", `index.${scriptExt}`))).toBeTruthy();
     expect(fs.existsSync(path.resolve(root, "launcher", "launcher.cs"))).toBeTruthy();
     expect(fs.existsSync(path.resolve(root, "launcher", "launcher.csproj"))).toBeTruthy();
@@ -38,16 +41,16 @@ const testFilesExists = (root: string, typescript: boolean = true, husky: boolea
     const packageJson = readJsonFile(path.resolve(root, "package.json"));
 
     // Dependencies
-    let expectedDependencies = [...consts.dependencies];
-    let expectedDevDependencies = [...consts.devDependencies];
+    let expectedDependencies = consts.dependencies;
+    let expectedDevDependencies = consts.devDependencies;
     if (typescript) {
         expectedDevDependencies = expectedDevDependencies.concat(consts.tsDevDependencies);
     }
     if (husky) {
         expectedDevDependencies = expectedDevDependencies.concat(consts.huskyDependencies);
     }
-    expect(Object.keys(packageJson.dependencies).sort()).toEqual(expectedDependencies.sort());
-    expect(Object.keys(packageJson.devDependencies).sort()).toEqual(expectedDevDependencies.sort());
+    expect(Object.keys(packageJson.dependencies).sort()).toEqual(cleanExpectedDependencies(expectedDependencies).sort());
+    expect(Object.keys(packageJson.devDependencies).sort()).toEqual(cleanExpectedDependencies(expectedDevDependencies).sort());
 };
 
 const cli = (args: string[], cwd?: string): Promise<CliResult> => {

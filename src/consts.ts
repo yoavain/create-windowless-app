@@ -1,6 +1,6 @@
 export const consts = {
     dependencies: [
-        "node-notifier",
+        "node-notifier@9",
         "winston"
     ],
     devDependencies: [
@@ -19,6 +19,7 @@ export const consts = {
     tsDevDependencies: [
         "@types/jest",
         "@types/node",
+        "@tsconfig/node12",
         "@types/node-notifier",
         "@types/winston",
         "ts-loader",
@@ -51,6 +52,7 @@ export const consts = {
         "package.json",
         "webpack.config.js",
         "tsconfig.json",
+        "tsconfig.build.json",
         "src",
         "resources",
         "launcher",
