@@ -19,7 +19,7 @@ type CliResult = {
 };
 
 // Remove fixed type in list, i.e. "node-notifier@9" => "node-notifier"
-const cleanExpectedDependencies = (expectedDependencies: string[]): string[] => expectedDependencies.map((dep) => dep.split("@")[0]);
+const cleanExpectedDependencies = (expectedDependencies: string[]): string[] => expectedDependencies.map((dep) => dep.lastIndexOf("@") > 0 ? dep.substring(0, dep.lastIndexOf("@")) : dep);
 
 const testFilesExists = (root: string, typescript: boolean = true, husky: boolean = true, nodeModules: boolean = true): void => {
     // Files
@@ -41,8 +41,8 @@ const testFilesExists = (root: string, typescript: boolean = true, husky: boolea
     const packageJson = readJsonFile(path.resolve(root, "package.json"));
 
     // Dependencies
-    let expectedDependencies = [...consts.dependencies];
-    let expectedDevDependencies = [...consts.devDependencies];
+    let expectedDependencies = consts.dependencies;
+    let expectedDevDependencies = consts.devDependencies;
     if (typescript) {
         expectedDevDependencies = expectedDevDependencies.concat(consts.tsDevDependencies);
     }
@@ -125,5 +125,14 @@ describe("Test CLI", () => {
         expect(result.stderr).toEqual("");
         testFilesExists(sandbox, true, false, false);
         del.sync(sandbox);
+    });
+
+    it("remove me", () => {
+        let expectedDependencies = consts.dependencies;
+        let expectedDevDependencies = consts.devDependencies;
+        expectedDevDependencies = expectedDevDependencies.concat(consts.tsDevDependencies);
+        expectedDevDependencies = expectedDevDependencies.concat(consts.huskyDependencies);
+        console.log(JSON.stringify(cleanExpectedDependencies(expectedDependencies).sort()));
+        console.log(JSON.stringify(cleanExpectedDependencies(expectedDevDependencies).sort()));
     });
 });
