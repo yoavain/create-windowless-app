@@ -126,13 +126,4 @@ describe("Test CLI", () => {
         testFilesExists(sandbox, true, false, false);
         del.sync(sandbox);
     });
-
-    it("remove me", () => {
-        let expectedDependencies = consts.dependencies;
-        let expectedDevDependencies = consts.devDependencies;
-        expectedDevDependencies = expectedDevDependencies.concat(consts.tsDevDependencies);
-        expectedDevDependencies = expectedDevDependencies.concat(consts.huskyDependencies);
-        console.log(JSON.stringify(cleanExpectedDependencies(expectedDependencies).sort()));
-        console.log(JSON.stringify(cleanExpectedDependencies(expectedDevDependencies).sort()));
-    });
 });

@@ -53,8 +53,15 @@ const install = async (root: string, dependencies: string[], isDev: boolean, pro
         console.log(`Adding ${chalk.green(isDev ? "dev dependencies" : "dependencies")} to package.json (skipping installation)`);
         console.log();
 
-        const dependenciesObject = dependencies.reduce<Record<string, string>>((acc, cur) => {
-            acc[cur] = "^x.x.x";
+        const dependenciesObject = dependencies.reduce<Record<string, string>>((acc, dep) => {
+            let depName = dep;
+            let depVersion = "^x.x.x";
+            if (dep.lastIndexOf("@") > 0) {
+                depName = dep.substring(0, dep.lastIndexOf("@"));
+                const depVersionString: string[] = dep.substring(dep.lastIndexOf("@")).split(".");
+                depVersion = `^${depVersionString?.[0] ?? "x"}.${depVersionString?.[1] ?? "x"}.${depVersionString?.[2] ?? "x"}`;
+            }
+            acc[depName] = depVersion;
             return acc;
         }, {});
         mergeIntoPackageJson(root, isDev ? "devDependencies" : "dependencies", dependenciesObject);
