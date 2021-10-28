@@ -1,6 +1,6 @@
 {
     "name": "create-windowless-app",
-    "version": "7.9.2",
+    "version": "7.9.5",
     "description": "Create a windowless NodeJS app",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
@@ -10,7 +10,8 @@
     "scripts": {
         "prepare": "git config --get core.hookspath || husky install",
         "prebuild": "npm run test",
-        "build": "npm run tsc && npm run add-shebang && npm run package",
+        "build": "npm run build:no-test",
+        "build:no-test": "npm run tsc && npm run add-shebang && npm run package",
         "test": "npm run eslint && npm run type-check && npm run jest",
         "eslint": "eslint src/ test/ templates/",
         "eslint:fix": "npm run eslint -- --fix",
