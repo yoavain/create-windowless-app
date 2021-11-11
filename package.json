@@ -70,7 +70,7 @@
         "@typescript-eslint/eslint-plugin": "5.3.1",
         "@typescript-eslint/parser": "5.3.1",
         "add-shebang": "0.1.0",
-        "copy-webpack-plugin": "9.0.1",
+        "copy-webpack-plugin": "9.1.0",
         "cross-env": "7.0.3",
         "del": "6.0.0",
         "eslint": "8.2.0",
