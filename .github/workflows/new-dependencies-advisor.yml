@@ -1,4 +1,4 @@
-name: New Dependencies Advisor
+name: "Deps: show new dependencies metadata"
 
 on:
   pull_request:
@@ -8,21 +8,10 @@ on:
 jobs:
   new-dependencies-advisor:
     runs-on: windows-latest
-    strategy:
-      matrix:
-        node-version: [ '14' ]
 
     steps:
       - name: Checkout
         uses: actions/checkout@v2.4.0
-
-      - name: Setup NodeJS
-        uses: actions/setup-node@v2.5.0
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: npm
-        env:
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
       - name: New dependencies advisor
         uses: lirantal/github-action-new-dependencies-advisor@v1.1.1
