@@ -1,4 +1,4 @@
-name: "Deps: show new dependencies metadata"
+name: New dependencies advisor
 
 on:
   pull_request:
