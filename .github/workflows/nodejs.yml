@@ -27,6 +27,12 @@ jobs:
       env:
         NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
+    - name: New dependencies advisor
+      uses: lirantal/github-action-new-dependencies-advisor@v1.1.1
+      if: !(startsWith(github.ref, 'refs/tags/'))
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+
     - name: setup-msbuild
       uses: microsoft/setup-msbuild@v1.0.3
 
