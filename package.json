@@ -64,7 +64,7 @@
         "@types/request": "2.48.8",
         "@types/semver": "7.3.9",
         "@types/semver-compare": "1.0.1",
-        "@types/uuid": "8.3.3",
+        "@types/uuid": "8.3.4",
         "@types/validate-npm-package-name": "3.0.3",
         "@types/winston": "2.4.4",
         "@typescript-eslint/eslint-plugin": "5.9.0",
