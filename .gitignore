@@ -60,3 +60,4 @@ typings/
 /test-out/
 /launcher-dist/
 /.husky/_/husky.sh
+/npm-shrinkwrap.json

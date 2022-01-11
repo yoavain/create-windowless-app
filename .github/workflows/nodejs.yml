@@ -78,7 +78,7 @@ jobs:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
       - name: Build
-        run: npm run build:no-test
+        run: npm run build:no-test:ci
         env:
           CI: true
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
