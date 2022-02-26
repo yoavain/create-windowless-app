@@ -22,7 +22,8 @@ Create Windowless App works on Windows 64-bit only<br>
 If something doesn't work, please [file an issue](https://github.com/yoavain/create-windowless-app/issues/new). 
 
 
-Pre-Requisites:
+Pre-Requisites for template to work:
+* `NodeJS` version `12.20.0` or higher
 * `MSBuild.exe` must be in the PATH environment variable
 
 ## Quick Overview
@@ -42,7 +43,7 @@ npm install -g create-windowsless-app
 ```
 
 And then you can run:
-```
+```sh
 create-windowless-app my-app
 ```
 </p>
@@ -53,7 +54,7 @@ create-windowless-app my-app
 </p>
 
 Or in interactive mode:
-```
+```sh
 npx create-windowless-app --interactive
 ```
 
@@ -87,7 +88,7 @@ my-app
 No configuration or complicated folder structures, just the files you need to build your app.<br>
 
 Once the installation is done, you can build the project
-```
+```sh
 cd my-app
 npm run build
 ```
@@ -138,5 +139,5 @@ The "Hello World" template is a POC containing 2 features you might want when ru
 The template project build script does the following things
 1) Compiles TypeScript to JavaScript (if in a TypeScript template)
 2) Runs WebPack to bundle all JavaScript into a single file, and copy binary files into the "dist" folder
-3) Runs nexe to compile the single WebPack JavaScript output file to an exe file bundled with NodeJS (currently, latest NodeJS version is bundled) 
+3) Runs nexe to compile the single WebPack JavaScript output file to an exe file bundled with NodeJS (currently, NodeJS version 14.15.3 is the latest version supplied by nexe) 
 
