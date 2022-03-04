@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Test cliParser should error on missing project name: missing-project-name-stdout 1`] = `
+exports[`Test cliParser Test parseCommand should error on missing project name: missing-project-name-stdout 1`] = `
 "  console.error
     
     project name
@@ -23,7 +23,7 @@ exports[`Test cliParser should error on missing project name: missing-project-na
 "
 `;
 
-exports[`Test cliParser should print help with flags: --help: help-stdout 1`] = `
+exports[`Test cliParser Test parseCommand should print help with flags: --help: help-stdout 1`] = `
 "  console.log
     
     project name
