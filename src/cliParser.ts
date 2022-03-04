@@ -20,16 +20,22 @@ export type ProgramConfig = {
     verbose: boolean;
 };
 
-function interactiveMode(): Promise<ProgramConfig> {
+export const validateProjectNameInput = (value: string): string | boolean => {
+    const result: ValidNames | InvalidNames | LegacyNames = validateProjectName(value);
+    return result.validForNewPackages || ((result as InvalidNames)?.errors?.[0]) || ((result as LegacyNames)?.warnings?.[0]) || "Invalid project name";
+};
+
+export const validateNodeVersion = (value: string): string | boolean => {
+    return !value || !!semver.valid(value) || "Invalid node version";
+};
+
+const interactiveMode = (): Promise<ProgramConfig> => {
     return inquirer.prompt([
         {
             type: "input",
             message: "Project Name:",
             name: "projectName",
-            validate: (value) => {
-                const result: ValidNames | InvalidNames | LegacyNames = validateProjectName(value);
-                return result.validForNewPackages || ((result as InvalidNames)?.errors?.[0]) || ((result as LegacyNames)?.warnings?.[0]) || "Invalid project name";
-            }
+            validate: validateProjectNameInput
         },
         {
             type: "input",
@@ -58,7 +64,7 @@ function interactiveMode(): Promise<ProgramConfig> {
             type: "input",
             message: "Node Version:",
             name: "nodeVersion",
-            validate: (value) => !value || !!semver.valid(value) || "Invalid node version"
+            validate: validateNodeVersion
         },
         {
             type: "confirm",
@@ -67,7 +73,7 @@ function interactiveMode(): Promise<ProgramConfig> {
             default: false
         }
     ]);
-}
+};
 
 const validateInput = (argv): any => {
     if (argv.icon && !pathExistsSync(argv.icon)) {

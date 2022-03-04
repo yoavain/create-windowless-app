@@ -8,5 +8,5 @@
         "noEmit": true,
         "importsNotUsedAsValues": "error"
     },
-    "include": ["./src/**/*", "./test/**/*", "./templates/**/*", "jest.config.ts"]
+    "include": ["./src/**/*", "./test/**/*", "./integration_test/**/*", "./templates/**/*", "jest.config.ts"]
 }
