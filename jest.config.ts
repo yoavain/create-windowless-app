@@ -4,7 +4,7 @@ const config: Config.InitialOptions = {
     preset: "ts-jest",
     testEnvironment: "node",
     restoreMocks: true,
-    testRegex: "test/.*.test.ts$",
+    testRegex: "(test|integration_test)/.*.test.ts$",
     moduleFileExtensions: ["ts", "js", "json", "node"],
     verbose: true,
     collectCoverage: true,
