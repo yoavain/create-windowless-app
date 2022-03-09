@@ -103,7 +103,7 @@
         "cross-spawn": "7.0.3",
         "fs-extra": "10.0.1",
         "got": "11.8.3",
-        "inquirer": "8.2.0",
+        "inquirer": "8.2.1",
         "semver": "7.3.5",
         "semver-compare": "1.0.0",
         "validate-npm-package-name": "3.0.0",
