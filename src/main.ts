@@ -5,9 +5,10 @@ export const main = async () => {
     const currentNodeVersion: string = process.versions.node;
     const semver: string[] = currentNodeVersion.split(".");
     const major = Number(semver[0]);
+    const minor = Number(semver[1]);
 
-    if (Number.isNaN(major) || major < 10) {
-        console.error(`You are running Node ${currentNodeVersion}.\nCreate Windowless App requires Node 12 or higher.\nPlease update your version of Node.`);
+    if (isNaN(major) || isNaN(minor) || major < 12 || (major === 12 && minor < 20)) {
+        console.error(`You are running NodeJS ${currentNodeVersion}.\nCreate Windowless App requires NodeJS 12.20 or higher.\nPlease update your version of Node.`);
         process.exit(1);
     }
 
