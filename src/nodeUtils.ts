@@ -86,11 +86,11 @@ export const checkThatNpmCanReadCwd = (): boolean => {
     const cwd = process.cwd();
     let childOutput: string = null;
     try {
-        const spawnResult: SpawnSyncReturns<string> = spawn.sync("npm", ["config", "list"]);
+        const spawnResult: SpawnSyncReturns<Buffer> = spawn.sync("npm", ["config", "list"]);
         if (spawnResult.status !== 0) {
             return false;
         }
-        childOutput = spawnResult.output.join("");
+        childOutput = spawnResult.output.toString();
     }
     catch (err) {
         return false;
