@@ -6,6 +6,7 @@ const config: Config.InitialOptions = {
     restoreMocks: true,
     testRegex: "(test|integration_test)/.*.test.ts$",
     moduleFileExtensions: ["ts", "js", "json", "node"],
+    maxWorkers: "50%",
     verbose: true,
     collectCoverage: true,
     coverageDirectory: "coverage",
