@@ -85,7 +85,7 @@ const validateInput = (argv): any => {
 };
 
 export const parseCommand = async (argv: string[]): Promise<ProgramConfig> => {
-    const command = yargs(hideBin(argv))
+    const command: any = yargs(hideBin(argv))
         .command("* <projectName>", "project name",
             (yargs) => {
                 return yargs.positional("projectName", {
