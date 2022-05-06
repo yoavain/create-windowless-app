@@ -12,7 +12,7 @@ jest.mock("cross-spawn", () => ({
 
 // Imports should be after mocks
 import { createWindowlessApp } from "../src/createWindowlessApp";
-import { v4 as uuid } from "uuid";
+import { randomUUID as uuid } from "crypto";
 
 process.chdir = jest.fn();
 

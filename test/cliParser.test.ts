@@ -1,5 +1,5 @@
 import { parseCommand, validateNodeVersion, validateProjectNameInput } from "../src/cliParser";
-import { v4 as uuid } from "uuid";
+import { randomUUID as uuid } from "crypto";
 import inquirer from "inquirer";
 import * as path from "path";
 
