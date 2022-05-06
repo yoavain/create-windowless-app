@@ -64,10 +64,8 @@
         "@types/mock-fs": "4.13.1",
         "@types/node": "16.11.33",
         "@types/node-notifier": "8.0.2",
-        "@types/request": "2.48.8",
         "@types/semver": "7.3.9",
         "@types/semver-compare": "1.0.1",
-        "@types/uuid": "8.3.4",
         "@types/validate-npm-package-name": "3.0.3",
         "@types/winston": "2.4.4",
         "@typescript-eslint/eslint-plugin": "5.22.0",
@@ -94,7 +92,6 @@
         "ts-jest": "28.0.1",
         "ts-node": "10.7.0",
         "typescript": "4.6.4",
-        "uuid": "8.3.2",
         "webpack": "5.72.0",
         "winston": "3.7.2"
     },

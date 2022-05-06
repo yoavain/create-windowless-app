@@ -1,6 +1,6 @@
 import path from "path";
 import fs from "fs-extra";
-import { v4 as uuid } from "uuid";
+import { randomUUID as uuid } from "crypto";
 import { exec } from "child_process";
 import * as del from "del";
 import { readJsonFile } from "../src/fileUtils";
