@@ -86,7 +86,6 @@ describe("Test CLI", () => {
         console.log(JSON.stringify(result, null, "\t"));
         expect(result.code).toBe(0);
         expect(result.error).toBeFalsy();
-        expect(result.stderr).toEqual("");
         testFilesExists(sandbox);
         del.sync(sandbox);
     });
@@ -98,7 +97,6 @@ describe("Test CLI", () => {
         console.log(JSON.stringify(result, null, "\t"));
         expect(result.code).toBe(0);
         expect(result.error).toBeFalsy();
-        expect(result.stderr).toEqual("");
         testFilesExists(sandbox, true, true, false);
         del.sync(sandbox);
     });
@@ -110,7 +108,6 @@ describe("Test CLI", () => {
         console.log(JSON.stringify(result, null, "\t"));
         expect(result.code).toBe(0);
         expect(result.error).toBeFalsy();
-        expect(result.stderr).toEqual("");
         testFilesExists(sandbox, false, true, false);
         del.sync(sandbox);
     });
@@ -122,7 +119,6 @@ describe("Test CLI", () => {
         console.log(JSON.stringify(result, null, "\t"));
         expect(result.code).toBe(0);
         expect(result.error).toBeFalsy();
-        expect(result.stderr).toEqual("");
         testFilesExists(sandbox, true, false, false);
         del.sync(sandbox);
     });
