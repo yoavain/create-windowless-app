@@ -63,7 +63,7 @@
         "@types/mock-fs": "4.13.1",
         "@types/node": "18.6.3",
         "@types/node-notifier": "8.0.2",
-        "@types/semver": "7.3.10",
+        "@types/semver": "7.3.11",
         "@types/semver-compare": "1.0.1",
         "@types/validate-npm-package-name": "4.0.0",
         "@types/winston": "2.4.4",
