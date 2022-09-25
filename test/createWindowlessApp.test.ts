@@ -75,10 +75,12 @@ describe("Test createWindowlessApp", () => {
     });
 
     it("should error with missing project name", async () => {
-        // @ts-ignore
-        jest.spyOn(process, "exit").mockImplementation((code: number) => {
-            expect(code).toEqual(1);
-        });
-        await createWindowlessApp(["node.exe", "dummy.ts"]);
+        try {
+            await createWindowlessApp(["node.exe", "dummy.ts"]);
+            fail();
+        }
+        catch (e) {
+            expect(e.message).toEqual("Missing project name");
+        }
     });
 });
