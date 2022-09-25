@@ -1,20 +1,9 @@
-import { parseCommand, validateNodeVersion, validateProjectNameInput } from "../src/cliParser";
+import type { ProgramConfig } from "../src/cliParser";
+import { parseCommand } from "../src/cliParser";
+import * as interactive from "../src/interactive";
 import { randomUUID as uuid } from "crypto";
 import inquirer from "inquirer";
 import * as path from "path";
-
-const cleanStdout = (stdout: string): string => {
-    let filter = false;
-    return stdout.split("\n").filter((line) => {
-        if (line.includes("<projectName>")) {
-            return false;
-        }
-        if (line.trim().startsWith("at ")) {
-            filter = true;
-        }
-        return !filter;
-    }).join("\n");
-};
 
 describe("Test cliParser", () => {
     afterEach(() => {
@@ -157,51 +146,48 @@ describe("Test cliParser", () => {
 
             await parseCommand(["node.exe", "dummy.ts", sandbox, "--help"]);
 
-            expect(cleanStdout(mockStdout.mock.calls[0][0] as string)).toMatchSnapshot("help-stdout");
+            expect(mockStdout.mock.calls[0][0] as string).toContain("Show help");
         });
 
         it("should error on missing project name", async () => {
-            // @ts-ignore
-            jest.spyOn(process, "exit").mockImplementation((code: number) => {
-                expect(code).toEqual(1);
-            });
-            // @ts-ignore
-            const mockStdout = jest.spyOn(process.stdout, "write").mockImplementation(() => { /* do nothing */
+            try {
+                await parseCommand(["node.exe", "dummy.ts"]);
+                fail();
+            }
+            catch (e) {
+                expect(e.message).toEqual("Missing project name");
+            }
+        });
+
+        it("should not fail if no projectName and interactive", async () => {
+            jest.spyOn(interactive, "interactiveMode").mockImplementation(async () => {
+                return {
+                    projectName: "Test1234",
+                    typescript: true,
+                    husky: true,
+                    skipInstall: true
+                } as ProgramConfig;
             });
 
-            const { projectName } = await parseCommand(["node.exe", "dummy.ts"]);
+            const { projectName, verbose, typescript, husky, skipInstall, icon, nodeVersion } = await parseCommand(["node.exe", "dummy.ts", "--interactive"]);
 
-            expect(projectName).toBeUndefined();
-            expect(cleanStdout(mockStdout.mock.calls[0][0] as string)).toMatchSnapshot("missing-project-name-stdout");
+            expect(interactive.interactiveMode).toHaveBeenCalled();
+            expect(projectName).toEqual("Test1234");
+            expect(verbose).toBeUndefined();
+            expect(typescript).toEqual(true);
+            expect(husky).toEqual(true);
+            expect(skipInstall).toEqual(true);
+            expect(icon).toBeUndefined();
+            expect(nodeVersion).toBeUndefined();
         });
 
         it("should call inquirer in interactive mode", async () => {
-            const sandbox: string = uuid();
-
             // @ts-ignore
             jest.spyOn(inquirer, "prompt").mockImplementation(async () => ({}));
 
-            await parseCommand(["node.exe", "dummy.ts", sandbox, "--interactive"]);
+            await parseCommand(["node.exe", "dummy.ts", "--interactive"]);
 
             expect(inquirer.prompt).toHaveBeenCalled();
-        });
-    });
-
-    describe("Test validateProjectNameInput", () => {
-        it("Should return true on valid name", () => {
-            expect(validateProjectNameInput("test-1234")).toBe(true);
-        });
-        it("Should return error message on invalid name", () => {
-            expect(validateProjectNameInput("Test-1234")).toBe("name can no longer contain capital letters");
-        });
-    });
-
-    describe("Test validateNodeVersion", () => {
-        it("Should return true on valid node version", () => {
-            expect(validateNodeVersion("14.19.0")).toBe(true);
-        });
-        it("Should return error message on invalid node version", () => {
-            expect(validateNodeVersion("1.2.3.4.5.6")).toBe("Invalid node version");
         });
     });
 });
