@@ -73,15 +73,17 @@ export const parseCommand = async (argv: string[]): Promise<ProgramConfig> => {
             type: "string",
             description: "override node version to bundle"
         })
+        .check((argv) => {
+            if (!argv.projectName && !argv.interactive && !argv.help) {
+                throw new Error("Missing project name");
+            }
+            return true;
+        })
         .version("version", packageJson.version)
         .help()
         .middleware(validateInput)
         .strict()
         .argv;
-
-    if (!command.projectName && !command.interactive && !command.help) {
-        throw new Error("Missing project name");
-    }
 
     let programConfig: ProgramConfig;
     if (command.interactive) {
