@@ -102,8 +102,7 @@ describe("Test cliParser", () => {
                 expect(code).toEqual(1);
             });
             // @ts-ignore
-            const mockStdout = jest.spyOn(process.stdout, "write").mockImplementation(() => { /* do nothing */
-            });
+            const mockStdout = jest.spyOn(process.stdout, "write").mockImplementation(() => { /* do nothing */ });
 
             const sandbox: string = uuid();
 
@@ -140,8 +139,7 @@ describe("Test cliParser", () => {
                 expect(code).toEqual(0);
             });
             // @ts-ignore
-            const mockStdout = jest.spyOn(process.stdout, "write").mockImplementation(() => { /* do nothing */
-            });
+            const mockStdout = jest.spyOn(process.stdout, "write").mockImplementation(() => { /* do nothing */ });
             const sandbox: string = uuid();
 
             await parseCommand(["node.exe", "dummy.ts", sandbox, "--help"]);
@@ -150,13 +148,15 @@ describe("Test cliParser", () => {
         });
 
         it("should error on missing project name", async () => {
-            try {
-                await parseCommand(["node.exe", "dummy.ts"]);
-                fail();
-            }
-            catch (e) {
-                expect(e.message).toEqual("Missing project name");
-            }
+            // @ts-ignore
+            jest.spyOn(process, "exit").mockImplementation((code: number) => {
+                expect(code).toEqual(1);
+            });
+            // @ts-ignore
+            const mockStdout = jest.spyOn(process.stdout, "write").mockImplementation(() => { /* do nothing */ });
+
+            await parseCommand(["node.exe", "dummy.ts"]);
+            expect(mockStdout.mock.calls[0][0] as string).toContain("Show help");
         });
 
         it("should not fail if no projectName and interactive", async () => {
