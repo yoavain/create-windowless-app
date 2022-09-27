@@ -1,7 +1,6 @@
 ![](https://raw.githubusercontent.com/yoavain/create-windowless-app/main/resources/docs/logo.gif)
 # Create Windowless App
-[![Total alerts](https://img.shields.io/lgtm/alerts/g/yoavain/create-windowless-app.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/yoavain/create-windowless-app/alerts/)
-[![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/yoavain/create-windowless-app.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/yoavain/create-windowless-app/context:javascript)
+[![CodeQL](https://github.com/yoavain/create-windowless-app/workflows/CodeQL/badge.svg)](https://github.com/yoavain/create-windowless-app/actions?query=workflow%3ACodeQL)
 [![Actions Status](https://github.com/yoavain/create-windowless-app/workflows/Node%20CI/badge.svg)](https://github.com/yoavain/create-windowless-app/actions)
 ![node](https://img.shields.io/node/v/create-windowless-app.svg)
 ![types](https://img.shields.io/npm/types/typescript.svg)
