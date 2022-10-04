@@ -101,7 +101,7 @@
         "fs-extra": "10.1.0",
         "got": "11.8.5",
         "inquirer": "8.2.4",
-        "semver": "7.3.7",
+        "semver": "7.3.8",
         "semver-compare": "1.0.0",
         "validate-npm-package-name": "4.0.0",
         "yargs": "17.6.0"
