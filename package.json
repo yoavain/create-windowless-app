@@ -103,7 +103,7 @@
         "inquirer": "8.2.4",
         "semver": "7.3.8",
         "semver-compare": "1.0.0",
-        "validate-npm-package-name": "4.0.0",
+        "validate-npm-package-name": "5.0.0",
         "yargs": "17.6.0"
     },
     "lint-staged": {
