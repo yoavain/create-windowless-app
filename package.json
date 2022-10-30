@@ -62,7 +62,7 @@
         "@types/inquirer": "8.2.4",
         "@types/jest": "29.2.0",
         "@types/mock-fs": "4.13.1",
-        "@types/node": "18.11.7",
+        "@types/node": "18.11.8",
         "@types/node-notifier": "8.0.2",
         "@types/semver": "7.3.13",
         "@types/semver-compare": "1.0.1",
