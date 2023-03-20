@@ -6,7 +6,7 @@
         "allowJs": true,
         "target": "es6",
         "noEmit": true,
-        "importsNotUsedAsValues": "error"
+        "verbatimModuleSyntax": false
     },
     "include": ["./src/**/*", "./webpack.config.ts"]
 }
