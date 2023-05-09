@@ -14,6 +14,6 @@ jobs:
         uses: actions/checkout@v3.5.2
 
       - name: New dependencies advisor
-        uses: lirantal/github-action-new-dependencies-advisor@v1.1.1
+        uses: lirantal/github-action-new-dependencies-advisor@v1.2.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
