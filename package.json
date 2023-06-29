@@ -56,7 +56,7 @@
     },
     "homepage": "https://github.com/yoavain/create-windowless-app#readme",
     "devDependencies": {
-        "@tsconfig/node14": "1.0.3",
+        "@tsconfig/node14": "14.1.0",
         "@types/cross-spawn": "6.0.2",
         "@types/fs-extra": "9.0.13",
         "@types/inquirer": "8.2.6",
