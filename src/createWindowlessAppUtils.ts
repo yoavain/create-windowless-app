@@ -81,8 +81,16 @@ export const checkAppName = (appName) => {
     }
 };
 
-export const getNexeCommand = (appName: string, nodeVersion: string): string => {
-    return `nexe -t ${nodeVersion} -o dist/${appName}.exe`;
+export const getSingleExecutableApplicationsScripts = (appName: string): Record<string, string> => {
+    return {
+        "prenode-sea:build-blob": "rimraf _blob && mkdir _blob",
+        "node-sea:build-blob": "node --experimental-sea-config sea-config.json",
+        "node-sea:copy-node": `node -e "require('fs').copyFileSync(process.execPath, 'dist/${appName}.exe')"`,
+        "node-sea:unsign": `signtool remove /s dist/${appName}.exe`,
+        "node-sea:inject-blob": `postject dist/${appName}.exe NODE_SEA_BLOB _blob\\sea-prep.blob --sentinel-fuse NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2`,
+        "node-sea:sign": `signtool sign /fd SHA256 dist/${appName}.exe`,
+        "node-sea": "npm run node-sea:build-blob && npm run node-sea:copy-node && npm run node-sea:unsign && npm run node-sea:inject-blob"
+    };
 };
 
 export const mergeIntoPackageJson = (root: string, field: string, data: any): void => {
