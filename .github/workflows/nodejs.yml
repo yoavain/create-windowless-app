@@ -59,6 +59,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3.5.3
 
+      - name: Setup Windows SDK
+        uses: GuillaumeFalourd/setup-windows10-sdk-action@v1.11
+
+      - name: Add signtool.exe path to PATH environment variable
+        uses: myci-actions/export-env-var-powershell@1
+        with:
+          name: PATH
+          value: $env:PATH;C:\Program Files (x86)\Windows Kits\10\bin\10.0.17763.0\x86\
+
       - name: Setup NodeJS
         uses: actions/setup-node@v3.7.0
         with:
