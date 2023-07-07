@@ -28,6 +28,9 @@ const launcherSrcModifiedLocation = "launcher/launcher.cs";
 const launcherProjResourceLocation = "../templates/common/launcher.csproj";
 const launcherProjModifiedLocation = "launcher/launcher.csproj";
 
+// Single executable applications config
+const seaConfigResourceLocation = "../templates/common/sea-config.json";
+
 // Default icon location
 const defaultLauncherIconLocation = "../templates/common/resources/windows-launcher.ico";
 
@@ -246,6 +249,7 @@ const createApp = (programConfig: ProgramConfig): Promise<void> => {
         main: "_build/index.js"
     };
     writeJson(path.join(root, "package.json"), packageJson);
+    copyFile(path.resolve(__dirname, seaConfigResourceLocation), path.resolve(root, "sea-config.json"));
 
     const originalDirectory = process.cwd();
     process.chdir(root);
