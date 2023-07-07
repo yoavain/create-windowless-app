@@ -78,7 +78,7 @@ export const parseCommand = async (argv: string[]): Promise<ProgramConfig> => {
             if (projectName && typeof validateProjectNameInput(projectName) === "string") {
                 throw new Error("Invalid project name");
             }
-            else if (!interactive && !help) {
+            else if (!projectName && !interactive && !help) {
                 throw new Error("Missing project name");
             }
             return true;
