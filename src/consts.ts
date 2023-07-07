@@ -19,7 +19,7 @@ export const consts = {
     tsDevDependencies: [
         "@types/jest",
         "@types/node",
-        "@tsconfig/node14",
+        "@tsconfig/node18",
         "@types/node-notifier",
         "@types/winston",
         "ts-loader",
