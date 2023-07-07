@@ -97,7 +97,7 @@ Then you can find in your my-app\dist folder the following files:
 <img src='https://raw.githubusercontent.com/yoavain/create-windowless-app/main/resources/docs/dist.png' width='157' alt='dist files'>
 </p>
 
-* *my-app.exe* is the compiled app, with NodeJS bundled (using [nexe](https://github.com/nexe/nexe))
+* *my-app.exe* is the compiled app, with NodeJS bundled (using [Single Executable Applications](https://nodejs.org/api/single-executable-applications.html))
 * *my-app-launcher.exe* is the compiled launcher.cs file that executes my-app.exe without a console window
 * *snoretoast-x64.exe* allows windows notification (using [node-notifier](https://github.com/mikaelbr/node-notifier))
 * *my-app.log* will be generated on first run (using [winston logger](https://github.com/winstonjs/winston))
@@ -112,7 +112,6 @@ Options:
     --no-husky                      do not install husky pre-commit hook for building launcher
     --skip-install                  writes dependencies to package.json without installing them
     --icon <icon>                   override default launcher icon file
-    --node-version <nodeVersion>    override node version to bundle
 
     --interactive                   interactive mode
 
@@ -138,5 +137,5 @@ The "Hello World" template is a POC containing 2 features you might want when ru
 The template project build script does the following things
 1) Compiles TypeScript to JavaScript (if in a TypeScript template)
 2) Runs WebPack to bundle all JavaScript into a single file, and copy binary files into the "dist" folder
-3) Runs nexe to compile the single WebPack JavaScript output file to an exe file bundled with NodeJS (currently, NodeJS version 14.15.3 is the latest version supplied by nexe) 
+3) Runs Node's single executable applications scripts to compile the single WebPack JavaScript output file to an exe file bundled with NodeJS (Currently experimental in NodeJS 20)
 

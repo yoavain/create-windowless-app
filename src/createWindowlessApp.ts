@@ -4,9 +4,9 @@ import { ensureDirSync, readdirSync, removeSync } from "fs-extra";
 import spawn from "cross-spawn";
 import { compileLauncher } from "./launcherCompiler";
 import { consts } from "./consts";
-import { checkAppName, getNexeCommand, isSafeToCreateProjectIn, mergeIntoPackageJson, replaceAppNamePlaceholder } from "./createWindowlessAppUtils";
+import { checkAppName, getSingleExecutableApplicationsScripts, isSafeToCreateProjectIn, mergeIntoPackageJson, replaceAppNamePlaceholder } from "./createWindowlessAppUtils";
 import { copyFile, readJsonResource, readResource, writeFile, writeJson } from "./fileUtils";
-import { checkNodeVersion, checkThatNpmCanReadCwd } from "./nodeUtils";
+import { checkThatNpmCanReadCwd } from "./nodeUtils";
 import type { ProgramConfig } from "./cliParser";
 import { parseCommand } from "./cliParser";
 
@@ -68,7 +68,7 @@ const install = async (root: string, dependencies: string[], isDev: boolean, pro
     }
 };
 
-const buildTypeScriptProject = (root: string, appName: string, nodeVersion: string, husky: boolean): void => {
+const buildTypeScriptProject = (root: string, appName: string, husky: boolean): void => {
     console.log(`Building project ${chalk.green("files")}.`);
     console.log();
 
@@ -84,8 +84,8 @@ const buildTypeScriptProject = (root: string, appName: string, nodeVersion: stri
         "type-check": "tsc --build tsconfig.json",
         "prewebpack": "rimraf build && rimraf dist",
         "webpack": "webpack",
-        "nexe": getNexeCommand(appName, nodeVersion),
-        "build": "npm run type-check && npm run webpack && npm run nexe",
+        ...getSingleExecutableApplicationsScripts(appName),
+        "build": "npm run type-check && npm run webpack && npm run node-sea",
         "check-msbuild": "ts-node -e \"require(\"\"./launcher/launcherCompiler\"\").checkMsbuildInPath(true)\"",
         "rebuild-launcher": "msbuild launcher/launcher.csproj"
     };
@@ -102,7 +102,7 @@ const buildTypeScriptProject = (root: string, appName: string, nodeVersion: stri
     mergeIntoPackageJson(root, "scripts", scripts);
 };
 
-const buildJavaScriptProject = (root: string, appName: string, nodeVersion: string, husky: boolean): void => {
+const buildJavaScriptProject = (root: string, appName: string, husky: boolean): void => {
     console.log(`Building project ${chalk.green("files")}.`);
     console.log();
 
@@ -115,8 +115,8 @@ const buildJavaScriptProject = (root: string, appName: string, nodeVersion: stri
         "start": "node src/index.js",
         "prewebpack": "rimraf build && rimraf dist",
         "webpack": "webpack",
-        "nexe": getNexeCommand(appName, nodeVersion),
-        "build": "npm run webpack && npm run nexe",
+        ...getSingleExecutableApplicationsScripts(appName),
+        "build": "npm run webpack && npm run node-sea",
         "check-msbuild": "node -e \"require(\"\"./launcher/launcherCompiler\"\").checkMsbuildInPath(true)\"",
         "rebuild-launcher": "msbuild launcher/launcher.csproj"
     };
@@ -163,7 +163,7 @@ export const buildLauncher = (root: string, appName: string, icon: string, types
 };
 
 const run = async (root: string, appName: string, originalDirectory: string, programConfig: ProgramConfig): Promise<void> => {
-    const { typescript, husky, icon, nodeVersion } = programConfig;
+    const { typescript, husky, icon } = programConfig;
     const dependencies = [...consts.dependencies];
     const devDependencies = [...consts.devDependencies];
     if (typescript) {
@@ -176,12 +176,11 @@ const run = async (root: string, appName: string, originalDirectory: string, pro
     try {
         await install(root, dependencies, false, programConfig);
         await install(root, devDependencies, true, programConfig);
-        const checkedNodeVersion: string = await checkNodeVersion(nodeVersion);
         if (typescript) {
-            buildTypeScriptProject(root, appName, checkedNodeVersion, husky);
+            buildTypeScriptProject(root, appName, husky);
         }
         else {
-            buildJavaScriptProject(root, appName, checkedNodeVersion, husky);
+            buildJavaScriptProject(root, appName, husky);
         }
 
         // Launcher
