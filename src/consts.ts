@@ -10,7 +10,8 @@ export const consts = {
         "webpack-cli",
         "copy-webpack-plugin",
         "rimraf",
-        "cross-spawn"
+        "cross-spawn",
+        "postject"
     ],
     huskyDependencies: [
         "husky"
@@ -49,6 +50,7 @@ export const consts = {
     ],
     knownGeneratedFiles: [
         "package.json",
+        "sea-config.json",
         "webpack.config.js",
         "tsconfig.json",
         "tsconfig.build.json",
