@@ -14,7 +14,6 @@ export type ProgramConfig = {
     typescript: boolean;
     husky: boolean;
     skipInstall: boolean;
-    nodeVersion: string;
     verbose: boolean;
 };
 
@@ -69,11 +68,6 @@ export const parseCommand = async (argv: string[]): Promise<ProgramConfig> => {
             type: "string",
             description: "override default launcher icon file"
         })
-        .option("node-version", {
-            alias: "n",
-            type: "string",
-            description: "override node version to bundle"
-        })
         .check(({ projectName, interactive, help }) => {
             if (projectName && typeof validateProjectNameInput(projectName) === "string") {
                 throw new Error("Invalid project name");
@@ -100,8 +94,7 @@ export const parseCommand = async (argv: string[]): Promise<ProgramConfig> => {
             typescript: command.typescript,
             husky: command.husky,
             skipInstall: command["skip-install"],
-            icon: command.icon,
-            nodeVersion: command["node-version"]
+            icon: command.icon
         };
     }
 
