@@ -6,7 +6,6 @@ export const consts = {
     devDependencies: [
         "fs-extra",
         "jest",
-        "nexe",
         "webpack",
         "webpack-cli",
         "copy-webpack-plugin",
