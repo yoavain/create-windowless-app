@@ -15,7 +15,7 @@
         "build:no-test": "npm run tsc && npm run add-shebang && npm run package",
         "build:no-test:ci": "npm run tsc && npm run add-shebang && del package-lock.json && npm prune --omit=dev && npm shrinkwrap && npm run package",
         "test": "npm run eslint && npm run type-check && npm run jest",
-        "eslint": "eslint src/ test/ templates/",
+        "eslint": "eslint src/ test/ integration_test/ templates/",
         "eslint:fix": "npm run eslint -- --fix",
         "type-check": "tsc --build tsconfig.json",
         "jest": "cross-env FORCE_COLOR=0 jest",
