@@ -69,7 +69,7 @@ export const parseCommand = async (argv: string[]): Promise<ProgramConfig> => {
             description: "override default launcher icon file"
         })
         .check(({ projectName, interactive, help }) => {
-            if (projectName && typeof validateProjectNameInput(projectName) === "string") {
+            if (projectName && typeof validateProjectNameInput(projectName as string) === "string") {
                 throw new Error("Invalid project name");
             }
             else if (!projectName && !interactive && !help) {
