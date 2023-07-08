@@ -12,6 +12,18 @@
     "overrides": [
         {
             "files": [".js", ".ts"]
+        },
+        {
+            "files": ["**/*.ts"],
+            "rules": {
+                "@typescript-eslint/ban-ts-comment": 0
+            }
+        },
+        {
+            "files": ["templates/**/*.js"],
+            "rules": {
+                "@typescript-eslint/no-var-requires": 0
+            }
         }
     ],
     "parser": "@typescript-eslint/parser",
@@ -31,11 +43,11 @@
     ],
     "rules": {
         // code
-        "max-params": ["warn", 3],
+        "max-params": ["warn", 4],
         "max-depth": ["error", 3],
         "max-statements-per-line": ["error", { "max": 1 }],
         "max-lines": ["error", { "max": 1000, "skipBlankLines": true, "skipComments": true }],
-        "max-lines-per-function": ["warn", { "max": 50, "skipBlankLines": true, "skipComments": true }],
+        "max-lines-per-function": ["warn", { "max": 75, "skipBlankLines": true, "skipComments": true }],
         "@typescript-eslint/ban-ts-comment": ["warn"],
         "@typescript-eslint/interface-name-prefix": [0, "never"],
         "arrow-parens": ["error"],

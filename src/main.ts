@@ -7,7 +7,7 @@ export const main = async () => {
     const major: number = Number(semver[0]);
     const minor: number = Number(semver[1]);
 
-    if (isNaN(major) || isNaN(minor) || major < 12 || (major === 12 && minor < 20)) {
+    if (Number.isNaN(major) || Number.isNaN(minor) || major < 12 || (major === 12 && minor < 20)) {
         console.error(`You are running NodeJS ${currentNodeVersion}.\nCreate Windowless App requires NodeJS 12.20 or higher.\nPlease update your version of Node.`);
         process.exit(1);
     }

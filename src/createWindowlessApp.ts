@@ -3,7 +3,7 @@ import * as path from "path";
 import { ensureDirSync, readdirSync, removeSync } from "fs-extra";
 import spawn from "cross-spawn";
 import { compileLauncher } from "./launcherCompiler";
-import consts from "./consts";
+import { consts } from "./consts";
 import { checkAppName, getNexeCommand, isSafeToCreateProjectIn, mergeIntoPackageJson, replaceAppNamePlaceholder } from "./createWindowlessAppUtils";
 import { copyFile, readJsonResource, readResource, writeFile, writeJson } from "./fileUtils";
 import { checkNodeVersion, checkThatNpmCanReadCwd } from "./nodeUtils";
