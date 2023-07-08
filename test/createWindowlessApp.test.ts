@@ -9,15 +9,6 @@ jest.mock("cross-spawn", () => ({
         }
     }
 }));
-
-// Imports should be after mocks
-import { createWindowlessApp } from "../src/createWindowlessApp";
-import { randomUUID as uuid } from "crypto";
-
-process.chdir = jest.fn();
-
-jest.setTimeout(15000);
-
 jest.mock("fs-extra", () => {
     return {
         ensureDirSync: jest.fn(),
@@ -28,6 +19,14 @@ jest.mock("fs-extra", () => {
         pathExistsSync: jest.fn()
     };
 });
+
+// Imports should be after mocks
+import { createWindowlessApp } from "../src/createWindowlessApp";
+import { randomUUID as uuid } from "crypto";
+
+process.chdir = jest.fn();
+
+jest.setTimeout(15000);
 
 describe("Test createWindowlessApp", () => {
     it("should create a prototype project with default flags", async () => {

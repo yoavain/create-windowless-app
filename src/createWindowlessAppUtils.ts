@@ -3,7 +3,7 @@ import validateProjectName from "validate-npm-package-name";
 import chalk from "chalk";
 import path from "path";
 import { readJsonFile, writeJson } from "./fileUtils";
-import consts from "./consts";
+import { consts } from "./consts";
 import { readdirSync, removeSync } from "fs-extra";
 
 // These files should be allowed to remain on a failed install, but then silently removed during the next create.

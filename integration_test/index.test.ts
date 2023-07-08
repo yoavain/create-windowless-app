@@ -1,11 +1,11 @@
 import path from "path";
-import fs from "fs-extra";
 import { randomUUID as uuid } from "crypto";
+import type { ExecException } from "child_process";
 import { exec } from "child_process";
 import * as del from "del";
 import { readJsonFile } from "../src/fileUtils";
-import consts from "../src/consts";
-import type { ExecException } from "child_process";
+import { consts } from "../src/consts";
+import { existsSync, pathExistsSync } from "fs-extra";
 
 jest.setTimeout(300000);
 
@@ -24,19 +24,19 @@ const cleanExpectedDependencies = (expectedDependencies: string[]): string[] => 
 const testFilesExists = (root: string, typescript: boolean = true, husky: boolean = true, nodeModules: boolean = true): void => {
     // Files
     const scriptExt: string = typescript ? "ts" : "js";
-    expect(fs.existsSync(path.resolve(root, "package.json"))).toBeTruthy();
-    expect(fs.existsSync(path.resolve(root, `webpack.config.${scriptExt}`))).toBeTruthy();
-    expect(fs.existsSync(path.resolve(root, "tsconfig.build.json"))).toEqual(typescript);
-    expect(fs.existsSync(path.resolve(root, "tsconfig.json"))).toEqual(typescript);
-    expect(fs.existsSync(path.resolve(root, "src", `index.${scriptExt}`))).toBeTruthy();
-    expect(fs.existsSync(path.resolve(root, "launcher", "launcher.cs"))).toBeTruthy();
-    expect(fs.existsSync(path.resolve(root, "launcher", "launcher.csproj"))).toBeTruthy();
-    expect(fs.existsSync(path.resolve(root, "launcher", "launcher.ico"))).toBeTruthy();
-    expect(fs.existsSync(path.resolve(root, "launcher", `launcherCompiler.${scriptExt}`))).toBeTruthy();
-    expect(fs.existsSync(path.resolve(root, "resources", "bin", `${root}-launcher.exe`))).toBeTruthy();
-    expect(fs.pathExistsSync(path.resolve(root, "node_modules"))).toEqual(nodeModules);
-    expect(fs.pathExistsSync(path.resolve(root, ".husky"))).toEqual(husky);
-    expect(fs.existsSync(path.resolve(root, ".husky", "pre-commit"))).toEqual(husky);
+    expect(existsSync(path.resolve(root, "package.json"))).toBeTruthy();
+    expect(existsSync(path.resolve(root, `webpack.config.${scriptExt}`))).toBeTruthy();
+    expect(existsSync(path.resolve(root, "tsconfig.build.json"))).toEqual(typescript);
+    expect(existsSync(path.resolve(root, "tsconfig.json"))).toEqual(typescript);
+    expect(existsSync(path.resolve(root, "src", `index.${scriptExt}`))).toBeTruthy();
+    expect(existsSync(path.resolve(root, "launcher", "launcher.cs"))).toBeTruthy();
+    expect(existsSync(path.resolve(root, "launcher", "launcher.csproj"))).toBeTruthy();
+    expect(existsSync(path.resolve(root, "launcher", "launcher.ico"))).toBeTruthy();
+    expect(existsSync(path.resolve(root, "launcher", `launcherCompiler.${scriptExt}`))).toBeTruthy();
+    expect(existsSync(path.resolve(root, "resources", "bin", `${root}-launcher.exe`))).toBeTruthy();
+    expect(pathExistsSync(path.resolve(root, "node_modules"))).toEqual(nodeModules);
+    expect(pathExistsSync(path.resolve(root, ".husky"))).toEqual(husky);
+    expect(existsSync(path.resolve(root, ".husky", "pre-commit"))).toEqual(husky);
 
     const packageJson = readJsonFile(path.resolve(root, "package.json"));
 

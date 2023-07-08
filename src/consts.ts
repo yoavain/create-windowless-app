@@ -59,5 +59,3 @@ export const consts = {
         "node_modules"
     ]
 };
-
-export default consts;

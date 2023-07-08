@@ -4,6 +4,7 @@ import { pathExistsSync } from "fs-extra";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import { interactiveMode } from "./interactive";
+import { validateProjectNameInput } from "./validation";
 
 const packageJson = require(`../${PACKAGE_JSON_FILENAME}`);
 
@@ -73,8 +74,11 @@ export const parseCommand = async (argv: string[]): Promise<ProgramConfig> => {
             type: "string",
             description: "override node version to bundle"
         })
-        .check((argv) => {
-            if (!argv.projectName && !argv.interactive && !argv.help) {
+        .check(({ projectName, interactive, help }) => {
+            if (projectName && typeof validateProjectNameInput(projectName) === "string") {
+                throw new Error("Invalid project name");
+            }
+            else if (!projectName && !interactive && !help) {
                 throw new Error("Missing project name");
             }
             return true;
