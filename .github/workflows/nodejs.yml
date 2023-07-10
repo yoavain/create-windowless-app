@@ -43,6 +43,7 @@ jobs:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
       - name: Codecov
+        if: matrix.node-version == '18'
         uses: codecov/codecov-action@v3.1.4
         with:
           fail_ci_if_error: true
