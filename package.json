@@ -1,6 +1,6 @@
 {
     "name": "create-windowless-app",
-    "version": "10.0.3",
+    "version": "10.5.0",
     "description": "Create a windowless NodeJS app",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
@@ -44,7 +44,7 @@
     "author": "yoavain",
     "license": "MIT",
     "engines": {
-        "node": ">=12 <19",
+        "node": ">=14 <19",
         "npm": "<=9"
     },
     "files": [
