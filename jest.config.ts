@@ -5,7 +5,6 @@ const config: Config.InitialOptions = {
         "^.+\\.ts$": "ts-jest"
     },
     testEnvironment: "node",
-    restoreMocks: true,
     testRegex: "(test|integration_test)/.*.test.ts$",
     moduleFileExtensions: ["ts", "js", "json", "node"],
     maxWorkers: "50%",
