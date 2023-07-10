@@ -11,13 +11,12 @@ jest.mock("cross-spawn", () => ({
 }));
 jest.mock("fs-extra", () => {
     return {
-        ensureDirSync: () => {},
-        readdirSync: () => [],
-        removeSync: () => {},
-        writeFileSync: () => {},
-        readFileSync: () => "{}",
-        copyFileSync: () => {},
-        pathExistsSync: () => {}
+        ensureDirSync: jest.fn(),
+        readdirSync: jest.fn(() => []),
+        writeFileSync: jest.fn(),
+        readFileSync: jest.fn(() => "{}"),
+        copyFileSync: jest.fn(),
+        pathExistsSync: jest.fn()
     };
 });
 
