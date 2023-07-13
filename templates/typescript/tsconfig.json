@@ -8,5 +8,5 @@
         "noEmit": true,
         "verbatimModuleSyntax": false
     },
-    "include": ["./src/**/*", "./webpack.config.ts"]
+    "include": ["./src/**/*.ts", "./launcher/**/*.ts", "./utils/**/*.ts", "./webpack.config.ts"]
 }
