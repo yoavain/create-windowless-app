@@ -16,11 +16,13 @@ const tsConfigBuildResourceLocation = "../templates/typescript/tsconfig.build.js
 const tsConfigResourceLocation = "../templates/typescript/tsconfig.json";
 const tsIndexResourceLocation = "../templates/typescript/src/index.ts";
 const tsLauncherCompilerLocation = "../templates/typescript/launcher/launcherCompiler.ts";
+const tsCheckNodeVersionLocation = "../templates/typescript/utils/checkNodeVersion.ts";
 
 // JavaScript
 const jsWebpackConfigResourceLocation = "../templates/javascript/webpack.config.js";
 const jsIndexResourceLocation = "../templates/javascript/src/index.js";
 const jsLauncherCompilerLocation = "../templates/javascript/launcher/launcherCompiler.js";
+const jsCheckNodeVersionLocation = "../templates/javascript/utils/checkNodeVersion.js";
 
 // Launcher Source
 const launcherSrcResourceLocation = "../templates/common/src/launcher.cs";
@@ -80,6 +82,8 @@ const buildTypeScriptProject = (root: string, appName: string, husky: boolean): 
     writeFile(path.resolve(root, "webpack.config.ts"), replaceAppNamePlaceholder(readResource(tsWebpackConfigResourceLocation), appName));
     ensureDirSync(path.resolve(root, "src"));
     writeFile(path.resolve(root, "src", "index.ts"), replaceAppNamePlaceholder(readResource(tsIndexResourceLocation), appName));
+    ensureDirSync(path.resolve(root, "utils"));
+    writeFile(path.resolve(root, "utils", "checkNodeVersion.ts"), readResource(tsCheckNodeVersionLocation));
 
     // Add scripts
     const scripts: Record<string, string> = {
@@ -87,10 +91,12 @@ const buildTypeScriptProject = (root: string, appName: string, husky: boolean): 
         "type-check": "tsc --build tsconfig.json",
         "prewebpack": "rimraf build && rimraf dist",
         "webpack": "webpack",
-        ...getSingleExecutableApplicationsScripts(appName),
+        "prebuild": "npm run check-node-version",
         "build": "npm run type-check && npm run webpack && npm run node-sea",
+        "check-node-version": "ts-node -e \"require(\"\"./utils/checkNodeVersion\"\").checkNodeRuntimeVersion()\"",
         "check-msbuild": "ts-node -e \"require(\"\"./launcher/launcherCompiler\"\").checkMsbuildInPath(true)\"",
-        "rebuild-launcher": "msbuild launcher/launcher.csproj"
+        "rebuild-launcher": "msbuild launcher/launcher.csproj",
+        ...getSingleExecutableApplicationsScripts(appName)
     };
 
     // Add husky
@@ -112,16 +118,20 @@ const buildJavaScriptProject = (root: string, appName: string, husky: boolean): 
     writeFile(path.resolve(root, "webpack.config.js"), replaceAppNamePlaceholder(readResource(jsWebpackConfigResourceLocation), appName));
     ensureDirSync(path.resolve(root, "src"));
     writeFile(path.resolve(root, "src", "index.js"), replaceAppNamePlaceholder(readResource(jsIndexResourceLocation), appName));
+    ensureDirSync(path.resolve(root, "utils"));
+    writeFile(path.resolve(root, "utils", "checkNodeVersion.js"), readResource(jsCheckNodeVersionLocation));
 
     // Add scripts
     const scripts: Record<string, string> = {
         "start": "node src/index.js",
         "prewebpack": "rimraf build && rimraf dist",
         "webpack": "webpack",
-        ...getSingleExecutableApplicationsScripts(appName),
+        "prebuild": "npm run check-node-version",
         "build": "npm run webpack && npm run node-sea",
+        "check-node-version": "node -e \"require(\"\"./utils/checkNodeVersion\"\").checkNodeRuntimeVersion()\"",
         "check-msbuild": "node -e \"require(\"\"./launcher/launcherCompiler\"\").checkMsbuildInPath(true)\"",
-        "rebuild-launcher": "msbuild launcher/launcher.csproj"
+        "rebuild-launcher": "msbuild launcher/launcher.csproj",
+        ...getSingleExecutableApplicationsScripts(appName)
     };
 
     // Add husky
