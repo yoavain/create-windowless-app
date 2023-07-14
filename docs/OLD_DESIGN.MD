@@ -40,12 +40,12 @@
           * writes ".husky/pre-commit"
           * writes scripts to package.json
         * creates resources/bin folder
-        * calls `buildLauncher`
+        * `buildLauncher`
           * creates "launcher" folder
           * writes "launcher/launcher.cs"
           * writes "launcher/launcher.csproj"
           * copy file "launcher/launcherCompiler.ts" or "launcher/launcherCompiler.js"
           * if there's an icon, copies "launcher/launcher.ico"
-          * `compileLauncher`
-            * runs compiler
+        * `compileLauncher`
+          * runs compiler
       * change dir back
