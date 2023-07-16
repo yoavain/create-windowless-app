@@ -31,7 +31,7 @@ export const copyFile = (source: PathLike, destination: PathLike): void => {
     copyFileSync(source, destination);
 };
 
-const EXTENSIONS_TO_FORMAT = new Set<string>([".ts", ".js", ".cs", ".json"]);
+const EXTENSIONS_TO_FORMAT = new Set<string>([".ts", ".js", ".cs", ".json", ".csproj"]);
 
 export type Formatter = (s: string) => string;
 
