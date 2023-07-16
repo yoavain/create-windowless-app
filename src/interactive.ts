@@ -29,12 +29,6 @@ export const interactiveMode = (): Promise<ProgramConfig> => {
         },
         {
             type: "confirm",
-            message: "Skip NPM Install:",
-            name: "skipInstall",
-            default: false
-        },
-        {
-            type: "confirm",
             message: "Verbose:",
             name: "verbose",
             default: false
