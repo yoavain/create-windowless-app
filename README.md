@@ -69,6 +69,7 @@ create-windowless-app creates the following files:
 my-app
 ├── node_modules
 ├── package.json
+├── sea-config.json
 ├── tsconfig.json
 ├── tsconfig.build.json
 ├── webpack.config.js
@@ -110,7 +111,6 @@ create-windowless-app <project-directory> [options]
 Options:
     --no-typescript                 use javascript rather than typescript
     --no-husky                      do not install husky pre-commit hook for building launcher
-    --skip-install                  writes dependencies to package.json without installing them
     --icon <icon>                   override default launcher icon file
 
     --interactive                   interactive mode

@@ -3,7 +3,7 @@ import { randomUUID as uuid } from "crypto";
 import type { ExecException } from "child_process";
 import { exec } from "child_process";
 import * as del from "del";
-import { readJsonFile } from "../src/fileUtils";
+import { readJsonFile } from "../src/files/fileUtils";
 import { consts } from "../src/consts";
 import { existsSync, pathExistsSync } from "fs-extra";
 
@@ -92,32 +92,10 @@ describe("Test CLI", () => {
         del.sync(sandbox);
     });
 
-    it("should create a prototype project with flags: --skip-install", async () => {
+    it("should create a prototype project with flags: --no-husky", async () => {
         const sandbox: string = uuid();
         SANDBOXES.add(sandbox);
-        const result: CliResult = await cli([sandbox, "--skip-install"], ".");
-        console.log(JSON.stringify(result, null, "\t"));
-        expect(result.code).toBe(0);
-        expect(result.error).toBeFalsy();
-        testFilesExists(sandbox, true, true, false);
-        del.sync(sandbox);
-    });
-
-    it("should create a prototype project with flags: --no-typescript --skip-install", async () => {
-        const sandbox: string = uuid();
-        SANDBOXES.add(sandbox);
-        const result: CliResult = await cli([sandbox, "--no-typescript --skip-install"], ".");
-        console.log(JSON.stringify(result, null, "\t"));
-        expect(result.code).toBe(0);
-        expect(result.error).toBeFalsy();
-        testFilesExists(sandbox, false, true, false);
-        del.sync(sandbox);
-    });
-
-    it("should create a prototype project with flags: --no-husky --skip-install", async () => {
-        const sandbox: string = uuid();
-        SANDBOXES.add(sandbox);
-        const result: CliResult = await cli([sandbox, "--no-husky", "--skip-install"], ".");
+        const result: CliResult = await cli([sandbox, "--no-husky"], ".");
         console.log(JSON.stringify(result, null, "\t"));
         expect(result.code).toBe(0);
         expect(result.error).toBeFalsy();

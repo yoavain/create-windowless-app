@@ -2,7 +2,7 @@ import type { InvalidNames, LegacyNames } from "validate-npm-package-name";
 import validateProjectName from "validate-npm-package-name";
 import chalk from "chalk";
 import path from "path";
-import { readJsonFile, writeJson } from "./fileUtils";
+import { readJsonFile, writeJson } from "./files/fileUtils";
 import { consts } from "./consts";
 import { readdirSync, removeSync } from "fs-extra";
 
@@ -81,18 +81,6 @@ export const checkAppName = (appName) => {
     }
 };
 
-export const getSingleExecutableApplicationsScripts = (appName: string): Record<string, string> => {
-    return {
-        "prenode-sea:build-blob": "rimraf _blob && mkdir _blob",
-        "node-sea:build-blob": "node --experimental-sea-config sea-config.json",
-        "node-sea:copy-node": `node -e "require('fs').copyFileSync(process.execPath, 'dist/${appName}.exe')"`,
-        "node-sea:unsign": `signtool remove /s dist/${appName}.exe`,
-        "node-sea:inject-blob": `postject dist/${appName}.exe NODE_SEA_BLOB _blob\\sea-prep.blob --sentinel-fuse NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2`,
-        "node-sea:sign": `signtool sign /fd SHA256 dist/${appName}.exe`,
-        "node-sea": "npm run node-sea:build-blob && npm run node-sea:copy-node && npm run node-sea:unsign && npm run node-sea:inject-blob"
-    };
-};
-
 export const mergeIntoPackageJson = (root: string, field: string, data: any): void => {
     const packageJsonPath = path.resolve(root, PACKAGE_JSON_FILENAME);
     const packageJson = readJsonFile(packageJsonPath);
@@ -109,6 +97,6 @@ export const mergeIntoPackageJson = (root: string, field: string, data: any): vo
     writeJson(packageJsonPath, packageJson);
 };
 
-export const replaceAppNamePlaceholder = (str: string, appName: string): string => {
+export const replaceAppNamePlaceholder = (appName: string, str: string): string => {
     return str.replace(/##APPNAME##/g, `${appName}`);
 };

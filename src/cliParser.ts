@@ -13,13 +13,12 @@ export type ProgramConfig = {
     icon?: string;
     typescript: boolean;
     husky: boolean;
-    skipInstall: boolean;
     verbose: boolean;
 };
 
 const validateInput = (argv): any => {
     if (argv.icon && !pathExistsSync(argv.icon)) {
-        console.log(`Cannot find icon in ${chalk.red(argv.icon)}. Switching to ${chalk.green("default")} icon.`);
+        console.warn(`Cannot find icon in ${chalk.red(argv.icon)}. Switching to ${chalk.green("default")} icon.`);
         delete argv.icon;
     }
 
@@ -58,11 +57,6 @@ export const parseCommand = async (argv: string[]): Promise<ProgramConfig> => {
             description: "install husky pre-commit hook for building launcher",
             default: true
         })
-        .option("skip-install", {
-            alias: "s",
-            type: "boolean",
-            description: "write dependencies to package.json without installing"
-        })
         .option("icon", {
             alias: "c",
             type: "string",
@@ -93,7 +87,6 @@ export const parseCommand = async (argv: string[]): Promise<ProgramConfig> => {
             verbose: command.verbose,
             typescript: command.typescript,
             husky: command.husky,
-            skipInstall: command["skip-install"],
             icon: command.icon
         };
     }

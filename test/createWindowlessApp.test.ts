@@ -11,6 +11,9 @@ jest.mock("cross-spawn", () => ({
 }));
 jest.mock("fs-extra", () => {
     return {
+        existsSync: jest.fn(() => true),
+        lstatSync: jest.fn(() => ({ isDirectory: () => true })),
+        mkdirSync: jest.fn(),
         ensureDirSync: jest.fn(),
         readdirSync: jest.fn(() => []),
         writeFileSync: jest.fn(),
@@ -32,11 +35,6 @@ describe("Test createWindowlessApp", () => {
     it("should create a prototype project with default flags", async () => {
         const sandbox: string = uuid();
         await createWindowlessApp(["node.exe", "dummy.ts", sandbox]);
-    });
-
-    it("should create a prototype project with flags: --skip-install", async () => {
-        const sandbox: string = uuid();
-        await createWindowlessApp(["node.exe", "dummy.ts", sandbox, "--skip-install"]);
     });
 
     it("should create a prototype project with flags: --no-typescript", async () => {
