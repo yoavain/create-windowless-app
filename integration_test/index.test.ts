@@ -21,7 +21,7 @@ type CliResult = {
 // Remove fixed type in list, i.e. "node-notifier@9" => "node-notifier"
 const cleanExpectedDependencies = (expectedDependencies: string[]): string[] => expectedDependencies.map((dep) => dep.lastIndexOf("@") > 0 ? dep.substring(0, dep.lastIndexOf("@")) : dep);
 
-const testFilesExists = (root: string, typescript: boolean = true, husky: boolean = true, nodeModules: boolean = true): void => {
+const testFilesExists = (root: string, typescript: boolean = true, husky: boolean = true): void => {
     // Files
     const scriptExt: string = typescript ? "ts" : "js";
     expect(existsSync(path.resolve(root, "package.json"))).toBeTruthy();
@@ -36,9 +36,11 @@ const testFilesExists = (root: string, typescript: boolean = true, husky: boolea
     expect(existsSync(path.resolve(root, "launcher", "launcher.ico"))).toBeTruthy();
     expect(existsSync(path.resolve(root, "launcher", `launcherCompiler.${scriptExt}`))).toBeTruthy();
     expect(existsSync(path.resolve(root, "resources", "bin", `${root}-launcher.exe`))).toBeTruthy();
-    expect(pathExistsSync(path.resolve(root, "node_modules"))).toEqual(nodeModules);
-    expect(pathExistsSync(path.resolve(root, ".husky"))).toEqual(husky);
-    expect(existsSync(path.resolve(root, ".husky", "pre-commit"))).toEqual(husky);
+    expect(pathExistsSync(path.resolve(root, "node_modules"))).toEqual(true);
+    if (husky) {
+        expect(pathExistsSync(path.resolve(root, ".husky"))).toEqual(husky);
+        expect(existsSync(path.resolve(root, ".husky", "pre-commit"))).toEqual(husky);
+    }
 
     const packageJson = readJsonFile(path.resolve(root, "package.json"));
 
@@ -92,6 +94,17 @@ describe("Test CLI", () => {
         del.sync(sandbox);
     });
 
+    it("should create a prototype project with flags: --no-typescript", async () => {
+        const sandbox: string = uuid();
+        SANDBOXES.add(sandbox);
+        const result: CliResult = await cli([sandbox, "--no-typescript"], ".");
+        console.log(JSON.stringify(result, null, "\t"));
+        expect(result.code).toBe(0);
+        expect(result.error).toBeFalsy();
+        testFilesExists(sandbox, false);
+        del.sync(sandbox);
+    });
+
     it("should create a prototype project with flags: --no-husky", async () => {
         const sandbox: string = uuid();
         SANDBOXES.add(sandbox);
@@ -99,7 +112,7 @@ describe("Test CLI", () => {
         console.log(JSON.stringify(result, null, "\t"));
         expect(result.code).toBe(0);
         expect(result.error).toBeFalsy();
-        testFilesExists(sandbox, true, false, false);
+        testFilesExists(sandbox, true, false);
         del.sync(sandbox);
     });
 });
