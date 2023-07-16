@@ -1,10 +1,11 @@
 export type Scripts = Record<string, string>
 
-export const getPackageJsonBase = (appName): object => ({
+export const getPackageJsonBase = (appName): any => ({
     name: appName,
     version: "0.1.0",
     private: true,
-    main: "_build/index.js"
+    main: "_build/index.js",
+    scripts: {}
 });
 
 const getSingleExecutableApplicationsScripts = (appName: string): Scripts => ({
