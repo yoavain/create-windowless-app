@@ -31,7 +31,7 @@ export const copyFile = (source: PathLike, destination: PathLike): void => {
     copyFileSync(source, destination);
 };
 
-const EXTENSIONS_TO_FORMAT = new Set<string>([".ts", ".js", ".cs", ".json", ".csproj"]);
+const TEXT_FORMAT_EXTENSIONS = new Set<string>([".ts", ".js", ".cs", ".json", ".csproj"]);
 
 export type Formatter = (s: string) => string;
 
@@ -42,15 +42,16 @@ function copyFileSyncWithFormatter(sourceFile, targetFile, formatter?: Formatter
         throw new Error(`Target file already exists: ${targetFile}`);
     }
 
-    let data = readFileSync(sourceFile, { encoding: "utf8" });
-
     const ext: string = path.extname(sourceFile);
-    if (typeof formatter === "function" && EXTENSIONS_TO_FORMAT.has(ext.toLowerCase())) {
+    if (typeof formatter === "function" && TEXT_FORMAT_EXTENSIONS.has(ext.toLowerCase())) {
         console.log(`modifying ${sourceFile}`);
-        data = formatter(data);
+        const data = readFileSync(sourceFile, { encoding: "utf8" });
+        writeFileSync(targetFile, formatter(data), { encoding: "utf8" });
     }
-
-    writeFileSync(targetFile, data, { encoding: "utf8" });
+    else {
+        const data = readFileSync(sourceFile);
+        writeFileSync(targetFile, data);
+    }
 }
 
 export const copyFolderRecursiveSync = (sourceFolder, targetFolder, formatter?: Formatter) => {
