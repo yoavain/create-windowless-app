@@ -32,3 +32,12 @@
       * `compileLauncher`
         * runs compiler
       * change dir back
+
+
+## MVP:
+* Adding a new file to template, does not require code change
+* Simple flow
+* Remove the "skipInstall" option
+
+TBD:
+* Should add package.json to template (without dependencies)?
