@@ -19,18 +19,17 @@ export class PackageJsonBuilder {
         return this;
     }
 
-    build(): string {
+    build(): object {
         let packageJson = getPackageJsonBase(this.#appName);
         if (this.#typescript) {
-            packageJson = { ...packageJson, ...getTsScripts(this.#appName) };
+            packageJson = { ...packageJson, scripts: { ...packageJson.scripts, ...getTsScripts(this.#appName) } };
         }
         else {
-            packageJson = { ...packageJson, ...getJsScripts(this.#appName) };
+            packageJson = { ...packageJson, scripts: { ...packageJson.scripts, ...getJsScripts(this.#appName) } };
         }
         if (this.#husky) {
-            packageJson = { ...packageJson, ...getHuskyScripts(this.#appName) };
+            packageJson = { ...packageJson, scripts: { ...packageJson.scripts, ...getHuskyScripts(this.#appName) } };
         }
-
-        return JSON.stringify(packageJson, null, 2);
+        return packageJson;
     }
 }
