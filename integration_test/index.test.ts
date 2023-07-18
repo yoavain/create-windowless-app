@@ -61,7 +61,7 @@ const cli = (args: string[], cwd?: string): Promise<CliResult> => {
     return new Promise((resolve) => {
         const nycLocation: string = path.resolve("node_modules", ".bin", "nyc");
         const indexLocation: string = `${path.resolve("src/index.ts")}`;
-        const command: string = `${nycLocation} -r lcov -- node -r ts-node/register/transpile-only ${indexLocation} ${args.join(" ")}`;
+        const command: string = `${nycLocation} --reporter lcov --reporter json --report-dir coverage_integration -- node -r ts-node/register/transpile-only ${indexLocation} ${args.join(" ")}`;
         console.log(`Testing command: ${command}`);
         exec(command, { cwd }, (error, stdout, stderr) => {
             if (error) {
