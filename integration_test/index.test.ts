@@ -59,7 +59,9 @@ const testFilesExists = (root: string, typescript: boolean = true, husky: boolea
 
 const cli = (args: string[], cwd?: string): Promise<CliResult> => {
     return new Promise((resolve) => {
-        const command: string = `node -r ts-node/register ${path.resolve("src/index.ts")} ${args.join(" ")}`;
+        const nycLocation: string = path.resolve("node_modules", ".bin", "nyc");
+        const indexLocation: string = `${path.resolve("src/index.ts")}`;
+        const command: string = `${nycLocation} -r lcov -- node -r ts-node/register/transpile-only ${indexLocation} ${args.join(" ")}`;
         console.log(`Testing command: ${command}`);
         exec(command, { cwd }, (error, stdout, stderr) => {
             if (error) {
