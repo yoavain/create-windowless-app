@@ -3,9 +3,8 @@ import { randomUUID as uuid } from "crypto";
 import type { ExecException } from "child_process";
 import { exec } from "child_process";
 import * as del from "del";
-import { readJsonFile } from "../src/files/fileUtils";
 import { consts } from "../src/consts";
-import { existsSync, pathExistsSync } from "fs-extra";
+import { existsSync, pathExistsSync, readFileSync } from "fs-extra";
 
 jest.setTimeout(300000);
 
@@ -20,6 +19,11 @@ type CliResult = {
 
 // Remove fixed type in list, i.e. "node-notifier@9" => "node-notifier"
 const cleanExpectedDependencies = (expectedDependencies: string[]): string[] => expectedDependencies.map((dep) => dep.lastIndexOf("@") > 0 ? dep.substring(0, dep.lastIndexOf("@")) : dep);
+
+export const readJsonFile = (jsonFileName: string): any => {
+    return JSON.parse(readFileSync(jsonFileName, "utf8"));
+};
+
 
 const testFilesExists = (root: string, typescript: boolean = true, husky: boolean = true): void => {
     // Files

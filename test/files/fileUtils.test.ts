@@ -1,3 +1,5 @@
+import * as path from "path";
+
 const mockExistsSync = jest.fn((p) => {
     if (p === "target" || p === `target${path.sep}inner1` || p === `target${path.sep}inner2`) {
         return false;
@@ -35,7 +37,6 @@ jest.mock("fs-extra", () => {
 });
 
 
-import * as path from "path";
 import { copyFolderRecursiveSync } from "../../src/files/fileUtils";
 import type { StatsBase } from "fs";
 

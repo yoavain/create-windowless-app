@@ -1,34 +1,9 @@
-import { copyFileSync, existsSync, lstatSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "fs-extra";
+import { existsSync, lstatSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "fs-extra";
 import path from "path";
 import os from "os";
-import type { PathLike } from "fs";
 
-export const readFile = (fileName: string): string => {
-    return readFileSync(fileName, "utf8");
-};
-
-export const readJsonFile = (jsonFileName: string): any => {
-    return JSON.parse(readFile(jsonFileName));
-};
-
-export const readResource = (resourceRelativePath: string): string => {
-    return readFile(path.resolve(__dirname, resourceRelativePath));
-};
-
-export const readJsonResource = (resourceRelativePath: string): any => {
-    return JSON.parse(readResource(resourceRelativePath));
-};
-
-export const writeJson = (fileName: string, object): void => {
-    writeFileSync(fileName, JSON.stringify(object, null, 2).replace(/\n/g, os.EOL) + os.EOL);
-};
-
-export const writeFile = (fileName: string, data: string): void => {
-    writeFileSync(fileName, data.replace(/\r/g, "").replace(/\n/g, os.EOL));
-};
-
-export const copyFile = (source: PathLike, destination: PathLike): void => {
-    copyFileSync(source, destination);
+export const writeJson = (fileName: string, json: object): void => {
+    writeFileSync(fileName, JSON.stringify(json, null, 2).replace(/\n/g, os.EOL) + os.EOL);
 };
 
 const TEXT_FORMAT_EXTENSIONS = new Set<string>([".ts", ".js", ".cs", ".json", ".csproj"]);
@@ -68,8 +43,8 @@ export const copyFolderRecursiveSync = (sourceFolder, targetFolder, formatter?: 
     // Copy
     if (lstatSync(sourceFolder).isDirectory()) {
         readdirSync(sourceFolder).forEach((child: string) => {
-            const curSource = path.join(sourceFolder, child);
-            const curTarget = path.join(targetFolder, child);
+            const curSource: string = path.join(sourceFolder, child);
+            const curTarget: string = path.join(targetFolder, child);
             if (lstatSync(curSource).isDirectory()) {
                 copyFolderRecursiveSync(curSource, curTarget, formatter);
             }
