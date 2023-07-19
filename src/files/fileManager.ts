@@ -1,5 +1,5 @@
-import type { Formatter } from "./fileUtils";
-import { copyFolderRecursiveSync } from "./fileUtils";
+import type { Formatter } from ".";
+import { copyFolderRecursiveSync } from ".";
 import { replaceAppNamePlaceholder } from "../createWindowlessAppUtils";
 import { copyFileSync } from "fs-extra";
 import path from "path";
