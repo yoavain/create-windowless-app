@@ -1,6 +1,7 @@
 import type { Formatter } from "./fileUtils";
-import { copyFile, copyFolderRecursiveSync } from "./fileUtils";
+import { copyFolderRecursiveSync } from "./fileUtils";
 import { replaceAppNamePlaceholder } from "../createWindowlessAppUtils";
+import { copyFileSync } from "fs-extra";
 import path from "path";
 
 export class FileManager {
@@ -45,7 +46,7 @@ export class FileManager {
 
         // Icon
         if (this.#icon) {
-            copyFile(path.resolve(this.#icon), path.resolve(this.#targetRoot, "launcher", "launcher.ico"));
+            copyFileSync(path.resolve(this.#icon), path.resolve(this.#targetRoot, "launcher", "launcher.ico"));
         }
     }
 }
