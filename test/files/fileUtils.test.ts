@@ -37,7 +37,7 @@ jest.mock("fs-extra", () => {
 });
 
 
-import { copyFolderRecursiveSync } from "../../src/files/fileUtils";
+import { copyFolderRecursiveSync } from "../../src/files";
 import type { StatsBase } from "fs";
 
 

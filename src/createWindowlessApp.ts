@@ -9,8 +9,7 @@ import type { ProgramConfig } from "./cliParser";
 import { parseCommand } from "./cliParser";
 import { PackageJsonBuilder } from "./packageJson";
 import { DependenciesManager } from "./dependencies";
-import { FileManager } from "./files";
-import { writeJson } from "./files/fileUtils";
+import { FileManager, writeJson } from "./files";
 
 const run = async (root: string, appName: string, originalDirectory: string, programConfig: ProgramConfig): Promise<void> => {
     const { typescript, husky, icon, verbose } = programConfig;
