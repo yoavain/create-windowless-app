@@ -13,7 +13,7 @@
 ![visitors](https://visitor-badge.glitch.me/badge?page_id=yoavain.create-windowless-app)
 ![Downloads](https://img.shields.io/npm/dm/create-windowless-app.svg)
 
-Create a windowless NodeJS app.
+Create a windowless Node.js app.
 
 You can also start from this template repository [create-windowless-app-template](https://github.com/yoavain/create-windowless-app-template)
 
@@ -22,7 +22,7 @@ If something doesn't work, please [file an issue](https://github.com/yoavain/cre
 
 
 Pre-Requisites for template to work:
-* `NodeJS` version `14.17.0` or higher
+* `NodeJS` version `20.0.0` or higher
 * `MSBuild.exe` must be in the PATH environment variable
 
 ## Quick Overview
@@ -98,7 +98,7 @@ Then you can find in your my-app\dist folder the following files:
 <img src='https://raw.githubusercontent.com/yoavain/create-windowless-app/main/resources/docs/dist.png' width='157' alt='dist files'>
 </p>
 
-* *my-app.exe* is the compiled app, with NodeJS bundled (using [Single Executable Applications](https://nodejs.org/api/single-executable-applications.html))
+* *my-app.exe* is the compiled app, with Node.js bundled (using [Single Executable Applications](https://nodejs.org/api/single-executable-applications.html))
 * *my-app-launcher.exe* is the compiled launcher.cs file that executes my-app.exe without a console window
 * *snoretoast-x64.exe* allows windows notification (using [node-notifier](https://github.com/mikaelbr/node-notifier))
 * *my-app.log* will be generated on first run (using [winston logger](https://github.com/winstonjs/winston))
@@ -120,12 +120,12 @@ Only <project-directory> is required.
 
 ## Why?
 
-NodeJS does not have a native windowless mode (like java has javaw).
+Node.js does not have a native windowless mode (like java has javaw).
 Sometimes, you want to run an app as a scheduled task that runs in the background, or run a long task (i.e. a server) but do not want a console that must always be open.
-Best solution I could find is using a script that executes the NodeJS in windowless mode
+Best solution I could find is using a script that executes the Node.js in windowless mode
 
 This package comes to do the following:
-1) Compile a NodeJS (javascript/typescript) project into an *.exe file bundled with NodeJS, so no installation is needed
+1) Compile a Node.js (javascript/typescript) project into an *.exe file bundled with Node.js, so no installation is needed
 2) Compile a C# launcher that executes the compiled project, in windowless mode
 
 ## Template project
@@ -137,5 +137,5 @@ The "Hello World" template is a POC containing 2 features you might want when ru
 The template project build script does the following things
 1) Compiles TypeScript to JavaScript (if in a TypeScript template)
 2) Runs WebPack to bundle all JavaScript into a single file, and copy binary files into the "dist" folder
-3) Runs Node's single executable applications scripts to compile the single WebPack JavaScript output file to an exe file bundled with NodeJS (Currently experimental in NodeJS 20)
+3) Runs Node's single executable applications scripts to compile the single WebPack JavaScript output file to an exe file bundled with Node.js (Currently experimental in Node.js 20)
 
