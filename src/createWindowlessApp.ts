@@ -16,7 +16,7 @@ const run = async (root: string, appName: string, originalDirectory: string, pro
 
     try {
         const dependenciesManager: DependenciesManager = new DependenciesManager(typescript, husky);
-        await dependenciesManager.install(verbose);
+        await dependenciesManager.installAll(verbose);
 
         const fileManager: FileManager = new FileManager(root, appName, typescript, husky, icon);
         await fileManager.copyTemplate();

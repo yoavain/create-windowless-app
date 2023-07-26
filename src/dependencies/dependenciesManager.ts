@@ -61,7 +61,7 @@ export class DependenciesManager {
         }
     }
     
-    async install(verbose?: boolean) {
+    async installAll(verbose?: boolean) {
         await install(this.#dependencies, false, verbose);
         await install(this.#devDependencies, true, verbose);
     }
