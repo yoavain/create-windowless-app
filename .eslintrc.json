@@ -24,6 +24,12 @@
             "rules": {
                 "@typescript-eslint/no-var-requires": 0
             }
+        },
+        {
+            "files": ["test/**/*.ts"],
+            "rules": {
+                "max-lines-per-function": 0
+            }
         }
     ],
     "parser": "@typescript-eslint/parser",
