@@ -6,8 +6,7 @@ on:
       - main
   push:
     tags:
-      - 'v*.*.*'
-      - 'v*.*.*.*'
+      - '*.*.*'
 
 jobs:
   build:
@@ -111,12 +110,7 @@ jobs:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
       - name: Publish
-        run: |
-          if [[ ${{ github.ref }} == *beta* ]]; then
-            npm publish --tag beta
-          else
-            npm publish
-          fi
+        run: npm publish
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
