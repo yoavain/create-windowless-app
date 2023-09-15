@@ -24,6 +24,7 @@ If something doesn't work, please [file an issue](https://github.com/yoavain/cre
 Pre-Requisites for template to work:
 * `NodeJS` version `20.0.0` or higher
 * `MSBuild.exe` must be in the PATH environment variable
+* `signtool` must be in the PATH environment variable
 
 ## Quick Overview
 
