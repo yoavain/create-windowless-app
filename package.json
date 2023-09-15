@@ -58,7 +58,7 @@
     "devDependencies": {
         "@tsconfig/node14": "14.1.0",
         "@types/cross-spawn": "6.0.3",
-        "@types/fs-extra": "11.0.1",
+        "@types/fs-extra": "11.0.2",
         "@types/inquirer": "8.2.6",
         "@types/jest": "29.5.4",
         "@types/mock-fs": "4.13.1",
