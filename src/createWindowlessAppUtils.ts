@@ -2,7 +2,6 @@ import type { InvalidNames, LegacyNames } from "validate-npm-package-name";
 import validateProjectName from "validate-npm-package-name";
 import chalk from "chalk";
 import path from "path";
-import { readJsonFile, writeJson } from "./fileUtils";
 import { consts } from "./consts";
 import { readdirSync, removeSync } from "fs-extra";
 
@@ -81,26 +80,6 @@ export const checkAppName = (appName) => {
     }
 };
 
-export const getNexeCommand = (appName: string, nodeVersion: string): string => {
-    return `nexe -t ${nodeVersion} -o dist/${appName}.exe`;
-};
-
-export const mergeIntoPackageJson = (root: string, field: string, data: any): void => {
-    const packageJsonPath = path.resolve(root, PACKAGE_JSON_FILENAME);
-    const packageJson = readJsonFile(packageJsonPath);
-    if (Array.isArray(data)) {
-        const list = (packageJson[field] || []).concat(data).reduce((acc, cur) => {
-            acc[cur] = cur;
-            return acc;
-        }, {});
-        packageJson[field] = Object.keys(list);
-    }
-    else {
-        packageJson[field] = Object.assign(packageJson[field] || {}, data);
-    }
-    writeJson(packageJsonPath, packageJson);
-};
-
-export const replaceAppNamePlaceholder = (str: string, appName: string): string => {
+export const replaceAppNamePlaceholder = (appName: string, str: string): string => {
     return str.replace(/##APPNAME##/g, `${appName}`);
 };

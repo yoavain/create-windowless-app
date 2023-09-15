@@ -6,6 +6,7 @@ import { hideBin } from "yargs/helpers";
 import { interactiveMode } from "./interactive";
 import { validateProjectNameInput } from "./validation";
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const packageJson = require(`../${PACKAGE_JSON_FILENAME}`);
 
 export type ProgramConfig = {
@@ -13,14 +14,12 @@ export type ProgramConfig = {
     icon?: string;
     typescript: boolean;
     husky: boolean;
-    skipInstall: boolean;
-    nodeVersion: string;
     verbose: boolean;
 };
 
 const validateInput = (argv): any => {
     if (argv.icon && !pathExistsSync(argv.icon)) {
-        console.log(`Cannot find icon in ${chalk.red(argv.icon)}. Switching to ${chalk.green("default")} icon.`);
+        console.warn(`Cannot find icon in ${chalk.red(argv.icon)}. Switching to ${chalk.green("default")} icon.`);
         delete argv.icon;
     }
 
@@ -59,23 +58,13 @@ export const parseCommand = async (argv: string[]): Promise<ProgramConfig> => {
             description: "install husky pre-commit hook for building launcher",
             default: true
         })
-        .option("skip-install", {
-            alias: "s",
-            type: "boolean",
-            description: "write dependencies to package.json without installing"
-        })
         .option("icon", {
             alias: "c",
             type: "string",
             description: "override default launcher icon file"
         })
-        .option("node-version", {
-            alias: "n",
-            type: "string",
-            description: "override node version to bundle"
-        })
         .check(({ projectName, interactive, help }) => {
-            if (projectName && typeof validateProjectNameInput(projectName) === "string") {
+            if (projectName && typeof validateProjectNameInput(projectName as string) === "string") {
                 throw new Error("Invalid project name");
             }
             else if (!projectName && !interactive && !help) {
@@ -99,9 +88,7 @@ export const parseCommand = async (argv: string[]): Promise<ProgramConfig> => {
             verbose: command.verbose,
             typescript: command.typescript,
             husky: command.husky,
-            skipInstall: command["skip-install"],
-            icon: command.icon,
-            nodeVersion: command["node-version"]
+            icon: command.icon
         };
     }
 

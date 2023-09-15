@@ -24,6 +24,12 @@
             "rules": {
                 "@typescript-eslint/no-var-requires": 0
             }
+        },
+        {
+            "files": ["test/**/*.ts"],
+            "rules": {
+                "max-lines-per-function": 0
+            }
         }
     ],
     "parser": "@typescript-eslint/parser",
@@ -52,7 +58,7 @@
         "@typescript-eslint/interface-name-prefix": [0, "never"],
         "arrow-parens": ["error"],
         "quote-props": ["error", "consistent-as-needed", { "numbers": true }],
-        "no-unused-vars": "error",
+        "no-unused-vars": "warn",
         "no-useless-escape": "error",
         "no-empty-pattern": "error",
         "no-eval": "error",

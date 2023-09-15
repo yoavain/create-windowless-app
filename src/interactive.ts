@@ -1,6 +1,6 @@
 import inquirer from "inquirer";
 import type { ProgramConfig } from "./cliParser";
-import { validateNodeVersion, validateProjectNameInput } from "./validation";
+import { validateProjectNameInput } from "./validation";
 
 export const interactiveMode = (): Promise<ProgramConfig> => {
     return inquirer.prompt([
@@ -26,18 +26,6 @@ export const interactiveMode = (): Promise<ProgramConfig> => {
             message: "Install Husky:",
             name: "husky",
             default: true
-        },
-        {
-            type: "confirm",
-            message: "Skip NPM Install:",
-            name: "skipInstall",
-            default: false
-        },
-        {
-            type: "input",
-            message: "Node Version:",
-            name: "nodeVersion",
-            validate: validateNodeVersion
         },
         {
             type: "confirm",

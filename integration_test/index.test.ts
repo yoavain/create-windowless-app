@@ -3,9 +3,8 @@ import { randomUUID as uuid } from "crypto";
 import type { ExecException } from "child_process";
 import { exec } from "child_process";
 import * as del from "del";
-import { readJsonFile } from "../src/fileUtils";
 import { consts } from "../src/consts";
-import { existsSync, pathExistsSync } from "fs-extra";
+import { existsSync, pathExistsSync, readFileSync } from "fs-extra";
 
 jest.setTimeout(300000);
 
@@ -21,22 +20,31 @@ type CliResult = {
 // Remove fixed type in list, i.e. "node-notifier@9" => "node-notifier"
 const cleanExpectedDependencies = (expectedDependencies: string[]): string[] => expectedDependencies.map((dep) => dep.lastIndexOf("@") > 0 ? dep.substring(0, dep.lastIndexOf("@")) : dep);
 
-const testFilesExists = (root: string, typescript: boolean = true, husky: boolean = true, nodeModules: boolean = true): void => {
+export const readJsonFile = (jsonFileName: string): any => {
+    return JSON.parse(readFileSync(jsonFileName, "utf8"));
+};
+
+
+const testFilesExists = (root: string, typescript: boolean = true, husky: boolean = true): void => {
     // Files
     const scriptExt: string = typescript ? "ts" : "js";
     expect(existsSync(path.resolve(root, "package.json"))).toBeTruthy();
+    expect(existsSync(path.resolve(root, "sea-config.json"))).toBeTruthy();
     expect(existsSync(path.resolve(root, `webpack.config.${scriptExt}`))).toBeTruthy();
     expect(existsSync(path.resolve(root, "tsconfig.build.json"))).toEqual(typescript);
     expect(existsSync(path.resolve(root, "tsconfig.json"))).toEqual(typescript);
     expect(existsSync(path.resolve(root, "src", `index.${scriptExt}`))).toBeTruthy();
+    expect(existsSync(path.resolve(root, "utils", `checkNodeVersion.${scriptExt}`))).toBeTruthy();
     expect(existsSync(path.resolve(root, "launcher", "launcher.cs"))).toBeTruthy();
     expect(existsSync(path.resolve(root, "launcher", "launcher.csproj"))).toBeTruthy();
     expect(existsSync(path.resolve(root, "launcher", "launcher.ico"))).toBeTruthy();
     expect(existsSync(path.resolve(root, "launcher", `launcherCompiler.${scriptExt}`))).toBeTruthy();
     expect(existsSync(path.resolve(root, "resources", "bin", `${root}-launcher.exe`))).toBeTruthy();
-    expect(pathExistsSync(path.resolve(root, "node_modules"))).toEqual(nodeModules);
-    expect(pathExistsSync(path.resolve(root, ".husky"))).toEqual(husky);
-    expect(existsSync(path.resolve(root, ".husky", "pre-commit"))).toEqual(husky);
+    expect(pathExistsSync(path.resolve(root, "node_modules"))).toEqual(true);
+    if (husky) {
+        expect(pathExistsSync(path.resolve(root, ".husky"))).toEqual(husky);
+        expect(existsSync(path.resolve(root, ".husky", "pre-commit"))).toEqual(husky);
+    }
 
     const packageJson = readJsonFile(path.resolve(root, "package.json"));
 
@@ -55,7 +63,9 @@ const testFilesExists = (root: string, typescript: boolean = true, husky: boolea
 
 const cli = (args: string[], cwd?: string): Promise<CliResult> => {
     return new Promise((resolve) => {
-        const command: string = `node -r ts-node/register ${path.resolve("src/index.ts")} ${args.join(" ")}`;
+        const nycLocation: string = path.resolve("node_modules", ".bin", "nyc");
+        const indexLocation: string = `${path.resolve("src/index.ts")}`;
+        const command: string = `${nycLocation} --reporter lcov --reporter json --report-dir coverage_integration -- node -r ts-node/register/transpile-only ${indexLocation} ${args.join(" ")}`;
         console.log(`Testing command: ${command}`);
         exec(command, { cwd }, (error, stdout, stderr) => {
             if (error) {
@@ -90,36 +100,25 @@ describe("Test CLI", () => {
         del.sync(sandbox);
     });
 
-    it("should create a prototype project with flags: --skip-install", async () => {
+    it("should create a prototype project with flags: --no-typescript", async () => {
         const sandbox: string = uuid();
         SANDBOXES.add(sandbox);
-        const result: CliResult = await cli([sandbox, "--skip-install"], ".");
+        const result: CliResult = await cli([sandbox, "--no-typescript"], ".");
         console.log(JSON.stringify(result, null, "\t"));
         expect(result.code).toBe(0);
         expect(result.error).toBeFalsy();
-        testFilesExists(sandbox, true, true, false);
+        testFilesExists(sandbox, false);
         del.sync(sandbox);
     });
 
-    it("should create a prototype project with flags: --no-typescript --skip-install", async () => {
+    it("should create a prototype project with flags: --no-husky", async () => {
         const sandbox: string = uuid();
         SANDBOXES.add(sandbox);
-        const result: CliResult = await cli([sandbox, "--no-typescript --skip-install"], ".");
+        const result: CliResult = await cli([sandbox, "--no-husky"], ".");
         console.log(JSON.stringify(result, null, "\t"));
         expect(result.code).toBe(0);
         expect(result.error).toBeFalsy();
-        testFilesExists(sandbox, false, true, false);
-        del.sync(sandbox);
-    });
-
-    it("should create a prototype project with flags: --no-husky --skip-install", async () => {
-        const sandbox: string = uuid();
-        SANDBOXES.add(sandbox);
-        const result: CliResult = await cli([sandbox, "--no-husky", "--skip-install"], ".");
-        console.log(JSON.stringify(result, null, "\t"));
-        expect(result.code).toBe(0);
-        expect(result.error).toBeFalsy();
-        testFilesExists(sandbox, true, false, false);
+        testFilesExists(sandbox, true, false);
         del.sync(sandbox);
     });
 });

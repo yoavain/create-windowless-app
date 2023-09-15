@@ -11,6 +11,9 @@ jest.mock("cross-spawn", () => ({
 }));
 jest.mock("fs-extra", () => {
     return {
+        existsSync: jest.fn(() => true),
+        lstatSync: jest.fn(() => ({ isDirectory: () => true })),
+        mkdirSync: jest.fn(),
         ensureDirSync: jest.fn(),
         readdirSync: jest.fn(() => []),
         writeFileSync: jest.fn(),
@@ -34,11 +37,6 @@ describe("Test createWindowlessApp", () => {
         await createWindowlessApp(["node.exe", "dummy.ts", sandbox]);
     });
 
-    it("should create a prototype project with flags: --skip-install", async () => {
-        const sandbox: string = uuid();
-        await createWindowlessApp(["node.exe", "dummy.ts", sandbox, "--skip-install"]);
-    });
-
     it("should create a prototype project with flags: --no-typescript", async () => {
         const sandbox: string = uuid();
         await createWindowlessApp(["node.exe", "dummy.ts", sandbox, "--no-typescript"]);
@@ -57,11 +55,6 @@ describe("Test createWindowlessApp", () => {
     it("should create a prototype project with flags: --icon", async () => {
         const sandbox: string = uuid();
         await createWindowlessApp(["node.exe", "dummy.ts", sandbox, "--icon", "someIcon"]);
-    });
-
-    it("should create a prototype project with flags: --node-version", async () => {
-        const sandbox: string = uuid();
-        await createWindowlessApp(["node.exe", "dummy.ts", sandbox, "--node-version", "12.12.0"]);
     });
 
     it("should print help with flags: --help", async () => {

@@ -6,12 +6,12 @@ export const consts = {
     devDependencies: [
         "fs-extra",
         "jest",
-        "nexe",
         "webpack",
         "webpack-cli",
         "copy-webpack-plugin",
         "rimraf",
-        "cross-spawn"
+        "cross-spawn",
+        "postject"
     ],
     huskyDependencies: [
         "husky"
@@ -19,7 +19,7 @@ export const consts = {
     tsDevDependencies: [
         "@types/jest",
         "@types/node",
-        "@tsconfig/node14",
+        "@tsconfig/node20",
         "@types/node-notifier",
         "@types/winston",
         "ts-loader",
@@ -50,6 +50,7 @@ export const consts = {
     ],
     knownGeneratedFiles: [
         "package.json",
+        "sea-config.json",
         "webpack.config.js",
         "tsconfig.json",
         "tsconfig.build.json",

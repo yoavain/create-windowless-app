@@ -3,9 +3,14 @@ import mockedEnv from "mocked-env";
 import mockFs from "mock-fs";
 
 describe("Test checkMsbuildInPath", () => {
+    let p;
+    beforeEach(() => {
+        p = process;
+    });
     afterEach(() => {
         mockFs.restore();
         jest.restoreAllMocks();
+        process = p;
     });
 
     it("Test MSBuild found", async () => {
@@ -28,6 +33,19 @@ describe("Test checkMsbuildInPath", () => {
 
         const result: boolean = await checkMsbuildInPath(false);
         expect(result).toBeFalsy();
+        restoreEnv();
+    });
+    it("Test MSBuild not found, with exit", async () => {
+        const restoreEnv = mockedEnv({
+            PATH: "fakePath"
+        });
+        // @ts-ignore
+        jest.spyOn(process, "exit").mockImplementation(() => {});
+
+        const result: boolean = await checkMsbuildInPath(true);
+        expect(result).toBeFalsy();
+        expect(process.exit).toHaveBeenCalledTimes(1);
+        expect(process.exit).toHaveBeenCalledWith(1);
         restoreEnv();
     });
 });

@@ -18,7 +18,7 @@ const config: Config.InitialOptions = {
         "lcov",
         "clover"
     ],
-    collectCoverageFrom: ["src/**/*.ts", "!src/index.ts", "!**/node_modules/**"]
+    collectCoverageFrom: ["src/**/*.ts", "!**/node_modules/**"]
 };
 
 export default config;
