@@ -62,7 +62,7 @@
         "@types/inquirer": "8.2.6",
         "@types/jest": "29.5.5",
         "@types/mock-fs": "4.13.1",
-        "@types/node": "20.6.3",
+        "@types/node": "20.6.4",
         "@types/node-notifier": "8.0.2",
         "@types/validate-npm-package-name": "4.0.0",
         "@types/winston": "2.4.4",
