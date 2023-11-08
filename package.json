@@ -59,7 +59,7 @@
         "@tsconfig/node20": "20.1.2",
         "@types/cross-spawn": "6.0.5",
         "@types/fs-extra": "11.0.4",
-        "@types/inquirer": "8.2.9",
+        "@types/inquirer": "8.2.10",
         "@types/jest": "29.5.7",
         "@types/mock-fs": "4.13.4",
         "@types/node": "20.8.10",
