@@ -60,7 +60,7 @@
         "@types/cross-spawn": "6.0.6",
         "@types/fs-extra": "11.0.4",
         "@types/inquirer": "8.2.10",
-        "@types/jest": "29.5.10",
+        "@types/jest": "29.5.11",
         "@types/mock-fs": "4.13.4",
         "@types/node": "20.10.3",
         "@types/node-notifier": "8.0.5",
