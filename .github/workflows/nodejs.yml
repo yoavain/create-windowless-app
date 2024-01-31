@@ -28,7 +28,7 @@ jobs:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
       - name: setup-msbuild
-        uses: microsoft/setup-msbuild@v1.3.2
+        uses: microsoft/setup-msbuild@v1.3.3
 
       - name: Dependencies Install
         run: npm ci
@@ -78,7 +78,7 @@ jobs:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
       - name: setup-msbuild
-        uses: microsoft/setup-msbuild@v1.3.2
+        uses: microsoft/setup-msbuild@v1.3.3
 
       - name: Dependencies Install
         run: npm ci
