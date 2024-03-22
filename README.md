@@ -29,17 +29,17 @@ Pre-Requisites for template to work:
 ## Quick Overview
 
 ```sh
-npx create-windowsless-app my-app
+npx create-windowless-app my-app
 ```
 Note: There's an open issue regarding running npx on Windows when the user folder path contains a space.
 For more info and a workaround: [npx#146](https://github.com/zkat/npx/issues/146)
 
 <details><summary>Or with npm</summary>
 <p>
-You can install create-windowsless-app globally:
+You can install create-windowless-app globally:
 
 ```sh
-npm install -g create-windowsless-app
+npm install -g create-windowless-app
 ```
 
 And then you can run:
