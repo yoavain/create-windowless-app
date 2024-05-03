@@ -43,7 +43,7 @@ jobs:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
       - name: Codecov
-        if: matrix.node-version == '20'
+        if: matrix.node-version == '22'
         uses: codecov/codecov-action@v4.3.0
         with:
           fail_ci_if_error: true
@@ -55,7 +55,7 @@ jobs:
     needs: build
     strategy:
       matrix:
-        node-version: [ '20' ]
+        node-version: [ '22' ]
 
     steps:
       - name: Checkout
