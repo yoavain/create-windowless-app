@@ -9,7 +9,7 @@ const mockLstatSync = jest.fn((p) => {
     const isDirectory: boolean = p === "source" || p === `source${path.sep}inner1` || p === `source${path.sep}inner2`;
     return {
         isDirectory: () => isDirectory
-    } as unknown as StatsBase<any>;
+    } as unknown as StatsBase<unknown>;
 });
 const mockReaddirSync = jest.fn((p) => {
     if (p === "source") {

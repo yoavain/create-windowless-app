@@ -20,7 +20,7 @@ type CliResult = {
 // Remove fixed type in list, i.e. "node-notifier@9" => "node-notifier"
 const cleanExpectedDependencies = (expectedDependencies: string[]): string[] => expectedDependencies.map((dep) => dep.lastIndexOf("@") > 0 ? dep.substring(0, dep.lastIndexOf("@")) : dep);
 
-export const readJsonFile = (jsonFileName: string): any => {
+export const readJsonFile = (jsonFileName: string) => {
     return JSON.parse(readFileSync(jsonFileName, "utf8"));
 };
 

@@ -17,7 +17,7 @@ export type ProgramConfig = {
     verbose: boolean;
 };
 
-const validateInput = (argv): any => {
+const validateInput = (argv) => {
     if (argv.icon && !pathExistsSync(argv.icon)) {
         console.warn(`Cannot find icon in ${chalk.red(argv.icon)}. Switching to ${chalk.green("default")} icon.`);
         delete argv.icon;
@@ -27,6 +27,7 @@ const validateInput = (argv): any => {
 };
 
 export const parseCommand = async (argv: string[]): Promise<ProgramConfig> => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const command: any = yargs(hideBin(argv))
         .command("* [projectName]", "project name",
             (yargs) => {
