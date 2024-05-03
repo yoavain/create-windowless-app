@@ -13,11 +13,11 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        node-version: [ '20' ]
+        node-version: [ '20', '22' ]
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@v4.1.4
 
       - name: Setup NodeJS
         uses: actions/setup-node@v4.0.2
@@ -44,9 +44,10 @@ jobs:
 
       - name: Codecov
         if: matrix.node-version == '20'
-        uses: codecov/codecov-action@v3.1.6
+        uses: codecov/codecov-action@v4.3.0
         with:
           fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   publish:
     runs-on: windows-latest
@@ -58,7 +59,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@v4.1.4
 
       - name: Setup Windows SDK
         uses: GuillaumeFalourd/setup-windows10-sdk-action@v1.12
@@ -115,7 +116,7 @@ jobs:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
       - name: Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: create-windowless-app-*.tgz
         env:
