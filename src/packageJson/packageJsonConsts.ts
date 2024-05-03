@@ -1,6 +1,6 @@
 export type Scripts = Record<string, string>
 
-export const getPackageJsonBase = (appName): any => ({
+export const getPackageJsonBase = (appName) => ({
     name: appName,
     version: "0.1.0",
     private: true,

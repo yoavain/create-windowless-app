@@ -32,6 +32,7 @@ const logger: winston.Logger = winston.createLogger({
 // Notifier init
 const snoreToastPath: string = executable.endsWith(".exe") ? path.resolve(executable, "../", "snoretoast-x64.exe") : null;
 let notifierOptions: Option = { withFallback: false, customPath: snoreToastPath };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const notifier: any = new WindowsToaster(notifierOptions);
 
 // Log message
@@ -39,7 +40,7 @@ logger.log("info", `"${AppName}" started with ${argv ? argv.join("; ") : "no arg
 logger.log("info", `Notifier started with options ${JSON.stringify(notifierOptions)}`);
 
 // Notify
-const notification: any = { title: `${AppName}`, message: "Hello World", actions: ["Log", "Close"] };
+const notification = { title: `${AppName}`, message: "Hello World", actions: ["Log", "Close"] };
 notifier.notify(notification);
 notifier.on("log", () => {
     const file: string = path.join(__dirname, "..", filename);
