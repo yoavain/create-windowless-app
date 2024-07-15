@@ -87,7 +87,7 @@
         "nyc": "17.0.0",
         "postject": "1.0.0-alpha.6",
         "prettier": "3.3.3",
-        "rimraf": "5.0.9",
+        "rimraf": "6.0.1",
         "tmp-promise": "3.0.3",
         "ts-jest": "29.2.2",
         "ts-loader": "9.5.1",
