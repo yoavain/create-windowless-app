@@ -89,7 +89,7 @@
         "prettier": "3.3.3",
         "rimraf": "6.0.1",
         "tmp-promise": "3.0.3",
-        "ts-jest": "29.2.2",
+        "ts-jest": "29.2.3",
         "ts-loader": "9.5.1",
         "ts-node": "10.9.2",
         "typescript": "5.5.3",
