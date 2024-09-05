@@ -74,7 +74,7 @@
         "del": "6.1.1",
         "eslint": "8.57.0",
         "eslint-plugin-import": "2.30.0",
-        "eslint-plugin-jest": "28.8.2",
+        "eslint-plugin-jest": "28.8.3",
         "eslint-plugin-n": "17.10.2",
         "eslint-plugin-security": "1.7.1",
         "global-npm": "0.5.0",
