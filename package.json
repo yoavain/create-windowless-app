@@ -59,7 +59,7 @@
         "@tsconfig/node20": "20.1.4",
         "@types/cross-spawn": "6.0.6",
         "@types/fs-extra": "11.0.4",
-        "@types/jest": "29.5.13",
+        "@types/jest": "29.5.14",
         "@types/mock-fs": "4.13.4",
         "@types/node": "20.16.15",
         "@types/node-notifier": "8.0.5",
