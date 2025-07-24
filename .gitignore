@@ -63,3 +63,5 @@ typings/
 /.husky/_/husky.sh
 /npm-shrinkwrap.json
 /create-windowless-app-template/
+/.vscode/
+/.junie/

@@ -23,6 +23,7 @@ If something doesn't work, please [file an issue](https://github.com/yoavain/cre
 
 Pre-Requisites for template to work:
 * `NodeJS` version `20.0.0` or higher
+* `npm` version `9.0.0` or higher
 * `MSBuild.exe` must be in the PATH environment variable
 * `signtool` must be in the PATH environment variable
 
@@ -71,19 +72,23 @@ my-app
 ├── node_modules
 ├── package.json
 ├── sea-config.json
-├── tsconfig.json
-├── tsconfig.build.json
-├── webpack.config.js
-├── launcher
+├── tsconfig.json (TypeScript projects)
+├── tsconfig.build.json (TypeScript projects)
+├── webpack.config.ts (TypeScript projects)
+├── webpack.config.js (JavaScript projects)
+├── .husky/ (if husky enabled)
+├── launcher/
 │   ├── launcher.cs
 │   ├── launcher.csproj
-|   ├── launcher.ico
-|   └── launcherCompiler.ts
-├── resources
-│   └── bin
+│   ├── launcher.ico
+│   └── launcherCompiler.js (JavaScript) / launcherCompiler.ts (TypeScript)
+├── resources/
+│   └── bin/
 │       └── my-app-launcher.exe
-└───src
-    └── index.js
+├── src/
+│   └── index.js (JavaScript) / index.ts (TypeScript)
+└── utils/
+    └── (utility files)
 ```
 
 No configuration or complicated folder structures, just the files you need to build your app.<br>
