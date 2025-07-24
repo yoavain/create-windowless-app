@@ -2,7 +2,7 @@ import path from "path";
 import { randomUUID as uuid } from "crypto";
 import type { ExecException } from "child_process";
 import { exec } from "child_process";
-import * as del from "del";
+import { rimraf } from "rimraf";
 import { consts } from "../src/consts";
 import { existsSync, pathExistsSync, readFileSync } from "fs-extra";
 
@@ -85,7 +85,7 @@ const cli = (args: string[], cwd?: string): Promise<CliResult> => {
 describe("Test CLI", () => {
     afterAll(() => {
         SANDBOXES.forEach((sandbox) => {
-            del.sync(sandbox);
+            rimraf.sync(sandbox);
         });
     });
 
@@ -97,7 +97,7 @@ describe("Test CLI", () => {
         expect(result.code).toBe(0);
         expect(result.error).toBeFalsy();
         testFilesExists(sandbox);
-        del.sync(sandbox);
+        rimraf.sync(sandbox);
     });
 
     it("should create a prototype project with flags: --no-typescript", async () => {
@@ -108,7 +108,7 @@ describe("Test CLI", () => {
         expect(result.code).toBe(0);
         expect(result.error).toBeFalsy();
         testFilesExists(sandbox, false);
-        del.sync(sandbox);
+        rimraf.sync(sandbox);
     });
 
     it("should create a prototype project with flags: --no-husky", async () => {
@@ -119,6 +119,6 @@ describe("Test CLI", () => {
         expect(result.code).toBe(0);
         expect(result.error).toBeFalsy();
         testFilesExists(sandbox, true, false);
-        del.sync(sandbox);
+        rimraf.sync(sandbox);
     });
 });
