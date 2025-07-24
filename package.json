@@ -106,7 +106,7 @@
         "fs-extra": "11.3.0",
         "inquirer": "11.1.0",
         "validate-npm-package-name": "6.0.2",
-        "yargs": "17.7.2"
+        "yargs": "18.0.0"
     },
     "lint-staged": {
         "*.(ts|js)": [
