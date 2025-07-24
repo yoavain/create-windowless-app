@@ -6,7 +6,7 @@ import { hideBin } from "yargs/helpers";
 import { interactiveMode } from "./interactive";
 import { validateProjectNameInput } from "./validation";
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const packageJson = require(`../${PACKAGE_JSON_FILENAME}`);
 
 export type ProgramConfig = {
