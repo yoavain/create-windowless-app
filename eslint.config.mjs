@@ -1,54 +1,72 @@
-{
-    "env": {
-        "es6": true,
-        "node": true,
-        "jest": true,
-        "jest/globals": true
+import { fixupConfigRules, fixupPluginRules } from "@eslint/compat";
+import n from "eslint-plugin-n";
+import typescriptEslint from "@typescript-eslint/eslint-plugin";
+import _import from "eslint-plugin-import";
+import jest from "eslint-plugin-jest";
+import pluginSecurity from "eslint-plugin-security";
+import globals from "globals";
+import tsParser from "@typescript-eslint/parser";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import js from "@eslint/js";
+import { FlatCompat } from "@eslint/eslintrc";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const compat = new FlatCompat({
+    baseDirectory: __dirname,
+    recommendedConfig: js.configs.recommended,
+    allConfig: js.configs.all
+});
+
+export default [...fixupConfigRules(compat.extends(
+    "eslint:recommended",
+    "plugin:n/recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:security/recommended-legacy"
+)), {
+    plugins: {
+        "n": fixupPluginRules(n),
+        "@typescript-eslint": fixupPluginRules(typescriptEslint),
+        "import": fixupPluginRules(_import),
+        jest,
+        "security": fixupPluginRules(pluginSecurity)
     },
-    "globals": {
-        "Atomics": "readonly",
-        "SharedArrayBuffer": "readonly"
+
+    languageOptions: {
+        globals: {
+            ...globals.node,
+            ...globals.jest,
+            ...jest.environments.globals.globals,
+            Atomics: "readonly",
+            SharedArrayBuffer: "readonly"
+        },
+
+        parser: tsParser,
+        ecmaVersion: 2018,
+        sourceType: "commonjs",
+
+        parserOptions: {
+            project: "./tsconfig.json"
+        }
     },
-    "overrides": [
-        {
-            "files": [".js", ".ts"]
+
+    settings: {
+        "import/parsers": {
+            "@typescript-eslint/parser": [".ts", ".tsx"]
         },
-        {
-            "files": ["**/*.ts"],
-            "rules": {
-                "@typescript-eslint/ban-ts-comment": 0
-            }
-        },
-        {
-            "files": ["templates/**/*.js"],
-            "rules": {
-                "@typescript-eslint/no-var-requires": 0
-            }
-        },
-        {
-            "files": ["test/**/*.ts"],
-            "rules": {
-                "max-lines-per-function": 0
+
+        "import/resolver": {
+            typescript: {
+                alwaysTryTypes: true
             }
         }
-    ],
-    "parser": "@typescript-eslint/parser",
-    "parserOptions": {
-        "project": "tsconfig.json",
-        "ecmaVersion": 2018,
-        "sourceType": "module"
     },
-    "plugins": ["n", "@typescript-eslint", "import", "jest", "security"],
-    "extends": [
-        "plugin:n/recommended",
-        "plugin:import/errors",
-        "plugin:import/warnings",
-        "plugin:@typescript-eslint/eslint-recommended",
-        "plugin:@typescript-eslint/recommended",
-        "plugin:security/recommended"
-    ],
-    "rules": {
-        // code
+
+    rules: {
         "max-params": ["warn", 4],
         "max-depth": ["error", 3],
         "max-statements-per-line": ["error", { "max": 1 }],
@@ -120,4 +138,14 @@
         "keyword-spacing": "error",
         "one-var": ["error", "never"]
     }
-}
+}, {
+    files: ["**/*.js"],
+    rules: {
+        "@typescript-eslint/no-require-imports": 0
+    }
+}, {
+    files: ["test/**/*"],
+    rules: {
+        "no-global-assign": 0
+    }
+}];
