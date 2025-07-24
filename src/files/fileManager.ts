@@ -4,6 +4,14 @@ import { replaceAppNamePlaceholder } from "../createWindowlessAppUtils";
 import { copyFileSync } from "fs-extra";
 import path from "path";
 
+type FileManagerOptions = {
+    targetRoot: string;
+    appName: string;
+    typeScript: boolean;
+    husky: boolean;
+    icon: string;
+};
+
 export class FileManager {
     #templatesRoot: string;
     #targetRoot: string;
@@ -12,8 +20,7 @@ export class FileManager {
     #icon: string;
     #formatter: Formatter;
 
-
-    constructor(targetRoot: string, appName: string, typeScript: boolean, husky: boolean, icon: string) {
+    constructor({ targetRoot, appName, typeScript, husky, icon }: FileManagerOptions) {
         this.#templatesRoot = path.resolve(__dirname, "..", "..", "templates");
         this.#targetRoot = targetRoot;
 

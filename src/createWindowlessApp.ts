@@ -18,7 +18,7 @@ const run = async (root: string, appName: string, originalDirectory: string, pro
         const dependenciesManager: DependenciesManager = new DependenciesManager(typescript, husky);
         await dependenciesManager.installAll(verbose);
 
-        const fileManager: FileManager = new FileManager(root, appName, typescript, husky, icon);
+        const fileManager: FileManager = new FileManager({ targetRoot: root, appName, typeScript: typescript, husky, icon });
         await fileManager.copyTemplate();
 
         // Launcher
