@@ -71,7 +71,7 @@
         "@typescript-eslint/eslint-plugin": "8.39.1",
         "@typescript-eslint/parser": "8.39.1",
         "add-shebang": "0.1.0",
-        "copy-webpack-plugin": "13.0.0",
+        "copy-webpack-plugin": "13.0.1",
         "cross-env": "10.0.0",
         "eslint": "9.33.0",
         "eslint-import-resolver-typescript": "4.4.4",
