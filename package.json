@@ -104,7 +104,7 @@
         "chalk": "4.1.2",
         "cross-spawn": "7.0.6",
         "fs-extra": "11.3.2",
-        "inquirer": "11.1.0",
+        "inquirer": "13.0.2",
         "validate-npm-package-name": "7.0.0",
         "yargs": "17.7.2"
     },
