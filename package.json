@@ -105,7 +105,7 @@
         "cross-spawn": "7.0.6",
         "fs-extra": "11.3.3",
         "inquirer": "11.1.0",
-        "validate-npm-package-name": "7.0.1",
+        "validate-npm-package-name": "7.0.2",
         "yargs": "17.7.2"
     },
     "lint-staged": {
