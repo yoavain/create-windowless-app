@@ -80,7 +80,7 @@
         "eslint-plugin-n": "17.23.2",
         "eslint-plugin-security": "3.0.1",
         "global-npm": "0.5.0",
-        "globals": "17.2.0",
+        "globals": "17.3.0",
         "husky": "9.1.7",
         "jest": "30.0.5",
         "lint-staged": "15.5.2",
