@@ -68,3 +68,5 @@ typings/
 /docs/plan/
 /tsconfig.tsbuildinfo
 /.claude/settings.local.json
+/.qodo/
+/lsp/

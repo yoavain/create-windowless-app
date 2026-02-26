@@ -7,9 +7,9 @@ const COMPILER: string = "msbuild.exe";
 
 export const checkMsbuildInPath = async (exit?: boolean): Promise<boolean> => {
     // Check for compiler in %PATH%
-    const promises = process.env.path.split(";").map((p) => fs.promises.access(path.resolve(p, COMPILER)).then(() => true, () => false));
+    const promises = (process.env.PATH ?? "").split(";").map((p) => fs.promises.access(path.resolve(p, COMPILER)).then(() => true, () => false));
     const results: boolean[] = await Promise.all(promises);
-    const compilerFound: boolean = results.find((result) => !!result);
+    const compilerFound: boolean = !!results.find((result) => !!result);
 
     if (exit && !compilerFound) {
         console.error(`You need "${COMPILER}" in your %PATH% in order to compile the launcher executable.`);

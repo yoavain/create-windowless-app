@@ -11,7 +11,10 @@ const install = async (dependencies: string[], isDev: boolean, verbose?: boolean
     console.log(`Installing ${chalk.green(isDev ? "dev dependencies" : "dependencies")}.`);
     console.log();
 
-    spawnSync(command, args, { stdio: "inherit", shell: true });
+    const spawnResult = spawnSync(command, args, { stdio: "inherit", shell: true });
+    if (spawnResult.status !== 0) {
+        return Promise.reject({ command: `${command} ${args.join(" ")}` });
+    }
 };
 
 

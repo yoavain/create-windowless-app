@@ -11,6 +11,35 @@ import { PackageJsonBuilder } from "./packageJson";
 import { DependenciesManager } from "./dependencies";
 import { FileManager, writeJson } from "./files";
 
+const handleInstallError = (reason: unknown, root: string, appName: string): never => {
+    console.log();
+    console.log("Aborting installation.");
+    if ((reason as { command?: string }).command) {
+        console.log(`  ${chalk.cyan((reason as { command: string }).command)} has failed.`);
+    }
+    else {
+        console.log(chalk.red("Unexpected error. Please report it as a bug:"));
+        console.log(reason);
+    }
+    console.log();
+
+    // On 'exit' we will delete these files from target directory.
+    deleteFilesInDir(
+        root,
+        (file) => consts.knownGeneratedFiles.includes(file),
+        (file) => console.log(`Deleting generated file... ${chalk.cyan(file)}`)
+    );
+    const remainingFiles = fs.readdirSync(path.join(root));
+    if (!remainingFiles.length) {
+        // Delete target folder if empty
+        console.log(`Deleting ${chalk.cyan(`${appName}/`)} from ${chalk.cyan(path.resolve(root, ".."))}`);
+        process.chdir(path.resolve(root, ".."));
+        fs.rmSync(path.join(root), { recursive: true, force: true });
+    }
+    console.log("Done (with errors).");
+    process.exit(1);
+};
+
 const run = async (root: string, appName: string, originalDirectory: string, programConfig: ProgramConfig): Promise<void> => {
     const { typescript, husky, icon, verbose } = programConfig;
 
@@ -27,33 +56,8 @@ const run = async (root: string, appName: string, originalDirectory: string, pro
 
         console.log("Done");
     }
-    catch (reason) {
-        console.log();
-        console.log("Aborting installation.");
-        if (reason.command) {
-            console.log(`  ${chalk.cyan(reason.command)} has failed.`);
-        }
-        else {
-            console.log(chalk.red("Unexpected error. Please report it as a bug:"));
-            console.log(reason);
-        }
-        console.log();
-
-        // On 'exit' we will delete these files from target directory.
-        deleteFilesInDir(
-            root,
-            (file) => consts.knownGeneratedFiles.includes(file),
-            (file) => console.log(`Deleting generated file... ${chalk.cyan(file)}`)
-        );
-        const remainingFiles = fs.readdirSync(path.join(root));
-        if (!remainingFiles.length) {
-            // Delete target folder if empty
-            console.log(`Deleting ${chalk.cyan(`${appName}/`)} from ${chalk.cyan(path.resolve(root, ".."))}`);
-            process.chdir(path.resolve(root, ".."));
-            fs.rmSync(path.join(root), { recursive: true, force: true });
-        }
-        console.log("Done (with errors).");
-        process.exit(1);
+    catch (reason: unknown) {
+        handleInstallError(reason, root, appName);
     }
 };
 

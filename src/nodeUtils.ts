@@ -4,7 +4,7 @@ import type { SpawnSyncReturns } from "child_process";
 
 export const checkThatNpmCanReadCwd = (): boolean => {
     const cwd = process.cwd();
-    let childOutput: string = null;
+    let childOutput = "";
     try {
         const spawnResult: SpawnSyncReturns<Buffer> = spawnSync("npm", ["config", "list"], { shell: true });
         if (spawnResult.status !== 0) {

@@ -9,7 +9,7 @@ type FileManagerOptions = {
     appName: string;
     typeScript: boolean;
     husky: boolean;
-    icon: string;
+    icon?: string;
 };
 
 export class FileManager {
@@ -17,7 +17,7 @@ export class FileManager {
     #targetRoot: string;
     #typeScript: boolean;
     #husky: boolean;
-    #icon: string;
+    #icon: string | undefined;
     #formatter: Formatter;
 
     constructor({ targetRoot, appName, typeScript, husky, icon }: FileManagerOptions) {
