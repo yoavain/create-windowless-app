@@ -9,6 +9,9 @@ module.exports = {
         path: path.join(__dirname, "_build"),
         filename: "index.js"
     },
+    resolve: {
+        extensions: [".js"]
+    },
     plugins: [
         new CopyWebpackPlugin({
             patterns: [

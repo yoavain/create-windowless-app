@@ -3,7 +3,7 @@ import * as path from "path";
 import { ensureDirSync, readdirSync, removeSync } from "fs-extra";
 import { compileLauncher } from "./launcherCompiler";
 import { consts } from "./consts";
-import { checkAppName, isSafeToCreateProjectIn } from "./createWindowlessAppUtils";
+import { checkAppName, deleteFilesInDir, isSafeToCreateProjectIn } from "./createWindowlessAppUtils";
 import { checkThatNpmCanReadCwd } from "./nodeUtils";
 import type { ProgramConfig } from "./cliParser";
 import { parseCommand } from "./cliParser";
@@ -40,17 +40,11 @@ const run = async (root: string, appName: string, originalDirectory: string, pro
         console.log();
 
         // On 'exit' we will delete these files from target directory.
-        const knownGeneratedFiles = [...consts.knownGeneratedFiles];
-        const currentFiles = readdirSync(path.join(root));
-        currentFiles.forEach((file) => {
-            knownGeneratedFiles.forEach((fileToMatch) => {
-                // This removes all knownGeneratedFiles.
-                if (file === fileToMatch) {
-                    console.log(`Deleting generated file... ${chalk.cyan(file)}`);
-                    removeSync(path.join(root, file));
-                }
-            });
-        });
+        deleteFilesInDir(
+            root,
+            (file) => consts.knownGeneratedFiles.includes(file),
+            (file) => console.log(`Deleting generated file... ${chalk.cyan(file)}`)
+        );
         const remainingFiles = readdirSync(path.join(root));
         if (!remainingFiles.length) {
             // Delete target folder if empty

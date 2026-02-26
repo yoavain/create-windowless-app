@@ -1,37 +1,6 @@
 import chalk from "chalk";
 import spawn from "cross-spawn";
-
-const dependencies = [
-    "node-notifier",
-    "winston"
-];
-
-const devDependencies = [
-    "fs-extra",
-    "jest",
-    "webpack",
-    "webpack-cli",
-    "copy-webpack-plugin",
-    "rimraf",
-    "cross-spawn",
-    "postject"
-];
-
-const tsDevDependencies =[
-    "@types/jest",
-    "@types/node",
-    "@tsconfig/node20",
-    "@types/node-notifier",
-    "@types/winston",
-    "ts-loader",
-    "ts-node",
-    "typescript",
-    "@types/cross-spawn"
-];
-
-const huskyDependencies = [
-    "husky"
-];
+import { consts } from "../consts";
 
 const install = async (dependencies: string[], isDev: boolean, verbose?: boolean): Promise<void> => {
     const command = "npm";
@@ -51,13 +20,13 @@ export class DependenciesManager {
     #devDependencies: string[] = [];
     
     constructor(typescript: boolean, husky: boolean) {
-        this.#dependencies = dependencies;
-        this.#devDependencies = devDependencies;
+        this.#dependencies = consts.dependencies;
+        this.#devDependencies = consts.devDependencies;
         if (typescript) {
-            this.#devDependencies = this.#devDependencies.concat(tsDevDependencies);
+            this.#devDependencies = this.#devDependencies.concat(consts.tsDevDependencies);
         }
         if (husky) {
-            this.#devDependencies = this.#devDependencies.concat(huskyDependencies);
+            this.#devDependencies = this.#devDependencies.concat(consts.huskyDependencies);
         }
     }
     

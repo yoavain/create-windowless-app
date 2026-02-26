@@ -13,6 +13,7 @@ export const checkThatNpmCanReadCwd = (): boolean => {
         childOutput = spawnResult.output.toString();
     }
     catch (err) {
+        console.error(chalk.red("Failed to run `npm config list`:"), err);
         return false;
     }
 
@@ -21,7 +22,7 @@ export const checkThatNpmCanReadCwd = (): boolean => {
     // "; cwd = C:\path\to\current\dir" (unquoted)
     // I couldn't find an easier way to get it.
     const prefix = "; cwd = ";
-    const line = lines.find((line) => line.indexOf(prefix) === 0);
+    const line = lines.find((line) => line.startsWith(prefix));
     if (typeof line !== "string") {
         // Fail gracefully. They could remove it.
         return true;

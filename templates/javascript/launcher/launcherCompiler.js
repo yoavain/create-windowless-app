@@ -4,11 +4,11 @@ const spawn = require("cross-spawn");
 
 const COMPILER = "msbuild.exe";
 
-const checkCscInPath = async (exit) => {
+const checkMsbuildInPath = async (exit) => {
     // Check for compiler in %PATH%
     const promises = process.env.path.split(";").map((p) => fs.pathExists(path.resolve(p, COMPILER)));
     const results = await Promise.all(promises);
-    const compilerFound = await results.find((result) => !!result);
+    const compilerFound = results.find((result) => !!result);
 
     if (exit && !compilerFound) {
         console.error(`You need "${COMPILER}" in your %PATH% in order to compile the launcher executable.`);
@@ -28,4 +28,4 @@ const compileLauncher = async () => {
     }
 };
 
-module.exports = { checkCscInPath, compileLauncher };
+module.exports = { checkMsbuildInPath, compileLauncher };

@@ -18,29 +18,29 @@ const getSingleExecutableApplicationsScripts = (appName: string): Scripts => ({
     "node-sea": "npm run node-sea:build-blob && npm run node-sea:copy-node && npm run node-sea:unsign && npm run node-sea:inject-blob"
 });
 
-export const getTsScripts = (appName: string): Scripts => ({
-    "start": "ts-node src/index.ts",
-    "type-check": "tsc --build tsconfig.json",
+const getCommonScripts = (appName: string): Scripts => ({
     "prewebpack": "rimraf build && rimraf dist",
     "webpack": "webpack",
     "prebuild": "npm run check-node-version",
-    "build": "npm run type-check && npm run webpack && npm run node-sea",
-    "check-node-version": "ts-node -e \"require(\"\"./utils/checkNodeVersion\"\").checkNodeRuntimeVersion()\"",
-    "check-msbuild": "ts-node -e \"require(\"\"./launcher/launcherCompiler\"\").checkMsbuildInPath(true)\"",
     "rebuild-launcher": "msbuild launcher/launcher.csproj",
     ...getSingleExecutableApplicationsScripts(appName)
 });
 
+export const getTsScripts = (appName: string): Scripts => ({
+    "start": "ts-node src/index.ts",
+    "type-check": "tsc --build tsconfig.json",
+    "build": "npm run type-check && npm run webpack && npm run node-sea",
+    "check-node-version": "ts-node -e \"require(\"\"./utils/checkNodeVersion\"\").checkNodeRuntimeVersion()\"",
+    "check-msbuild": "ts-node -e \"require(\"\"./launcher/launcherCompiler\"\").checkMsbuildInPath(true)\"",
+    ...getCommonScripts(appName)
+});
+
 export const getJsScripts = (appName: string): Scripts => ({
     "start": "node src/index.js",
-    "prewebpack": "rimraf build && rimraf dist",
-    "webpack": "webpack",
-    "prebuild": "npm run check-node-version",
     "build": "npm run webpack && npm run node-sea",
     "check-node-version": "node -e \"require(\"\"./utils/checkNodeVersion\"\").checkNodeRuntimeVersion()\"",
     "check-msbuild": "node -e \"require(\"\"./launcher/launcherCompiler\"\").checkMsbuildInPath(true)\"",
-    "rebuild-launcher": "msbuild launcher/launcher.csproj",
-    ...getSingleExecutableApplicationsScripts(appName)
+    ...getCommonScripts(appName)
 });
 
 export const getHuskyScripts = (appName: string): Scripts => ({

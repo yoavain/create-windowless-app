@@ -31,7 +31,7 @@ export class FileManager {
         this.#formatter = (str: string) => replaceAppNamePlaceholder(appName, str);
     }
 
-    async copyTemplate() {
+    copyTemplate() {
         // common files
         copyFolderRecursiveSync(path.resolve(this.#templatesRoot, "common"), path.resolve(this.#targetRoot), this.#formatter);
 

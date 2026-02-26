@@ -38,15 +38,7 @@ export const isSafeToCreateProjectIn = (root: string, name: string): boolean => 
     }
 
     // Remove any remnant files from a previous installation
-    const currentFiles = readdirSync(path.join(root));
-    currentFiles.forEach((file) => {
-        errorLogFilePatterns.forEach((errorLogFilePattern) => {
-            // This will catch `npm-debug.log*` files
-            if (file.indexOf(errorLogFilePattern) === 0) {
-                removeSync(path.join(root, file));
-            }
-        });
-    });
+    deleteFilesInDir(root, (file) => errorLogFilePatterns.some((pattern) => file.indexOf(pattern) === 0));
     return true;
 };
 
@@ -78,6 +70,15 @@ export const checkAppName = (appName) => {
         );
         process.exit(1);
     }
+};
+
+export const deleteFilesInDir = (root: string, shouldDelete: (file: string) => boolean, onDelete?: (file: string) => void): void => {
+    readdirSync(root).forEach((file) => {
+        if (shouldDelete(file)) {
+            onDelete?.(file);
+            removeSync(path.join(root, file));
+        }
+    });
 };
 
 export const replaceAppNamePlaceholder = (appName: string, str: string): string => {
