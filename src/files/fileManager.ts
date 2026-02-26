@@ -1,7 +1,7 @@
 import type { Formatter } from ".";
 import { copyFolderRecursiveSync } from ".";
 import { replaceAppNamePlaceholder } from "../createWindowlessAppUtils";
-import { copyFileSync } from "fs-extra";
+import { copyFileSync } from "fs";
 import path from "path";
 
 type FileManagerOptions = {

@@ -1,4 +1,4 @@
-import { pathExists } from "fs-extra";
+import * as fs from "fs";
 import * as path from "path";
 import { spawnSync } from "child_process";
 import type { SpawnSyncReturns } from "child_process";
@@ -7,7 +7,7 @@ const COMPILER: string = "msbuild.exe";
 
 export const checkMsbuildInPath = async (exit?: boolean): Promise<boolean> => {
     // Check for compiler in %PATH%
-    const promises = process.env.path.split(";").map((p) => pathExists(path.resolve(p, COMPILER)));
+    const promises = process.env.path.split(";").map((p) => fs.promises.access(path.resolve(p, COMPILER)).then(() => true, () => false));
     const results: boolean[] = await Promise.all(promises);
     const compilerFound: boolean = results.find((result) => !!result);
 

@@ -1,7 +1,7 @@
 import chalk from "chalk";
 import { parseArgs } from "util";
 import { PACKAGE_JSON_FILENAME } from "./createWindowlessAppUtils";
-import { pathExistsSync } from "fs-extra";
+import { existsSync } from "fs";
 import { interactiveMode } from "./interactive";
 import { validateProjectNameInput } from "./validation";
 
@@ -104,7 +104,7 @@ export const parseCommand = async (argv: string[]): Promise<ProgramConfig> => {
     const husky = !values["no-husky"] && (values.husky ?? true);
 
     let icon = values.icon;
-    if (icon && !pathExistsSync(icon)) {
+    if (icon && !existsSync(icon)) {
         console.warn(`Cannot find icon in ${chalk.red(icon)}. Switching to ${chalk.green("default")} icon.`);
         icon = undefined;
     }

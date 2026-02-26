@@ -4,7 +4,7 @@ import type { ExecException } from "child_process";
 import { exec } from "child_process";
 import { rimraf } from "rimraf";
 import { consts } from "../src/consts";
-import { existsSync, pathExistsSync, readFileSync } from "fs-extra";
+import { existsSync, readFileSync } from "fs";
 
 jest.setTimeout(300000);
 
@@ -40,9 +40,9 @@ const testFilesExists = (root: string, typescript: boolean = true, husky: boolea
     expect(existsSync(path.resolve(root, "launcher", "launcher.ico"))).toBeTruthy();
     expect(existsSync(path.resolve(root, "launcher", `launcherCompiler.${scriptExt}`))).toBeTruthy();
     expect(existsSync(path.resolve(root, "resources", "bin", `${root}-launcher.exe`))).toBeTruthy();
-    expect(pathExistsSync(path.resolve(root, "node_modules"))).toEqual(true);
+    expect(existsSync(path.resolve(root, "node_modules"))).toEqual(true);
     if (husky) {
-        expect(pathExistsSync(path.resolve(root, ".husky"))).toEqual(husky);
+        expect(existsSync(path.resolve(root, ".husky"))).toEqual(husky);
         expect(existsSync(path.resolve(root, ".husky", "pre-commit"))).toEqual(husky);
     }
 

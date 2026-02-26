@@ -60,7 +60,6 @@
         "@eslint/eslintrc": "3.3.4",
         "@eslint/js": "9.39.3",
         "@tsconfig/node20": "20.1.9",
-        "@types/fs-extra": "11.0.4",
         "@types/jest": "30.0.0",
         "@types/mock-fs": "4.13.4",
         "@types/node": "24.10.14",
@@ -101,7 +100,6 @@
     },
     "dependencies": {
         "chalk": "4.1.2",
-        "fs-extra": "11.3.3",
         "inquirer": "11.1.0",
         "validate-npm-package-name": "7.0.2"
     },

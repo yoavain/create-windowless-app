@@ -1,6 +1,6 @@
 import chalk from "chalk";
 import * as path from "path";
-import { ensureDirSync, readdirSync, removeSync } from "fs-extra";
+import * as fs from "fs";
 import { compileLauncher } from "./launcherCompiler";
 import { consts } from "./consts";
 import { checkAppName, deleteFilesInDir, isSafeToCreateProjectIn } from "./createWindowlessAppUtils";
@@ -22,7 +22,7 @@ const run = async (root: string, appName: string, originalDirectory: string, pro
         await fileManager.copyTemplate();
 
         // Launcher
-        ensureDirSync(path.resolve(root, "resources", "bin"));
+        fs.mkdirSync(path.resolve(root, "resources", "bin"), { recursive: true });
         await compileLauncher();
 
         console.log("Done");
@@ -45,12 +45,12 @@ const run = async (root: string, appName: string, originalDirectory: string, pro
             (file) => consts.knownGeneratedFiles.includes(file),
             (file) => console.log(`Deleting generated file... ${chalk.cyan(file)}`)
         );
-        const remainingFiles = readdirSync(path.join(root));
+        const remainingFiles = fs.readdirSync(path.join(root));
         if (!remainingFiles.length) {
             // Delete target folder if empty
             console.log(`Deleting ${chalk.cyan(`${appName}/`)} from ${chalk.cyan(path.resolve(root, ".."))}`);
             process.chdir(path.resolve(root, ".."));
-            removeSync(path.join(root));
+            fs.rmSync(path.join(root), { recursive: true, force: true });
         }
         console.log("Done (with errors).");
         process.exit(1);
@@ -63,7 +63,7 @@ const createApp = async (programConfig: ProgramConfig): Promise<void> => {
     const appName: string = path.basename(root);
 
     checkAppName(appName);
-    ensureDirSync(projectName);
+    fs.mkdirSync(projectName, { recursive: true });
     if (!isSafeToCreateProjectIn(root, projectName)) {
         process.exit(1);
     }

@@ -1,4 +1,4 @@
-const fs = require("fs-extra");
+const fs = require("fs");
 const path = require("path");
 const { spawnSync } = require("child_process");
 
@@ -6,7 +6,7 @@ const COMPILER = "msbuild.exe";
 
 const checkMsbuildInPath = async (exit) => {
     // Check for compiler in %PATH%
-    const promises = process.env.path.split(";").map((p) => fs.pathExists(path.resolve(p, COMPILER)));
+    const promises = process.env.path.split(";").map((p) => fs.promises.access(path.resolve(p, COMPILER)).then(() => true, () => false));
     const results = await Promise.all(promises);
     const compilerFound = results.find((result) => !!result);
 

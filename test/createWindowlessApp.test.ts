@@ -9,17 +9,19 @@ jest.mock("child_process", () => ({
         }
     }
 }));
-jest.mock("fs-extra", () => {
+jest.mock("fs", () => {
     return {
         existsSync: jest.fn(() => true),
         lstatSync: jest.fn(() => ({ isDirectory: () => true })),
         mkdirSync: jest.fn(),
-        ensureDirSync: jest.fn(),
         readdirSync: jest.fn(() => []),
+        rmSync: jest.fn(),
         writeFileSync: jest.fn(),
         readFileSync: jest.fn(() => "{}"),
         copyFileSync: jest.fn(),
-        pathExistsSync: jest.fn()
+        promises: {
+            access: jest.fn(() => Promise.resolve())
+        }
     };
 });
 

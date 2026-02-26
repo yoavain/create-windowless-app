@@ -3,7 +3,7 @@ import validateProjectName from "validate-npm-package-name";
 import chalk from "chalk";
 import path from "path";
 import { consts } from "./consts";
-import { readdirSync, removeSync } from "fs-extra";
+import * as fs from "fs";
 
 // These files should be allowed to remain on a failed install, but then silently removed during the next create.
 const errorLogFilePatterns = consts.errorLogFilePatterns;
@@ -18,7 +18,7 @@ export const isSafeToCreateProjectIn = (root: string, name: string): boolean => 
     const validFiles: string[] = consts.validFiles;
     console.log();
 
-    const conflicts = readdirSync(root)
+    const conflicts = fs.readdirSync(root)
         .filter((file) => !validFiles.includes(file))
         // IntelliJ IDEA creates module files before CRA is launched
         .filter((file) => !/\.iml$/.test(file))
@@ -73,10 +73,10 @@ export const checkAppName = (appName) => {
 };
 
 export const deleteFilesInDir = (root: string, shouldDelete: (file: string) => boolean, onDelete?: (file: string) => void): void => {
-    readdirSync(root).forEach((file) => {
+    fs.readdirSync(root).forEach((file) => {
         if (shouldDelete(file)) {
             onDelete?.(file);
-            removeSync(path.join(root, file));
+            fs.rmSync(path.join(root, file), { recursive: true, force: true });
         }
     });
 };

@@ -24,7 +24,7 @@ const mockReadFileSync = jest.fn(() => "data");
 const mockMkdirSync = jest.fn(() => "");
 const mockWriteFileSync = jest.fn(() => "");
 
-jest.mock("fs-extra", () => {
+jest.mock("fs", () => {
 
     return {
         existsSync: mockExistsSync,
