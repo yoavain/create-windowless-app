@@ -67,3 +67,4 @@ typings/
 /.junie/
 /docs/plan/
 /tsconfig.tsbuildinfo
+/.claude/settings.local.json

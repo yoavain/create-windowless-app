@@ -1,5 +1,5 @@
 import path from "path";
-import { randomUUID as uuid } from "crypto";
+import { randomUUID } from "crypto";
 import type { ExecException } from "child_process";
 import { exec } from "child_process";
 import { rimraf } from "rimraf";
@@ -7,6 +7,8 @@ import { consts } from "../src/consts";
 import { existsSync, readFileSync } from "fs";
 
 jest.setTimeout(300000);
+
+const shortUUID = () => randomUUID().split("-")[0];
 
 let SANDBOXES = new Set<string>();
 
@@ -90,7 +92,7 @@ describe("Test CLI", () => {
     });
 
     it("should create a prototype project with default flags", async () => {
-        const sandbox: string = uuid();
+        const sandbox: string = shortUUID();
         SANDBOXES.add(sandbox);
         const result: CliResult = await cli([sandbox], ".");
         console.log(JSON.stringify(result, null, "\t"));
@@ -101,7 +103,7 @@ describe("Test CLI", () => {
     });
 
     it("should create a prototype project with flags: --no-typescript", async () => {
-        const sandbox: string = uuid();
+        const sandbox: string = shortUUID();
         SANDBOXES.add(sandbox);
         const result: CliResult = await cli([sandbox, "--no-typescript"], ".");
         console.log(JSON.stringify(result, null, "\t"));
@@ -112,7 +114,7 @@ describe("Test CLI", () => {
     });
 
     it("should create a prototype project with flags: --no-husky", async () => {
-        const sandbox: string = uuid();
+        const sandbox: string = shortUUID();
         SANDBOXES.add(sandbox);
         const result: CliResult = await cli([sandbox, "--no-husky"], ".");
         console.log(JSON.stringify(result, null, "\t"));
