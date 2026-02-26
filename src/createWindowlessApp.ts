@@ -99,7 +99,7 @@ const createApp = async (programConfig: ProgramConfig): Promise<void> => {
 export const createWindowlessApp = async (argv: string[]): Promise<void> => {
     const programConfig: ProgramConfig = await parseCommand(argv);
 
-    if (programConfig.projectName) {
+    if (programConfig?.projectName) {
         return createApp(programConfig);
     }
 };
