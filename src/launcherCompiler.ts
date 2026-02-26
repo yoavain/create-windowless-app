@@ -1,6 +1,6 @@
 import { pathExists } from "fs-extra";
 import * as path from "path";
-import spawn from "cross-spawn";
+import { spawnSync } from "child_process";
 import type { SpawnSyncReturns } from "child_process";
 
 const COMPILER: string = "msbuild.exe";
@@ -23,7 +23,7 @@ export const checkMsbuildInPath = async (exit?: boolean): Promise<boolean> => {
 export const compileLauncher = async (): Promise<void> => {
     const args: string[] = ["./launcher/launcher.csproj"];
 
-    const spawnResult: SpawnSyncReturns<Buffer> = spawn.sync(COMPILER, args, { stdio: "inherit" });
+    const spawnResult: SpawnSyncReturns<Buffer> = spawnSync(COMPILER, args, { stdio: "inherit" });
     if (spawnResult.status !== 0) {
         return Promise.reject({ command: `${COMPILER} ${args.join(" ")}` });
     }

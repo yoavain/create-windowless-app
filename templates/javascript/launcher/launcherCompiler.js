@@ -1,6 +1,6 @@
 const fs = require("fs-extra");
 const path = require("path");
-const spawn = require("cross-spawn");
+const { spawnSync } = require("child_process");
 
 const COMPILER = "msbuild.exe";
 
@@ -22,7 +22,7 @@ const checkMsbuildInPath = async (exit) => {
 const compileLauncher = async () => {
     const args = ["./launcher/launcher.csproj"];
 
-    const spawnResult = spawn.sync(COMPILER, args, { stdio: "inherit" });
+    const spawnResult = spawnSync(COMPILER, args, { stdio: "inherit" });
     if (spawnResult.status !== 0) {
         return Promise.reject({ command: `${COMPILER} ${args.join(" ")}` });
     }

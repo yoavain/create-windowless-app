@@ -10,7 +10,6 @@ export const consts = {
         "webpack-cli",
         "copy-webpack-plugin",
         "rimraf",
-        "cross-spawn",
         "postject"
     ],
     huskyDependencies: [
@@ -24,8 +23,7 @@ export const consts = {
         "@types/winston",
         "ts-loader",
         "ts-node",
-        "typescript",
-        "@types/cross-spawn"
+        "typescript"
     ],
     errorLogFilePatterns: [
         "npm-debug.log"

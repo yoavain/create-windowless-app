@@ -1,12 +1,12 @@
 import chalk from "chalk";
-import spawn from "cross-spawn";
+import { spawnSync } from "child_process";
 import type { SpawnSyncReturns } from "child_process";
 
 export const checkThatNpmCanReadCwd = (): boolean => {
     const cwd = process.cwd();
     let childOutput: string = null;
     try {
-        const spawnResult: SpawnSyncReturns<Buffer> = spawn.sync("npm", ["config", "list"]);
+        const spawnResult: SpawnSyncReturns<Buffer> = spawnSync("npm", ["config", "list"], { shell: true });
         if (spawnResult.status !== 0) {
             return false;
         }

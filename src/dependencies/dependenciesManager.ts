@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import spawn from "cross-spawn";
+import { spawnSync } from "child_process";
 import { consts } from "../consts";
 
 const install = async (dependencies: string[], isDev: boolean, verbose?: boolean): Promise<void> => {
@@ -11,7 +11,7 @@ const install = async (dependencies: string[], isDev: boolean, verbose?: boolean
     console.log(`Installing ${chalk.green(isDev ? "dev dependencies" : "dependencies")}.`);
     console.log();
 
-    spawn.sync(command, args, { stdio: "inherit" });
+    spawnSync(command, args, { stdio: "inherit", shell: true });
 };
 
 
