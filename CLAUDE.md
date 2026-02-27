@@ -44,7 +44,7 @@ The tool has two distinct roles: the **CLI tool itself** (in `src/`) and the **t
 ### CLI Source (`src/`)
 
 - **`index.ts`** — Entry point; calls `checkNodeVersion` then `createWindowlessApp`
-- **`cliParser.ts`** — Yargs-based argument parser; handles `--interactive`, `--typescript`, `--husky`, `--icon` flags
+- **`cliParser.ts`** — Uses Node's built-in `util.parseArgs()`; handles `--interactive`, `--typescript`, `--icon`, `--verbose` flags
 - **`createWindowlessApp.ts`** — Main orchestration: validates name → creates dirs → generates `package.json` → copies templates → installs deps → compiles C# launcher
 - **`files/fileManager.ts`** — Copies template files to the generated project; selects TypeScript or JavaScript variant
 - **`packageJson/packageJsonBuilder.ts`** — Generates `package.json` for the target project with webpack + SEA build scripts

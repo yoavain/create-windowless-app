@@ -76,7 +76,6 @@ my-app
 ├── tsconfig.build.json (TypeScript projects)
 ├── webpack.config.ts (TypeScript projects)
 ├── webpack.config.js (JavaScript projects)
-├── .husky/ (if husky enabled)
 ├── launcher/
 │   ├── launcher.cs
 │   ├── launcher.csproj
@@ -116,8 +115,8 @@ create-windowless-app <project-directory> [options]
 
 Options:
     --no-typescript                 use javascript rather than typescript
-    --no-husky                      do not install husky pre-commit hook for building launcher
     --icon <icon>                   override default launcher icon file
+    --verbose                       print additional logs
 
     --interactive                   interactive mode
 
