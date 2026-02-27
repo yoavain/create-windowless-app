@@ -37,9 +37,43 @@ jest.mock("fs", () => {
 });
 
 
-import { copyFolderRecursiveSync } from "../../src/files";
+import { copyFolderRecursiveSync, writeJson } from "../../src/files";
 import type { StatsBase } from "fs";
+import os from "os";
 
+
+describe("writeJson", () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
+    it("should write properly formatted JSON with trailing newline", () => {
+        const json = { name: "my-app", version: "1.0.0" };
+        writeJson("output.json", json);
+
+        expect(mockWriteFileSync).toHaveBeenCalledTimes(1);
+        const call = mockWriteFileSync.mock.calls[0] as unknown as [string, string];
+        const [fileName, content] = call;
+        expect(fileName).toBe("output.json");
+        expect(content).toMatch(/^\{/);
+        expect(content.endsWith(os.EOL)).toBe(true);
+    });
+
+    it("should use OS line endings", () => {
+        const json = { key: "value" };
+        writeJson("output.json", json);
+
+        const call = mockWriteFileSync.mock.calls[0] as unknown as [string, string];
+        const content = call[1];
+        expect(content).not.toContain("\n" + os.EOL);
+        // All newlines should be os.EOL
+        const withoutOsEol = content.split(os.EOL).join("");
+        expect(withoutOsEol).not.toContain("\n");
+    });
+});
 
 describe("Test file utils", () => {
     it("Should copy folders recursively", () => {

@@ -9,13 +9,15 @@ jest.mock("child_process", () => ({
         }
     }
 }));
+
+const mockFsRmSync = jest.fn();
 jest.mock("fs", () => {
     return {
         existsSync: jest.fn(() => true),
         lstatSync: jest.fn(() => ({ isDirectory: () => true })),
         mkdirSync: jest.fn(),
         readdirSync: jest.fn(() => []),
-        rmSync: jest.fn(),
+        rmSync: mockFsRmSync,
         writeFileSync: jest.fn(),
         readFileSync: jest.fn(() => "{}"),
         copyFileSync: jest.fn(),
@@ -24,6 +26,13 @@ jest.mock("fs", () => {
         }
     };
 });
+
+const mockInstallAll = jest.fn(() => Promise.resolve());
+jest.mock("../src/dependencies", () => ({
+    DependenciesManager: jest.fn().mockImplementation(() => ({
+        installAll: mockInstallAll
+    }))
+}));
 
 // Imports should be after mocks
 import { createWindowlessApp } from "../src/createWindowlessApp";
@@ -69,5 +78,18 @@ describe("Test createWindowlessApp", () => {
             expect(code).toEqual(1);
         });
         await createWindowlessApp(["node.exe", "dummy.ts"]);
+    });
+
+    it("should call process.exit(1) and clean up dir when installAll rejects", async () => {
+        mockInstallAll.mockRejectedValueOnce({ command: "npm install" });
+        // @ts-expect-error -- process.exit returns never; mock implementation returns void
+        jest.spyOn(process, "exit").mockImplementation(() => {});
+
+        const sandbox: string = uuid();
+        await createWindowlessApp(["node.exe", "dummy.ts", sandbox]);
+
+        expect(process.exit).toHaveBeenCalledWith(1);
+        // readdirSync returns [] so the dir is empty → rmSync called to delete root
+        expect(mockFsRmSync).toHaveBeenCalled();
     });
 });
