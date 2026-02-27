@@ -1,18 +1,19 @@
 import chalk from "chalk";
-import spawn from "cross-spawn";
+import { spawnSync } from "child_process";
 import type { SpawnSyncReturns } from "child_process";
 
 export const checkThatNpmCanReadCwd = (): boolean => {
     const cwd = process.cwd();
-    let childOutput: string = null;
+    let childOutput = "";
     try {
-        const spawnResult: SpawnSyncReturns<Buffer> = spawn.sync("npm", ["config", "list"]);
+        const spawnResult: SpawnSyncReturns<Buffer> = spawnSync("npm config list", { shell: true });
         if (spawnResult.status !== 0) {
             return false;
         }
         childOutput = spawnResult.output.toString();
     }
     catch (err) {
+        console.error(chalk.red("Failed to run `npm config list`:"), err);
         return false;
     }
 
@@ -21,7 +22,7 @@ export const checkThatNpmCanReadCwd = (): boolean => {
     // "; cwd = C:\path\to\current\dir" (unquoted)
     // I couldn't find an easier way to get it.
     const prefix = "; cwd = ";
-    const line = lines.find((line) => line.indexOf(prefix) === 0);
+    const line = lines.find((line) => line.startsWith(prefix));
     if (typeof line !== "string") {
         // Fail gracefully. They could remove it.
         return true;

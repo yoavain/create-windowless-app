@@ -23,12 +23,6 @@ export const interactiveMode = (): Promise<ProgramConfig> => {
         },
         {
             type: "confirm",
-            message: "Install Husky:",
-            name: "husky",
-            default: true
-        },
-        {
-            type: "confirm",
             message: "Verbose:",
             name: "verbose",
             default: false

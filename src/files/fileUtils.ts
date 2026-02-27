@@ -1,4 +1,4 @@
-import { existsSync, lstatSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "fs-extra";
+import { existsSync, lstatSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "fs";
 import path from "path";
 import os from "os";
 
@@ -11,15 +11,12 @@ const TEXT_FORMAT_EXTENSIONS = new Set<string>([".ts", ".js", ".cs", ".json", ".
 export type Formatter = (s: string) => string;
 
 function copyFileSyncWithFormatter(sourceFile, targetFile, formatter?: Formatter) {
-    console.log(`copyFileSyncWithFormatter from ${sourceFile} to ${targetFile}`);
-
     if (existsSync(targetFile)) {
         throw new Error(`Target file already exists: ${targetFile}`);
     }
 
     const ext: string = path.extname(sourceFile);
     if (typeof formatter === "function" && TEXT_FORMAT_EXTENSIONS.has(ext.toLowerCase())) {
-        console.log(`modifying ${sourceFile}`);
         const data = readFileSync(sourceFile, { encoding: "utf8" });
         writeFileSync(targetFile, formatter(data), { encoding: "utf8" });
     }
@@ -30,10 +27,7 @@ function copyFileSyncWithFormatter(sourceFile, targetFile, formatter?: Formatter
 }
 
 export const copyFolderRecursiveSync = (sourceFolder, targetFolder, formatter?: Formatter) => {
-    console.log(`copyFolderRecursiveSync from ${sourceFolder} to ${targetFolder}`);
-
     if (!existsSync(targetFolder)) {
-        console.log(`mkdir ${targetFolder}`);
         mkdirSync(targetFolder);
     }
     else if (!lstatSync(targetFolder).isDirectory()) {

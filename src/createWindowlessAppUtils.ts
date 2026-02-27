@@ -3,7 +3,7 @@ import validateProjectName from "validate-npm-package-name";
 import chalk from "chalk";
 import path from "path";
 import { consts } from "./consts";
-import { readdirSync, removeSync } from "fs-extra";
+import * as fs from "fs";
 
 // These files should be allowed to remain on a failed install, but then silently removed during the next create.
 const errorLogFilePatterns = consts.errorLogFilePatterns;
@@ -18,7 +18,7 @@ export const isSafeToCreateProjectIn = (root: string, name: string): boolean => 
     const validFiles: string[] = consts.validFiles;
     console.log();
 
-    const conflicts = readdirSync(root)
+    const conflicts = fs.readdirSync(root)
         .filter((file) => !validFiles.includes(file))
         // IntelliJ IDEA creates module files before CRA is launched
         .filter((file) => !/\.iml$/.test(file))
@@ -38,15 +38,7 @@ export const isSafeToCreateProjectIn = (root: string, name: string): boolean => 
     }
 
     // Remove any remnant files from a previous installation
-    const currentFiles = readdirSync(path.join(root));
-    currentFiles.forEach((file) => {
-        errorLogFilePatterns.forEach((errorLogFilePattern) => {
-            // This will catch `npm-debug.log*` files
-            if (file.indexOf(errorLogFilePattern) === 0) {
-                removeSync(path.join(root, file));
-            }
-        });
-    });
+    deleteFilesInDir(root, (file) => errorLogFilePatterns.some((pattern) => file.indexOf(pattern) === 0));
     return true;
 };
 
@@ -78,6 +70,15 @@ export const checkAppName = (appName) => {
         );
         process.exit(1);
     }
+};
+
+export const deleteFilesInDir = (root: string, shouldDelete: (file: string) => boolean, onDelete?: (file: string) => void): void => {
+    fs.readdirSync(root).forEach((file) => {
+        if (shouldDelete(file)) {
+            onDelete?.(file);
+            fs.rmSync(path.join(root, file), { recursive: true, force: true });
+        }
+    });
 };
 
 export const replaceAppNamePlaceholder = (appName: string, str: string): string => {

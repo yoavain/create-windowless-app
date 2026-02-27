@@ -3,5 +3,14 @@ import validateProjectName from "validate-npm-package-name";
 
 export const validateProjectNameInput = (value: string): string | boolean => {
     const result: ValidNames | InvalidNames | LegacyNames = validateProjectName(value);
-    return result.validForNewPackages || ((result as InvalidNames)?.errors?.[0]) || ((result as LegacyNames)?.warnings?.[0]) || "Invalid project name";
+    if (result.validForNewPackages) {
+        return true;
+    }
+    if ((result as InvalidNames)?.errors?.[0]) {
+        return (result as InvalidNames).errors[0];
+    }
+    if ((result as LegacyNames)?.warnings?.[0]) {
+        return (result as LegacyNames).warnings[0];
+    }
+    return "Invalid project name";
 };

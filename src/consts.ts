@@ -4,28 +4,18 @@ export const consts = {
         "winston"
     ],
     devDependencies: [
-        "fs-extra",
-        "jest",
         "webpack",
         "webpack-cli",
         "copy-webpack-plugin",
         "rimraf",
-        "cross-spawn",
         "postject"
     ],
-    huskyDependencies: [
-        "husky"
-    ],
     tsDevDependencies: [
-        "@types/jest",
         "@types/node",
-        "@tsconfig/node20",
         "@types/node-notifier",
-        "@types/winston",
         "ts-loader",
         "ts-node",
-        "typescript",
-        "@types/cross-spawn"
+        "typescript"
     ],
     errorLogFilePatterns: [
         "npm-debug.log"

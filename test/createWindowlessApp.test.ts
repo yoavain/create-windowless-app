@@ -1,7 +1,7 @@
 // Mocks Should be first
-jest.mock("cross-spawn", () => ({
-    sync: (command: string, args?: ReadonlyArray<string>) => {
-        if (command === "npm" && args.length === 2 && args[0] === "config" && args[1] === "list") {
+jest.mock("child_process", () => ({
+    spawnSync: (command: string) => {
+        if (command === "npm config list") {
             return { status: 0, output: [`; cwd = ${process.cwd()}`] };
         }
         else {
@@ -9,17 +9,19 @@ jest.mock("cross-spawn", () => ({
         }
     }
 }));
-jest.mock("fs-extra", () => {
+jest.mock("fs", () => {
     return {
         existsSync: jest.fn(() => true),
         lstatSync: jest.fn(() => ({ isDirectory: () => true })),
         mkdirSync: jest.fn(),
-        ensureDirSync: jest.fn(),
         readdirSync: jest.fn(() => []),
+        rmSync: jest.fn(),
         writeFileSync: jest.fn(),
         readFileSync: jest.fn(() => "{}"),
         copyFileSync: jest.fn(),
-        pathExistsSync: jest.fn()
+        promises: {
+            access: jest.fn(() => Promise.resolve())
+        }
     };
 });
 
@@ -42,11 +44,6 @@ describe("Test createWindowlessApp", () => {
         await createWindowlessApp(["node.exe", "dummy.ts", sandbox, "--no-typescript"]);
     });
 
-    it("should create a prototype project with flags: --no-husky", async () => {
-        const sandbox: string = uuid();
-        await createWindowlessApp(["node.exe", "dummy.ts", sandbox, "--no-husky"]);
-    });
-
     it("should create a prototype project with flags: --verbose", async () => {
         const sandbox: string = uuid();
         await createWindowlessApp(["node.exe", "dummy.ts", sandbox, "--verbose"]);
@@ -58,7 +55,7 @@ describe("Test createWindowlessApp", () => {
     });
 
     it("should print help with flags: --help", async () => {
-        // @ts-ignore
+        // @ts-expect-error -- process.exit returns never; mock implementation returns void
         jest.spyOn(process, "exit").mockImplementation((code: number) => {
             expect(code).toEqual(0);
         });
@@ -67,7 +64,7 @@ describe("Test createWindowlessApp", () => {
     });
 
     it("should error with missing project name", async () => {
-        // @ts-ignore
+        // @ts-expect-error -- process.exit returns never; mock implementation returns void
         jest.spyOn(process, "exit").mockImplementation((code: number) => {
             expect(code).toEqual(1);
         });

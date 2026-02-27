@@ -39,7 +39,7 @@ describe("Test checkMsbuildInPath", () => {
         const restoreEnv = mockedEnv({
             PATH: "fakePath"
         });
-        // @ts-ignore
+        // @ts-expect-error -- process.exit returns never; mock implementation returns void
         jest.spyOn(process, "exit").mockImplementation(() => {});
 
         const result: boolean = await checkMsbuildInPath(true);

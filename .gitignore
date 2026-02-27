@@ -65,3 +65,8 @@ typings/
 /create-windowless-app-template/
 /.vscode/
 /.junie/
+/docs/plan/
+/tsconfig.tsbuildinfo
+/.claude/settings.local.json
+/.qodo/
+/lsp/

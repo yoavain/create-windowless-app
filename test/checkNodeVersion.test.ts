@@ -18,7 +18,7 @@ describe("Test checkNodeRuntimeVersion", () => {
         });
 
         it("should exit with code 1 when version does not meet requirements", async () => {
-            // @ts-ignore
+            // @ts-expect-error -- process.exit returns never; mock implementation returns void
             jest.spyOn(process, "exit").mockImplementation(() => {});
 
             process = { ...process, versions: { ...process.versions, node :"10.0.0" } };

@@ -1,12 +1,14 @@
 import path from "path";
-import { randomUUID as uuid } from "crypto";
+import { randomUUID } from "crypto";
 import type { ExecException } from "child_process";
 import { exec } from "child_process";
 import { rimraf } from "rimraf";
 import { consts } from "../src/consts";
-import { existsSync, pathExistsSync, readFileSync } from "fs-extra";
+import { existsSync, readFileSync } from "fs";
 
 jest.setTimeout(300000);
+
+const shortUUID = () => randomUUID().split("-")[0];
 
 let SANDBOXES = new Set<string>();
 
@@ -25,7 +27,7 @@ export const readJsonFile = (jsonFileName: string) => {
 };
 
 
-const testFilesExists = (root: string, typescript: boolean = true, husky: boolean = true): void => {
+const testFilesExists = (root: string, typescript: boolean = true): void => {
     // Files
     const scriptExt: string = typescript ? "ts" : "js";
     expect(existsSync(path.resolve(root, "package.json"))).toBeTruthy();
@@ -40,11 +42,7 @@ const testFilesExists = (root: string, typescript: boolean = true, husky: boolea
     expect(existsSync(path.resolve(root, "launcher", "launcher.ico"))).toBeTruthy();
     expect(existsSync(path.resolve(root, "launcher", `launcherCompiler.${scriptExt}`))).toBeTruthy();
     expect(existsSync(path.resolve(root, "resources", "bin", `${root}-launcher.exe`))).toBeTruthy();
-    expect(pathExistsSync(path.resolve(root, "node_modules"))).toEqual(true);
-    if (husky) {
-        expect(pathExistsSync(path.resolve(root, ".husky"))).toEqual(husky);
-        expect(existsSync(path.resolve(root, ".husky", "pre-commit"))).toEqual(husky);
-    }
+    expect(existsSync(path.resolve(root, "node_modules"))).toEqual(true);
 
     const packageJson = readJsonFile(path.resolve(root, "package.json"));
 
@@ -53,9 +51,6 @@ const testFilesExists = (root: string, typescript: boolean = true, husky: boolea
     let expectedDevDependencies = consts.devDependencies;
     if (typescript) {
         expectedDevDependencies = expectedDevDependencies.concat(consts.tsDevDependencies);
-    }
-    if (husky) {
-        expectedDevDependencies = expectedDevDependencies.concat(consts.huskyDependencies);
     }
     expect(Object.keys(packageJson.dependencies).sort()).toEqual(cleanExpectedDependencies(expectedDependencies).sort());
     expect(Object.keys(packageJson.devDependencies).sort()).toEqual(cleanExpectedDependencies(expectedDevDependencies).sort());
@@ -90,7 +85,7 @@ describe("Test CLI", () => {
     });
 
     it("should create a prototype project with default flags", async () => {
-        const sandbox: string = uuid();
+        const sandbox: string = shortUUID();
         SANDBOXES.add(sandbox);
         const result: CliResult = await cli([sandbox], ".");
         console.log(JSON.stringify(result, null, "\t"));
@@ -101,7 +96,7 @@ describe("Test CLI", () => {
     });
 
     it("should create a prototype project with flags: --no-typescript", async () => {
-        const sandbox: string = uuid();
+        const sandbox: string = shortUUID();
         SANDBOXES.add(sandbox);
         const result: CliResult = await cli([sandbox, "--no-typescript"], ".");
         console.log(JSON.stringify(result, null, "\t"));
@@ -111,14 +106,4 @@ describe("Test CLI", () => {
         rimraf.sync(sandbox);
     });
 
-    it("should create a prototype project with flags: --no-husky", async () => {
-        const sandbox: string = uuid();
-        SANDBOXES.add(sandbox);
-        const result: CliResult = await cli([sandbox, "--no-husky"], ".");
-        console.log(JSON.stringify(result, null, "\t"));
-        expect(result.code).toBe(0);
-        expect(result.error).toBeFalsy();
-        testFilesExists(sandbox, true, false);
-        rimraf.sync(sandbox);
-    });
 });

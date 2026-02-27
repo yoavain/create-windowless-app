@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`Test PackageJsonBuilder Test default package.json 1`] = `
 {
@@ -27,63 +27,6 @@ exports[`Test PackageJsonBuilder Test default package.json 1`] = `
 }
 `;
 
-exports[`Test PackageJsonBuilder Test package.json with husky 1`] = `
-{
-  "main": "_build/index.js",
-  "name": "test-app",
-  "private": true,
-  "scripts": {
-    "build": "npm run type-check && npm run webpack && npm run node-sea",
-    "check-msbuild": "ts-node -e "require(""./launcher/launcherCompiler"").checkMsbuildInPath(true)"",
-    "check-node-version": "ts-node -e "require(""./utils/checkNodeVersion"").checkNodeRuntimeVersion()"",
-    "node-sea": "npm run node-sea:build-blob && npm run node-sea:copy-node && npm run node-sea:unsign && npm run node-sea:inject-blob",
-    "node-sea:build-blob": "node --experimental-sea-config sea-config.json",
-    "node-sea:copy-node": "node -e "require('fs').copyFileSync(process.execPath, 'dist/test-app.exe')"",
-    "node-sea:inject-blob": "postject dist/test-app.exe NODE_SEA_BLOB _blob\\sea-prep.blob --sentinel-fuse NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2",
-    "node-sea:sign": "signtool sign /fd SHA256 dist/test-app.exe",
-    "node-sea:unsign": "signtool remove /s dist/test-app.exe || echo Warning: signtool not found in "Path"",
-    "pre-commit": "git diff HEAD --exit-code --stat launcher/* || npm run check-msbuild && npm run rebuild-launcher && git add resources/bin/test-app-launcher.exe",
-    "prebuild": "npm run check-node-version",
-    "prenode-sea:build-blob": "rimraf _blob && mkdir _blob",
-    "prepare": "git config --get core.hookspath || husky",
-    "prewebpack": "rimraf build && rimraf dist",
-    "rebuild-launcher": "msbuild launcher/launcher.csproj",
-    "start": "ts-node src/index.ts",
-    "type-check": "tsc --build tsconfig.json",
-    "webpack": "webpack",
-  },
-  "version": "0.1.0",
-}
-`;
-
-exports[`Test PackageJsonBuilder Test package.json with husky after javascript 1`] = `
-{
-  "main": "_build/index.js",
-  "name": "test-app",
-  "private": true,
-  "scripts": {
-    "build": "npm run webpack && npm run node-sea",
-    "check-msbuild": "node -e "require(""./launcher/launcherCompiler"").checkMsbuildInPath(true)"",
-    "check-node-version": "node -e "require(""./utils/checkNodeVersion"").checkNodeRuntimeVersion()"",
-    "node-sea": "npm run node-sea:build-blob && npm run node-sea:copy-node && npm run node-sea:unsign && npm run node-sea:inject-blob",
-    "node-sea:build-blob": "node --experimental-sea-config sea-config.json",
-    "node-sea:copy-node": "node -e "require('fs').copyFileSync(process.execPath, 'dist/test-app.exe')"",
-    "node-sea:inject-blob": "postject dist/test-app.exe NODE_SEA_BLOB _blob\\sea-prep.blob --sentinel-fuse NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2",
-    "node-sea:sign": "signtool sign /fd SHA256 dist/test-app.exe",
-    "node-sea:unsign": "signtool remove /s dist/test-app.exe || echo Warning: signtool not found in "Path"",
-    "pre-commit": "git diff HEAD --exit-code --stat launcher/* || npm run check-msbuild && npm run rebuild-launcher && git add resources/bin/test-app-launcher.exe",
-    "prebuild": "npm run check-node-version",
-    "prenode-sea:build-blob": "rimraf _blob && mkdir _blob",
-    "prepare": "git config --get core.hookspath || husky",
-    "prewebpack": "rimraf build && rimraf dist",
-    "rebuild-launcher": "msbuild launcher/launcher.csproj",
-    "start": "node src/index.js",
-    "webpack": "webpack",
-  },
-  "version": "0.1.0",
-}
-`;
-
 exports[`Test PackageJsonBuilder Test package.json with javascript 1`] = `
 {
   "main": "_build/index.js",
@@ -101,34 +44,6 @@ exports[`Test PackageJsonBuilder Test package.json with javascript 1`] = `
     "node-sea:unsign": "signtool remove /s dist/test-app.exe || echo Warning: signtool not found in "Path"",
     "prebuild": "npm run check-node-version",
     "prenode-sea:build-blob": "rimraf _blob && mkdir _blob",
-    "prewebpack": "rimraf build && rimraf dist",
-    "rebuild-launcher": "msbuild launcher/launcher.csproj",
-    "start": "node src/index.js",
-    "webpack": "webpack",
-  },
-  "version": "0.1.0",
-}
-`;
-
-exports[`Test PackageJsonBuilder Test package.json with javascript after husky 1`] = `
-{
-  "main": "_build/index.js",
-  "name": "test-app",
-  "private": true,
-  "scripts": {
-    "build": "npm run webpack && npm run node-sea",
-    "check-msbuild": "node -e "require(""./launcher/launcherCompiler"").checkMsbuildInPath(true)"",
-    "check-node-version": "node -e "require(""./utils/checkNodeVersion"").checkNodeRuntimeVersion()"",
-    "node-sea": "npm run node-sea:build-blob && npm run node-sea:copy-node && npm run node-sea:unsign && npm run node-sea:inject-blob",
-    "node-sea:build-blob": "node --experimental-sea-config sea-config.json",
-    "node-sea:copy-node": "node -e "require('fs').copyFileSync(process.execPath, 'dist/test-app.exe')"",
-    "node-sea:inject-blob": "postject dist/test-app.exe NODE_SEA_BLOB _blob\\sea-prep.blob --sentinel-fuse NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2",
-    "node-sea:sign": "signtool sign /fd SHA256 dist/test-app.exe",
-    "node-sea:unsign": "signtool remove /s dist/test-app.exe || echo Warning: signtool not found in "Path"",
-    "pre-commit": "git diff HEAD --exit-code --stat launcher/* || npm run check-msbuild && npm run rebuild-launcher && git add resources/bin/test-app-launcher.exe",
-    "prebuild": "npm run check-node-version",
-    "prenode-sea:build-blob": "rimraf _blob && mkdir _blob",
-    "prepare": "git config --get core.hookspath || husky",
     "prewebpack": "rimraf build && rimraf dist",
     "rebuild-launcher": "msbuild launcher/launcher.csproj",
     "start": "node src/index.js",
