@@ -8,7 +8,6 @@ type FileManagerOptions = {
     targetRoot: string;
     appName: string;
     typeScript: boolean;
-    husky: boolean;
     icon?: string;
 };
 
@@ -16,16 +15,14 @@ export class FileManager {
     #templatesRoot: string;
     #targetRoot: string;
     #typeScript: boolean;
-    #husky: boolean;
     #icon: string | undefined;
     #formatter: Formatter;
 
-    constructor({ targetRoot, appName, typeScript, husky, icon }: FileManagerOptions) {
+    constructor({ targetRoot, appName, typeScript, icon }: FileManagerOptions) {
         this.#templatesRoot = path.resolve(__dirname, "..", "..", "templates");
         this.#targetRoot = targetRoot;
 
         this.#typeScript = typeScript;
-        this.#husky = husky;
         this.#icon = icon;
 
         this.#formatter = (str: string) => replaceAppNamePlaceholder(appName, str);
@@ -42,12 +39,7 @@ export class FileManager {
         else {
             copyFolderRecursiveSync(path.resolve(this.#templatesRoot, "javascript"), path.resolve(this.#targetRoot), this.#formatter);
         }
-        
-        // Husky
-        if (this.#husky) {
-            copyFolderRecursiveSync(path.resolve(this.#templatesRoot, ".husky"), path.resolve(this.#targetRoot, ".husky"), this.#formatter);
-        }
-        
+
         // Launcher
         copyFolderRecursiveSync(path.resolve(this.#templatesRoot, "launcher"), path.resolve(this.#targetRoot, "launcher"), this.#formatter);
 

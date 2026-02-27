@@ -4,22 +4,15 @@ export const consts = {
         "winston"
     ],
     devDependencies: [
-        "jest",
         "webpack",
         "webpack-cli",
         "copy-webpack-plugin",
         "rimraf",
         "postject"
     ],
-    huskyDependencies: [
-        "husky"
-    ],
     tsDevDependencies: [
-        "@types/jest",
         "@types/node",
-        "@tsconfig/node20",
         "@types/node-notifier",
-        "@types/winston",
         "ts-loader",
         "ts-node",
         "typescript"

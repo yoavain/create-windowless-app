@@ -44,11 +44,6 @@ describe("Test createWindowlessApp", () => {
         await createWindowlessApp(["node.exe", "dummy.ts", sandbox, "--no-typescript"]);
     });
 
-    it("should create a prototype project with flags: --no-husky", async () => {
-        const sandbox: string = uuid();
-        await createWindowlessApp(["node.exe", "dummy.ts", sandbox, "--no-husky"]);
-    });
-
     it("should create a prototype project with flags: --verbose", async () => {
         const sandbox: string = uuid();
         await createWindowlessApp(["node.exe", "dummy.ts", sandbox, "--verbose"]);

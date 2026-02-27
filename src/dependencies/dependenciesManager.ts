@@ -20,18 +20,15 @@ const install = async (dependencies: string[], isDev: boolean, verbose?: boolean
 export class DependenciesManager {
     #dependencies: string[] = [];
     #devDependencies: string[] = [];
-    
-    constructor(typescript: boolean, husky: boolean) {
+
+    constructor(typescript: boolean) {
         this.#dependencies = consts.dependencies;
         this.#devDependencies = consts.devDependencies;
         if (typescript) {
             this.#devDependencies = this.#devDependencies.concat(consts.tsDevDependencies);
         }
-        if (husky) {
-            this.#devDependencies = this.#devDependencies.concat(consts.huskyDependencies);
-        }
     }
-    
+
     async installAll(verbose?: boolean) {
         await install(this.#dependencies, false, verbose);
         await install(this.#devDependencies, true, verbose);

@@ -41,13 +41,13 @@ const handleInstallError = (reason: unknown, root: string, appName: string): nev
 };
 
 const run = async (root: string, appName: string, originalDirectory: string, programConfig: ProgramConfig): Promise<void> => {
-    const { typescript, husky, icon, verbose } = programConfig;
+    const { typescript, icon, verbose } = programConfig;
 
     try {
-        const dependenciesManager: DependenciesManager = new DependenciesManager(typescript, husky);
+        const dependenciesManager: DependenciesManager = new DependenciesManager(typescript);
         await dependenciesManager.installAll(verbose);
 
-        const fileManager: FileManager = new FileManager({ targetRoot: root, appName, typeScript: typescript, husky, icon });
+        const fileManager: FileManager = new FileManager({ targetRoot: root, appName, typeScript: typescript, icon });
         fileManager.copyTemplate();
 
         // Launcher
@@ -62,7 +62,7 @@ const run = async (root: string, appName: string, originalDirectory: string, pro
 };
 
 const createApp = async (programConfig: ProgramConfig): Promise<void> => {
-    const { projectName, typescript, husky } = programConfig;
+    const { projectName, typescript } = programConfig;
     const root: string = path.resolve(projectName);
     const appName: string = path.basename(root);
 
@@ -87,9 +87,6 @@ const createApp = async (programConfig: ProgramConfig): Promise<void> => {
         const packageJson = new PackageJsonBuilder(appName);
         if (!typescript) {
             packageJson.withJavaScript();
-        }
-        if (husky) {
-            packageJson.withHusky();
         }
         writeJson(path.join(root, "package.json"), packageJson.build());
 

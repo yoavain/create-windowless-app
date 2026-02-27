@@ -12,7 +12,6 @@ export type ProgramConfig = {
     projectName: string;
     icon?: string;
     typescript: boolean;
-    husky: boolean;
     verbose: boolean;
 };
 
@@ -28,8 +27,6 @@ const HELP_TEXT = [
     "  -i, --interactive      interactive mode",
     "  -t, --typescript       use typescript (default: true)",
     "      --no-typescript    disable typescript",
-    "  -h, --husky            install husky pre-commit hook (default: true)",
-    "      --no-husky         disable husky",
     "  -c, --icon <file>      override default launcher icon file",
     "      --version          Show version number",
     "      --help             Show help",
@@ -54,8 +51,6 @@ export const parseCommand = async (argv: string[]): Promise<ProgramConfig> => {
                 "interactive":     { type: "boolean", short: "i" },
                 "typescript":      { type: "boolean", short: "t", default: true },
                 "no-typescript": { type: "boolean" },
-                "husky":           { type: "boolean", short: "h", default: true },
-                "no-husky":      { type: "boolean" },
                 "icon":            { type: "string",  short: "c" },
                 "help":            { type: "boolean" },
                 "version":         { type: "boolean" }
@@ -101,7 +96,6 @@ export const parseCommand = async (argv: string[]): Promise<ProgramConfig> => {
     }
 
     const typescript = !values["no-typescript"] && (values.typescript ?? true);
-    const husky = !values["no-husky"] && (values.husky ?? true);
 
     let icon = values.icon;
     if (icon && !existsSync(icon)) {
@@ -113,7 +107,6 @@ export const parseCommand = async (argv: string[]): Promise<ProgramConfig> => {
         projectName: projectName as string,
         verbose: values.verbose,
         typescript,
-        husky,
         icon
     };
 };

@@ -43,7 +43,3 @@ export const getJsScripts = (appName: string): Scripts => ({
     ...getCommonScripts(appName)
 });
 
-export const getHuskyScripts = (appName: string): Scripts => ({
-    "prepare":"git config --get core.hookspath || husky",
-    "pre-commit": `git diff HEAD --exit-code --stat launcher/* || npm run check-msbuild && npm run rebuild-launcher && git add resources/bin/${appName}-launcher.exe`
-});
