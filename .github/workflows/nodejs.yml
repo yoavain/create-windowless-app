@@ -8,6 +8,10 @@ on:
     tags:
       - '*.*.*'
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   build:
     runs-on: windows-latest
@@ -43,7 +47,7 @@ jobs:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
       - name: Codecov
-        if: matrix.node-version == '22'
+        if: matrix.node-version == '24'
         uses: codecov/codecov-action@v5.5.2
         with:
           fail_ci_if_error: true
@@ -55,7 +59,7 @@ jobs:
     needs: build
     strategy:
       matrix:
-        node-version: [ '22' ]
+        node-version: [ '24' ]
 
     steps:
       - name: Checkout
