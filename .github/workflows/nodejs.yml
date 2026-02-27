@@ -75,6 +75,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: npm
+          registry-url: 'https://registry.npmjs.org'
 
       - name: setup-msbuild
         uses: microsoft/setup-msbuild@v2.0.0
@@ -103,7 +104,7 @@ jobs:
         shell: cmd
 
       - name: Publish
-        run: npm publish
+        run: npm publish --provenance
 
       - name: Release
         uses: softprops/action-gh-release@v2
