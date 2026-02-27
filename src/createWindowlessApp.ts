@@ -48,7 +48,7 @@ const run = async (root: string, appName: string, originalDirectory: string, pro
         await dependenciesManager.installAll(verbose);
 
         const fileManager: FileManager = new FileManager({ targetRoot: root, appName, typeScript: typescript, husky, icon });
-        await fileManager.copyTemplate();
+        fileManager.copyTemplate();
 
         // Launcher
         fs.mkdirSync(path.resolve(root, "resources", "bin"), { recursive: true });

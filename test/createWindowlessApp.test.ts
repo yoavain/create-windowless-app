@@ -60,7 +60,7 @@ describe("Test createWindowlessApp", () => {
     });
 
     it("should print help with flags: --help", async () => {
-        // @ts-ignore
+        // @ts-expect-error -- process.exit returns never; mock implementation returns void
         jest.spyOn(process, "exit").mockImplementation((code: number) => {
             expect(code).toEqual(0);
         });
@@ -69,7 +69,7 @@ describe("Test createWindowlessApp", () => {
     });
 
     it("should error with missing project name", async () => {
-        // @ts-ignore
+        // @ts-expect-error -- process.exit returns never; mock implementation returns void
         jest.spyOn(process, "exit").mockImplementation((code: number) => {
             expect(code).toEqual(1);
         });

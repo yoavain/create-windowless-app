@@ -73,11 +73,11 @@ describe("Test cliParser", () => {
         });
 
         it("should error on non existing icon", async () => {
-            // @ts-ignore
+            // @ts-expect-error -- process.exit returns never; mock implementation returns void
             jest.spyOn(process, "exit").mockImplementation((code: number) => {
                 expect(code).toEqual(1);
             });
-            // @ts-ignore
+            // @ts-expect-error -- write overloads require boolean return; mock returns void
             const mockStdout = jest.spyOn(process.stdout, "write").mockImplementation(() => { /* do nothing */ });
 
             const sandbox: string = uuid();
@@ -94,11 +94,11 @@ describe("Test cliParser", () => {
         });
 
         it("should print help with flags: --help", async () => {
-            // @ts-ignore
+            // @ts-expect-error -- process.exit returns never; mock implementation returns void
             jest.spyOn(process, "exit").mockImplementation((code: number) => {
                 expect(code).toEqual(0);
             });
-            // @ts-ignore
+            // @ts-expect-error -- write overloads require boolean return; mock returns void
             const mockStdout = jest.spyOn(process.stdout, "write").mockImplementation(() => { /* do nothing */ });
             const sandbox: string = uuid();
 
@@ -108,11 +108,11 @@ describe("Test cliParser", () => {
         });
 
         it("should error on missing project name", async () => {
-            // @ts-ignore
+            // @ts-expect-error -- process.exit returns never; mock implementation returns void
             jest.spyOn(process, "exit").mockImplementation((code: number) => {
                 expect(code).toEqual(1);
             });
-            // @ts-ignore
+            // @ts-expect-error -- write overloads require boolean return; mock returns void
             const mockStdout = jest.spyOn(process.stdout, "write").mockImplementation(() => { /* do nothing */ });
 
             await parseCommand(["node.exe", "dummy.ts"]);
@@ -139,7 +139,7 @@ describe("Test cliParser", () => {
         });
 
         it("should call inquirer in interactive mode", async () => {
-            // @ts-ignore
+            // @ts-expect-error -- prompt has complex generics; mock returns empty object
             jest.spyOn(inquirer, "prompt").mockImplementation(async () => ({}));
 
             await parseCommand(["node.exe", "dummy.ts", "--interactive"]);
