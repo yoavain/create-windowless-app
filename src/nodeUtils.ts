@@ -6,7 +6,7 @@ export const checkThatNpmCanReadCwd = (): boolean => {
     const cwd = process.cwd();
     let childOutput = "";
     try {
-        const spawnResult: SpawnSyncReturns<Buffer> = spawnSync("npm", ["config", "list"], { shell: true });
+        const spawnResult: SpawnSyncReturns<Buffer> = spawnSync("npm config list", { shell: true });
         if (spawnResult.status !== 0) {
             return false;
         }

@@ -3,7 +3,6 @@ import { spawnSync } from "child_process";
 import { consts } from "../consts";
 
 const install = async (dependencies: string[], isDev: boolean, verbose?: boolean): Promise<void> => {
-    const command = "npm";
     const args = ["install", isDev ? "--save-dev" : "--save", "--save-exact", "--loglevel", "error"].concat(dependencies);
     if (verbose) {
         args.push("--verbose");
@@ -11,9 +10,9 @@ const install = async (dependencies: string[], isDev: boolean, verbose?: boolean
     console.log(`Installing ${chalk.green(isDev ? "dev dependencies" : "dependencies")}.`);
     console.log();
 
-    const spawnResult = spawnSync(command, args, { stdio: "inherit", shell: true });
+    const spawnResult = spawnSync(`npm ${args.join(" ")}`, { stdio: "inherit", shell: true });
     if (spawnResult.status !== 0) {
-        return Promise.reject({ command: `${command} ${args.join(" ")}` });
+        return Promise.reject({ command: `npm ${args.join(" ")}` });
     }
 };
 

@@ -1,7 +1,7 @@
 // Mocks Should be first
 jest.mock("child_process", () => ({
-    spawnSync: (command: string, args?: ReadonlyArray<string>) => {
-        if (command === "npm" && args.length === 2 && args[0] === "config" && args[1] === "list") {
+    spawnSync: (command: string) => {
+        if (command === "npm config list") {
             return { status: 0, output: [`; cwd = ${process.cwd()}`] };
         }
         else {
