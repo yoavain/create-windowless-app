@@ -30,7 +30,7 @@ jobs:
           cache: npm
 
       - name: setup-msbuild
-        uses: microsoft/setup-msbuild@v2.0.0
+        uses: microsoft/setup-msbuild@v3.0.0
 
       - name: Dependencies Install
         run: npm ci
@@ -78,7 +78,7 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
 
       - name: setup-msbuild
-        uses: microsoft/setup-msbuild@v2.0.0
+        uses: microsoft/setup-msbuild@v3.0.0
 
       - name: Dependencies Install
         run: npm ci
