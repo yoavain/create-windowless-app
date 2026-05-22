@@ -43,9 +43,12 @@ The tool has two distinct roles: the **CLI tool itself** (in `src/`) and the **t
 
 ### CLI Source (`src/`)
 
-- **`index.ts`** — Entry point; calls `checkNodeVersion` then `createWindowlessApp`
-- **`cliParser.ts`** — Uses Node's built-in `util.parseArgs()`; handles `--interactive`, `--typescript`, `--icon`, `--verbose` flags
-- **`createWindowlessApp.ts`** — Main orchestration: validates name → creates dirs → generates `package.json` → copies templates → installs deps → compiles C# launcher
+- **`index.ts`** — Entry point; delegates to `main()`
+- **`main.ts`** — Top-level orchestration: `checkNodeRuntimeVersion` → `checkMsbuildInPath` → `createWindowlessApp(process.argv)`
+- **`checkNodeVersion.ts`** — Verifies the running Node.js meets the minimum version (>= 20.0)
+- **`cliParser.ts`** — Uses Node's built-in `util.parseArgs()`; handles `-v/--verbose`, `-i/--interactive`, `-t/--typescript` (default true) / `--no-typescript`, `-c/--icon <file>`, `--version`, `--help`. Routes to `interactiveMode()` when `--interactive` is set
+- **`interactive.ts`** — Enquirer-based interactive prompt flow (project name, icon, typescript, verbose); returns a `ProgramConfig`
+- **`createWindowlessApp.ts`** — Per-project orchestration: validates name → creates dirs → generates `package.json` → copies templates → installs deps → compiles C# launcher
 - **`files/fileManager.ts`** — Copies template files to the generated project; selects TypeScript or JavaScript variant
 - **`packageJson/packageJsonBuilder.ts`** — Generates `package.json` for the target project with webpack + SEA build scripts
 - **`dependencies/dependenciesManager.ts`** — Installs npm packages in generated project
