@@ -22,7 +22,7 @@ If something doesn't work, please [file an issue](https://github.com/yoavain/cre
 
 
 Pre-Requisites for template to work:
-* `NodeJS` version `20.0.0` or higher
+* `NodeJS` version `22.22.2` or higher (`^22.22.2 || ^24.15.0 || >=26.0.0`)
 * `npm` version `9.0.0` or higher
 * `MSBuild.exe` must be in the PATH environment variable
 * `signtool` must be in the PATH environment variable
@@ -111,17 +111,22 @@ Then you can find in your my-app\dist folder the following files:
 ## create-windowless-app CLI
 
 ```
-create-windowless-app <project-directory> [options]
+Usage: create-windowless-app [projectName] [options]
+
+Arguments:
+  projectName            project name
 
 Options:
-    --no-typescript                 use javascript rather than typescript
-    --icon <icon>                   override default launcher icon file
-    --verbose                       print additional logs
-
-    --interactive                   interactive mode
-
-Only <project-directory> is required.
+  -v, --verbose          print additional logs
+  -i, --interactive      interactive mode
+  -t, --typescript       use typescript (default: true)
+      --no-typescript    disable typescript
+  -c, --icon <file>      override default launcher icon file
+      --version          Show version number
+      --help             Show help
 ```
+
+`projectName` is required unless `--interactive` is used.
 
 ## Why?
 
@@ -142,5 +147,5 @@ The "Hello World" template is a POC containing 2 features you might want when ru
 The template project build script does the following things
 1) Compiles TypeScript to JavaScript (if in a TypeScript template)
 2) Runs WebPack to bundle all JavaScript into a single file, and copy binary files into the "dist" folder
-3) Runs Node's single executable applications scripts to compile the single WebPack JavaScript output file to an exe file bundled with Node.js (Currently experimental in Node.js 20)
+3) Runs Node's single executable applications scripts to compile the single WebPack JavaScript output file to an exe file bundled with Node.js
 

@@ -1,5 +1,5 @@
-const MIN_MAJOR_VERSION = 20;
-const MIN_MINOR_VERSION = 0;
+const MIN_MAJOR_VERSION = 22;
+const MIN_MINOR_VERSION = 22;
 
 export const checkNodeRuntimeVersion = () => {
     const currentNodeVersion = process.versions.node;

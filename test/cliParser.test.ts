@@ -2,7 +2,7 @@ import type { ProgramConfig } from "../src/cliParser";
 import { parseCommand } from "../src/cliParser";
 import * as interactive from "../src/interactive";
 import { randomUUID as uuid } from "crypto";
-import inquirer from "inquirer";
+import Enquirer from "enquirer";
 import * as path from "path";
 
 describe("Test cliParser", () => {
@@ -119,13 +119,12 @@ describe("Test cliParser", () => {
             expect(icon).toBeUndefined();
         });
 
-        it("should call inquirer in interactive mode", async () => {
-            // @ts-expect-error -- prompt has complex generics; mock returns empty object
-            jest.spyOn(inquirer, "prompt").mockImplementation(async () => ({}));
+        it("should call enquirer in interactive mode", async () => {
+            jest.spyOn(Enquirer, "prompt").mockImplementation(async () => ({}));
 
             await parseCommand(["node.exe", "dummy.ts", "--interactive"]);
 
-            expect(inquirer.prompt).toHaveBeenCalled();
+            expect(Enquirer.prompt).toHaveBeenCalled();
         });
     });
 });

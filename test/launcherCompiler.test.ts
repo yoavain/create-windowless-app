@@ -7,7 +7,9 @@ jest.mock("child_process", () => ({
 
 import { checkMsbuildInPath, compileLauncher } from "../src/launcherCompiler";
 import mockedEnv from "mocked-env";
-import mockFs from "mock-fs";
+import { dir } from "tmp-promise";
+import path from "path";
+import { promises as fs } from "fs";
 
 describe("compileLauncher", () => {
     beforeEach(() => {
@@ -31,23 +33,25 @@ describe("Test checkMsbuildInPath", () => {
         p = process;
     });
     afterEach(() => {
-        mockFs.restore();
         jest.restoreAllMocks();
         process = p;
     });
 
     it("Test MSBuild found", async () => {
+        const d = await dir({ unsafeCleanup: true });
         const restoreEnv = mockedEnv({
-            PATH: "fakePath"
+            PATH: d.path
         });
-        mockFs({
-            "fakePath/msbuild.exe": "exist"
-        });
+        try {
+            await fs.writeFile(path.join(d.path, "msbuild.exe"), "exist", { encoding: "utf-8" });
 
-        const result: boolean = await checkMsbuildInPath(false);
-        expect(result).toBeTruthy();
-        restoreEnv();
-
+            const result: boolean = await checkMsbuildInPath(false);
+            expect(result).toBeTruthy();
+        }
+        finally {
+            restoreEnv();
+            await d.cleanup();
+        }
     });
     it("Test MSBuild not found", async () => {
         const restoreEnv = mockedEnv({

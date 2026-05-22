@@ -92,4 +92,13 @@ describe("checkAppName", () => {
 
         expect(exitSpy).toHaveBeenCalledWith(1);
     });
+
+    it("should call process.exit(1) if name conflicts with a known TypeScript dependency", () => {
+        // @ts-expect-error -- process.exit returns never; mock implementation returns void
+        const exitSpy = jest.spyOn(process, "exit").mockImplementation(() => {});
+
+        checkAppName("ts-node");
+
+        expect(exitSpy).toHaveBeenCalledWith(1);
+    });
 });
