@@ -1,9 +1,9 @@
-import inquirer from "inquirer";
+import Enquirer from "enquirer";
 import type { ProgramConfig } from "./cliParser";
 import { validateProjectNameInput } from "./validation";
 
 export const interactiveMode = (): Promise<ProgramConfig> => {
-    return inquirer.prompt([
+    return Enquirer.prompt<ProgramConfig>([
         {
             type: "input",
             message: "Project Name:",
@@ -19,13 +19,13 @@ export const interactiveMode = (): Promise<ProgramConfig> => {
             type: "confirm",
             message: "TypeScript:",
             name: "typescript",
-            default: true
+            initial: true
         },
         {
             type: "confirm",
             message: "Verbose:",
             name: "verbose",
-            default: false
+            initial: false
         }
     ]);
 };

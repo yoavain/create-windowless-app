@@ -1,6 +1,6 @@
 {
     "name": "create-windowless-app",
-    "version": "13.0.8",
+    "version": "14.0.0",
     "description": "Create a windowless NodeJS app",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
@@ -24,7 +24,7 @@
         "prettier": "prettier --write *.json templates/**/*.json",
         "pretsc": "rimraf dist",
         "tsc": "tsc --build tsconfig.build.json",
-        "add-shebang": "add-shebang",
+        "add-shebang": "node -r ts-node/register/transpile-only scripts/add-shebang.ts",
         "start": "ts-node src/index.ts",
         "start:help": "npm run start -- --help",
         "package": "npm pack",
@@ -68,7 +68,6 @@
         "@types/winston": "2.4.4",
         "@typescript-eslint/eslint-plugin": "8.59.2",
         "@typescript-eslint/parser": "8.59.2",
-        "add-shebang": "0.1.0",
         "copy-webpack-plugin": "14.0.0",
         "cross-env": "10.1.0",
         "eslint": "9.39.4",
@@ -100,8 +99,12 @@
     },
     "dependencies": {
         "chalk": "4.1.2",
-        "inquirer": "11.1.0",
+        "enquirer": "2.4.1",
         "validate-npm-package-name": "7.0.2"
+    },
+    "overrides": {
+        "uuid": "14.0.0",
+        "brace-expansion": "5.0.6"
     },
     "lint-staged": {
         "*.(ts|js)": [
