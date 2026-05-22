@@ -12,7 +12,9 @@ jest.mock("child_process", () => ({
 
 const mockFsRmSync = jest.fn();
 jest.mock("fs", () => {
+    const actualFs = jest.requireActual("fs");
     return {
+        ...actualFs,
         existsSync: jest.fn(() => true),
         lstatSync: jest.fn(() => ({ isDirectory: () => true })),
         mkdirSync: jest.fn(),
@@ -22,6 +24,7 @@ jest.mock("fs", () => {
         readFileSync: jest.fn(() => "{}"),
         copyFileSync: jest.fn(),
         promises: {
+            ...actualFs.promises,
             access: jest.fn(() => Promise.resolve())
         }
     };
