@@ -7,7 +7,8 @@
         "target": "es6",
         "noEmit": true,
         "verbatimModuleSyntax": false,
-        "types": ["node", "jest"]
+        "types": ["node", "jest"],
+        "rootDir": "."
     },
     "include": ["./src/**/*", "./test/**/*", "./integration_test/**/*", "./templates/**/*", "jest.config.ts"]
 }
