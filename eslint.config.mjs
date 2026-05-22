@@ -21,15 +21,13 @@ const compat = new FlatCompat({
 
 export default [...fixupConfigRules(compat.extends(
     "eslint:recommended",
-    "plugin:n/recommended",
     "plugin:import/errors",
     "plugin:import/warnings",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:security/recommended-legacy"
-)), {
+)), n.configs["flat/recommended-script"], {
     plugins: {
-        "n": fixupPluginRules(n),
         "@typescript-eslint": fixupPluginRules(typescriptEslint),
         "import": fixupPluginRules(_import),
         jest,
