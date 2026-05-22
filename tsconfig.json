@@ -10,5 +10,5 @@
         "types": ["node", "jest"],
         "rootDir": "."
     },
-    "include": ["./src/**/*", "./test/**/*", "./integration_test/**/*", "./templates/**/*", "jest.config.ts"]
+    "include": ["./src/**/*", "./test/**/*", "./integration_test/**/*", "./templates/**/*", "./scripts/**/*", "jest.config.ts"]
 }
