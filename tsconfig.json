@@ -6,7 +6,8 @@
         "allowJs": true,
         "target": "es6",
         "noEmit": true,
-        "verbatimModuleSyntax": false
+        "verbatimModuleSyntax": false,
+        "types": ["node", "jest"]
     },
     "include": ["./src/**/*", "./test/**/*", "./integration_test/**/*", "./templates/**/*", "jest.config.ts"]
 }

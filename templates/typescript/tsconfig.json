@@ -10,7 +10,8 @@
         "forceConsistentCasingInFileNames": true,
         "allowJs": true,
         "noEmit": true,
-        "verbatimModuleSyntax": false
+        "verbatimModuleSyntax": false,
+        "types": ["node"]
     },
     "include": ["./src/**/*.ts", "./launcher/**/*.ts", "./utils/**/*.ts", "./webpack.config.ts"]
 }
