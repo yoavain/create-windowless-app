@@ -101,7 +101,7 @@
     "dependencies": {
         "chalk": "4.1.2",
         "inquirer": "11.1.0",
-        "validate-npm-package-name": "7.0.2"
+        "validate-npm-package-name": "8.0.0"
     },
     "lint-staged": {
         "*.(ts|js)": [
