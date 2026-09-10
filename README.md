@@ -111,17 +111,22 @@ Then you can find in your my-app\dist folder the following files:
 ## create-windowless-app CLI
 
 ```
-create-windowless-app <project-directory> [options]
+Usage: create-windowless-app [projectName] [options]
+
+Arguments:
+  projectName            project name
 
 Options:
-    --no-typescript                 use javascript rather than typescript
-    --icon <icon>                   override default launcher icon file
-    --verbose                       print additional logs
-
-    --interactive                   interactive mode
-
-Only <project-directory> is required.
+  -v, --verbose          print additional logs
+  -i, --interactive      interactive mode
+  -t, --typescript       use typescript (default: true)
+      --no-typescript    disable typescript
+  -c, --icon <file>      override default launcher icon file
+      --version          Show version number
+      --help             Show help
 ```
+
+`projectName` is required unless `--interactive` is used.
 
 ## Why?
 
