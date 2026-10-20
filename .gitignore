@@ -70,3 +70,5 @@ typings/
 /.claude/settings.local.json
 /.qodo/
 /lsp/
+/*.bat
+/tsconfig.build.tsbuildinfo

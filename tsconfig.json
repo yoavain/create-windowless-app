@@ -1,5 +1,5 @@
 {
-    "extends": "@tsconfig/node20",
+    "extends": "@tsconfig/node22",
     "compilerOptions": {
         "strict": false,
         "esModuleInterop": true,
@@ -10,5 +10,5 @@
         "types": ["node", "jest"],
         "rootDir": "."
     },
-    "include": ["./src/**/*", "./test/**/*", "./integration_test/**/*", "./templates/**/*", "jest.config.ts"]
+    "include": ["./src/**/*", "./test/**/*", "./integration_test/**/*", "./templates/**/*", "./scripts/**/*", "jest.config.ts"]
 }

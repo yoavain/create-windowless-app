@@ -17,14 +17,14 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        node-version: [ '20', '22', '24' ]
+        node-version: [ '22', '24', '26' ]
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6.0.3
+        uses: actions/checkout@v7.0.1
 
       - name: Setup NodeJS
-        uses: actions/setup-node@v6.4.0
+        uses: actions/setup-node@v7.1.0
         with:
           node-version: ${{ matrix.node-version }}
           cache: npm
@@ -44,7 +44,7 @@ jobs:
 
       - name: Codecov
         if: matrix.node-version == '24'
-        uses: codecov/codecov-action@v6.0.1
+        uses: codecov/codecov-action@v7.1.1
         with:
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -59,7 +59,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6.0.3
+        uses: actions/checkout@v7.0.1
 
       - name: Setup Windows SDK
         uses: GuillaumeFalourd/setup-windows10-sdk-action@v2.5
@@ -71,7 +71,7 @@ jobs:
           value: $env:PATH;C:\Program Files (x86)\Windows Kits\10\bin\10.0.17763.0\x86\
 
       - name: Setup NodeJS
-        uses: actions/setup-node@v6.4.0
+        uses: actions/setup-node@v7.1.0
         with:
           node-version: ${{ matrix.node-version }}
           cache: npm

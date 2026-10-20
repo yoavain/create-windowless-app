@@ -1,7 +1,9 @@
 import { fixupConfigRules, fixupPluginRules } from "@eslint/compat";
 import n from "eslint-plugin-n";
 import typescriptEslint from "@typescript-eslint/eslint-plugin";
-import _import from "eslint-plugin-import";
+// eslint-plugin-import-x replaces eslint-plugin-import, which does not support ESLint 10. Snyk rates import-x 4.17.1 Healthy.
+import { importX } from "eslint-plugin-import-x";
+import { createTypeScriptImportResolver } from "eslint-import-resolver-typescript";
 import jest from "eslint-plugin-jest";
 import pluginSecurity from "eslint-plugin-security";
 import globals from "globals";
@@ -21,15 +23,12 @@ const compat = new FlatCompat({
 
 export default [...fixupConfigRules(compat.extends(
     "eslint:recommended",
-    "plugin:import/errors",
-    "plugin:import/warnings",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:security/recommended-legacy"
-)), n.configs["flat/recommended-script"], {
+)), importX.flatConfigs.recommended, n.configs["flat/recommended-script"], {
     plugins: {
         "@typescript-eslint": fixupPluginRules(typescriptEslint),
-        "import": fixupPluginRules(_import),
         jest,
         "security": fixupPluginRules(pluginSecurity)
     },
@@ -53,15 +52,13 @@ export default [...fixupConfigRules(compat.extends(
     },
 
     settings: {
-        "import/parsers": {
+        "import-x/parsers": {
             "@typescript-eslint/parser": [".ts", ".tsx"]
         },
 
-        "import/resolver": {
-            typescript: {
-                alwaysTryTypes: true
-            }
-        }
+        "import-x/resolver-next": [
+            createTypeScriptImportResolver({ alwaysTryTypes: true })
+        ]
     },
 
     rules: {
@@ -98,7 +95,7 @@ export default [...fixupConfigRules(compat.extends(
         "n/no-missing-import": 0,
         "n/no-unpublished-import": 0,
         "n/no-unsupported-features/es-syntax": 0,
-        "import/extensions": [
+        "import-x/extensions": [
             "error",
             {
                 "ts": "never",
@@ -106,10 +103,10 @@ export default [...fixupConfigRules(compat.extends(
                 "json": "always"
             }
         ],
-        "import/named": "warn",
-        "import/no-duplicates": "error",
-        "import/no-unresolved": 0,
-        "import/default": 0,
+        "import-x/named": "warn",
+        "import-x/no-duplicates": "error",
+        "import-x/no-unresolved": 0,
+        "import-x/default": 0,
         "@typescript-eslint/no-unused-vars": "warn",
         "@typescript-eslint/no-inferrable-types": 0,
         "@typescript-eslint/no-empty-function": 0,

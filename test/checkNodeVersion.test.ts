@@ -13,7 +13,7 @@ describe("Test checkNodeRuntimeVersion", () => {
 
     describe("Test checkNodeRuntimeVersion", () => {
         it("should succeed on allowed version", async () => {
-            process = { ...process, versions: { ...process.versions, node :"20.0.0" } };
+            process = { ...process, versions: { ...process.versions, node :"22.22.0" } };
             checkNodeRuntimeVersion();
         });
 
@@ -21,7 +21,7 @@ describe("Test checkNodeRuntimeVersion", () => {
             // @ts-expect-error -- process.exit returns never; mock implementation returns void
             jest.spyOn(process, "exit").mockImplementation(() => {});
 
-            process = { ...process, versions: { ...process.versions, node :"10.0.0" } };
+            process = { ...process, versions: { ...process.versions, node :"20.19.0" } };
             checkNodeRuntimeVersion();
             expect(process.exit).toHaveBeenCalledTimes(1);
             expect(process.exit).toHaveBeenCalledWith(1);

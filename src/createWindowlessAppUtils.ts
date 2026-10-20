@@ -59,7 +59,10 @@ export const checkAppName = (appName) => {
         process.exit(1);
     }
 
-    const dependencies = [...consts.dependencies, ...consts.devDependencies].sort();
+    // Strip version specs, e.g. "@types/node@22" -> "@types/node"
+    const dependencies = [...consts.dependencies, ...consts.devDependencies, ...consts.tsDevDependencies]
+        .map((dep) => dep.lastIndexOf("@") > 0 ? dep.substring(0, dep.lastIndexOf("@")) : dep)
+        .sort();
     if (dependencies.indexOf(appName) >= 0) {
         console.error(
             chalk.red(
