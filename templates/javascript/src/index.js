@@ -1,7 +1,7 @@
 const path = require("path");
 const winston = require("winston");
 const { WindowsToaster } = require("node-notifier");
-const { execFile } = require("child_process");
+const { spawn } = require("child_process");
 
 // App Name
 const AppName = "##APPNAME##";
@@ -13,9 +13,10 @@ const argv = process.argv.slice(2);
 
 // Logger init
 const { combine, timestamp, printf, label } = winston.format;
-const filename = `${AppName}.log`;
+// Absolute path, so the logger and the "Log" action use the same file
+const logFile = path.resolve(`${AppName}.log`);
 const transports = {
-    file: new winston.transports.File({ filename })
+    file: new winston.transports.File({ filename: logFile })
 };
 transports.file.level = "debug";
 const logger = winston.createLogger({
@@ -27,6 +28,16 @@ const logger = winston.createLogger({
     ),
     transports: [transports.file]
 });
+
+// Open a file with its default app. The encoded command keeps special characters in the path literal
+const openFile = (file) => {
+    const script = `Invoke-Item -LiteralPath '${file.replace(/'/g, "''")}'`;
+    const encoded = Buffer.from(script, "utf16le").toString("base64");
+    spawn("powershell.exe", ["-NoProfile", "-NonInteractive", "-EncodedCommand", encoded], {
+        stdio: "ignore",
+        windowsHide: true
+    }).on("error", (error) => logger.log("error", `Failed to open ${file}: ${error.message}`));
+};
 
 // Notifier init
 const snoreToastPath = executable.endsWith(".exe") ? path.resolve(executable, "../", "snoretoast-x64.exe") : null;
@@ -41,6 +52,5 @@ logger.log("info", `Notifier started with options ${JSON.stringify(notifierOptio
 const notification = { title: `${AppName}`, message: "Hello World", actions: ["Log", "Close"] };
 notifier.notify(notification);
 notifier.on("log", () => {
-    const file = path.join(__dirname, "..", filename);
-    execFile(file, { shell: "powershell" });
+    openFile(logFile);
 });
