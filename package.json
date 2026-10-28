@@ -92,7 +92,7 @@
         "ts-loader": "9.6.2",
         "ts-node": "10.9.2",
         "typescript": "npm:@typescript/typescript6@6.0.2",
-        "webpack": "5.112.0",
+        "webpack": "5.112.2",
         "webpack-cli": "7.2.3",
         "winston": "3.19.0"
     },
