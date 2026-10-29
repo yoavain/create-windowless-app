@@ -61,7 +61,7 @@
         "@eslint/js": "10.0.1",
         "@tsconfig/node24": "24.0.5",
         "@types/jest": "30.0.0",
-        "@types/node": "24.19.2",
+        "@types/node": "26.6.6",
         "@types/node-notifier": "8.0.5",
         "@types/validate-npm-package-name": "4.0.2",
         "@types/winston": "2.4.4",
