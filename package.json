@@ -77,7 +77,7 @@
         "eslint-plugin-n": "18.5.0",
         "eslint-plugin-security": "4.2.0",
         "global-npm": "0.5.0",
-        "globals": "17.13.0",
+        "globals": "17.14.0",
         "husky": "9.1.7",
         "jest": "30.5.2",
         "lint-staged": "17.6.0",
