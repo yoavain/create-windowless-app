@@ -16,5 +16,7 @@
         }
     ],
     "prConcurrentLimit": 5,
+    "minimumReleaseAge": "14 days",
+    "internalChecksFilter": "strict",
     "ignoreNpmrcFile": true
 }
