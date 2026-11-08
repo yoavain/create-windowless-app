@@ -5,9 +5,13 @@
     "packageRules": [
         {
             "matchManagers": ["npm"],
+            "matchDepTypes": ["dependencies", "devDependencies"],
+            "rangeStrategy": "bump"
+        },
+        {
+            "matchManagers": ["npm"],
             "matchDepTypes": ["dependencies"],
             "matchUpdateTypes": ["minor", "patch"],
-            "rangeStrategy": "bump",
             "groupName": "minor runtime dependencies",
             "groupSlug": "update-minor-runtime-dependencies",
             "labels": ["dependencies"]
@@ -16,7 +20,6 @@
             "matchManagers": ["npm"],
             "matchDepTypes": ["devDependencies"],
             "matchUpdateTypes": ["minor", "patch"],
-            "rangeStrategy": "bump",
             "groupName": "minor dev dependencies",
             "groupSlug": "update-minor-dev-dependencies",
             "labels": ["dev-dependencies"]
