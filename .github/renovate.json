@@ -1,16 +1,25 @@
 {
-    "extends": ["config:base"],
+    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+    "extends": ["config:recommended"],
     "labels": ["renovate", "dependencies"],
     "packageRules": [
         {
-            "depTypeList": ["dependencies"],
-            "labels": ["dependencies"],
-            "updateTypes": ["minor", "patch"]
+            "matchManagers": ["npm"],
+            "matchDepTypes": ["dependencies"],
+            "matchUpdateTypes": ["minor", "patch"],
+            "rangeStrategy": "bump",
+            "groupName": "minor runtime dependencies",
+            "groupSlug": "update-minor-runtime-dependencies",
+            "labels": ["dependencies"]
         },
         {
-            "depTypeList": ["devDependencies"],
-            "labels": ["dev-dependencies"],
-            "updateTypes": ["minor", "patch"]
+            "matchManagers": ["npm"],
+            "matchDepTypes": ["devDependencies"],
+            "matchUpdateTypes": ["minor", "patch"],
+            "rangeStrategy": "bump",
+            "groupName": "minor dev dependencies",
+            "groupSlug": "update-minor-dev-dependencies",
+            "labels": ["dev-dependencies"]
         }
     ],
     "prConcurrentLimit": 5,
