@@ -2,6 +2,7 @@ const path = require("path");
 const winston = require("winston");
 const { WindowsToaster } = require("node-notifier");
 const { spawn } = require("child_process");
+const { isSea } = require("node:sea");
 
 // App Name
 const AppName = "##APPNAME##";
@@ -40,7 +41,8 @@ const openFile = (file) => {
 };
 
 // Notifier init
-const snoreToastPath = executable.endsWith(".exe") ? path.resolve(executable, "../", "snoretoast-x64.exe") : null;
+// Only the packaged app has SnoreToast next to it. Under plain Node, node-notifier uses its own copy
+const snoreToastPath = isSea() ? path.resolve(executable, "../", "snoretoast-x64.exe") : null;
 let notifierOptions = { withFallback: false, customPath: snoreToastPath };
 const notifier = new WindowsToaster(notifierOptions);
 
