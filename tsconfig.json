@@ -1,5 +1,5 @@
 {
-    "extends": "@tsconfig/node24",
+    "extends": "@tsconfig/node26",
     "compilerOptions": {
         "strict": false,
         "esModuleInterop": true,
