@@ -138,6 +138,12 @@ export default [...fixupConfigRules(compat.extends(
         "@typescript-eslint/no-require-imports": 0
     }
 }, {
+    // The generated app is a Node SEA, so the templates use node:sea. eslint-plugin-n rates it experimental
+    files: ["templates/**/*"],
+    rules: {
+        "n/no-unsupported-features/node-builtins": ["error", { "ignores": ["sea"] }]
+    }
+}, {
     files: ["test/**/*"],
     rules: {
         "no-global-assign": 0

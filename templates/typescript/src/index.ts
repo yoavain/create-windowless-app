@@ -2,6 +2,7 @@ import * as path from "path";
 import * as winston from "winston";
 import { WindowsToaster } from "node-notifier";
 import { spawn } from "child_process";
+import { isSea } from "node:sea";
 import type { NotifierOptions } from "node-notifier";
 
 // App Name
@@ -41,10 +42,10 @@ const openFile = (file: string): void => {
 };
 
 // Notifier init
-const snoreToastPath: string = executable.endsWith(".exe") ? path.resolve(executable, "../", "snoretoast-x64.exe") : null;
+// Only the packaged app has SnoreToast next to it. Under plain Node, node-notifier uses its own copy
+const snoreToastPath: string = isSea() ? path.resolve(executable, "../", "snoretoast-x64.exe") : null;
 let notifierOptions: NotifierOptions = { withFallback: false, customPath: snoreToastPath };
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const notifier: any = new WindowsToaster(notifierOptions);
+const notifier: WindowsToaster = new WindowsToaster(notifierOptions);
 
 // Log message
 logger.log("info", `"${AppName}" started with ${argv ? argv.join("; ") : "no args"}`);

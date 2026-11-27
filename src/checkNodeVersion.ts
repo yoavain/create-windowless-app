@@ -1,14 +1,16 @@
-const MIN_MAJOR_VERSION = 22;
-const MIN_MINOR_VERSION = 22;
+// The same range as "engines" in package.json
+const SUPPORTED_RANGE: string = "^22.22.2 || ^24.15.0 || >=26.0.0";
+
+const isSupported = (version: string): boolean => {
+    const [major, minor, patch] = version.split(".").map(Number);
+    return (major === 22 && (minor > 22 || (minor === 22 && patch >= 2))) || (major === 24 && minor >= 15) || major >= 26;
+};
 
 export const checkNodeRuntimeVersion = () => {
     const currentNodeVersion: string = process.versions.node;
-    const semver: string[] = currentNodeVersion.split(".");
-    const major: number = Number(semver[0]);
-    const minor: number = Number(semver[1]);
 
-    if (Number.isNaN(major) || Number.isNaN(minor) || major < MIN_MAJOR_VERSION || (major === MIN_MAJOR_VERSION && minor < MIN_MINOR_VERSION)) {
-        console.error(`You are running NodeJS ${currentNodeVersion}.\nCreate Windowless App requires NodeJS ${MIN_MAJOR_VERSION}.${MIN_MINOR_VERSION} or higher.\nPlease update your version of Node.`);
+    if (!isSupported(currentNodeVersion)) {
+        console.error(`You are running NodeJS ${currentNodeVersion}.\nCreate Windowless App requires NodeJS ${SUPPORTED_RANGE}.\nPlease update your version of Node.`);
         process.exit(1);
     }
 };

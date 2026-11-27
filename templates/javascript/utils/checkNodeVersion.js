@@ -1,14 +1,16 @@
-const MIN_MAJOR_VERSION = 22;
-const MIN_MINOR_VERSION = 22;
+// The "engines" range of node-notifier
+const SUPPORTED_RANGE = "^22.22.2 || ^24.15.0 || >=26.0.0";
+
+const isSupported = (version) => {
+    const [major, minor, patch] = version.split(".").map(Number);
+    return (major === 22 && (minor > 22 || (minor === 22 && patch >= 2))) || (major === 24 && minor >= 15) || major >= 26;
+};
 
 export const checkNodeRuntimeVersion = () => {
     const currentNodeVersion = process.versions.node;
-    const semver = currentNodeVersion.split(".");
-    const major = Number(semver[0]);
-    const minor = Number(semver[1]);
 
-    if (Number.isNaN(major) || Number.isNaN(minor) || major < MIN_MAJOR_VERSION || (major === MIN_MAJOR_VERSION && minor < MIN_MINOR_VERSION)) {
-        console.error(`You are running Node.js ${currentNodeVersion}.\nYou need at ${MIN_MAJOR_VERSION}.${MIN_MINOR_VERSION} or higher.\nPlease update your version of Node.`);
+    if (!isSupported(currentNodeVersion)) {
+        console.error(`You are running Node.js ${currentNodeVersion}.\nYou need Node.js ${SUPPORTED_RANGE}.\nPlease update your version of Node.`);
         process.exit(1);
     }
 };

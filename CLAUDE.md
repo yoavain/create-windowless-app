@@ -45,7 +45,7 @@ The tool has two distinct roles: the **CLI tool itself** (in `src/`) and the **t
 
 - **`index.ts`** — Entry point; delegates to `main()`
 - **`main.ts`** — Top-level orchestration: `checkNodeRuntimeVersion` → `checkMsbuildInPath` → `createWindowlessApp(process.argv)`
-- **`checkNodeVersion.ts`** — Verifies the running Node.js meets the minimum version (>= 22.22)
+- **`checkNodeVersion.ts`** — Verifies the running Node.js is in the supported range (see Engine Requirements)
 - **`cliParser.ts`** — Uses Node's built-in `util.parseArgs()`; handles `-v/--verbose`, `-i/--interactive`, `-t/--typescript` (default true) / `--no-typescript`, `-c/--icon <file>`, `--version`, `--help`. Routes to `interactiveMode()` when `--interactive` is set
 - **`interactive.ts`** — Enquirer-based interactive prompt flow (project name, icon, typescript, verbose); returns a `ProgramConfig`
 - **`createWindowlessApp.ts`** — Per-project orchestration: validates name → creates dirs → generates `package.json` → copies templates → installs deps → compiles C# launcher
