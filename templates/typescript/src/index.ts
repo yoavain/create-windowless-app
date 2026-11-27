@@ -2,7 +2,7 @@ import * as path from "path";
 import * as winston from "winston";
 import { WindowsToaster } from "node-notifier";
 import { spawn } from "child_process";
-import type { Option } from "node-notifier";
+import type { NotifierOptions } from "node-notifier";
 
 // App Name
 const AppName: string = "##APPNAME##";
@@ -42,7 +42,7 @@ const openFile = (file: string): void => {
 
 // Notifier init
 const snoreToastPath: string = executable.endsWith(".exe") ? path.resolve(executable, "../", "snoretoast-x64.exe") : null;
-let notifierOptions: Option = { withFallback: false, customPath: snoreToastPath };
+let notifierOptions: NotifierOptions = { withFallback: false, customPath: snoreToastPath };
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const notifier: any = new WindowsToaster(notifierOptions);
 

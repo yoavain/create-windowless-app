@@ -1,7 +1,9 @@
 export const consts = {
     // Pinned to major versions, so a new major release cannot break generated projects
     dependencies: [
-        "node-notifier@10",
+        // 12.1.0 is the first ESM release with bundled types. Accepted risks: it ships an unsigned
+        // snoretoast-x64.exe, and Snyk marks growly and is-inside-container "Review recommended" (inactivity only)
+        "node-notifier@^12.1.0",
         "winston@3"
     ],
     devDependencies: [
@@ -15,7 +17,6 @@ export const consts = {
     tsDevDependencies: [
         // Lowest supported Node.js major
         "@types/node@22",
-        "@types/node-notifier@8",
         "ts-loader@9",
         "ts-node@10",
         // TypeScript 7 (native port) has no JS compiler API, which ts-node and ts-loader require

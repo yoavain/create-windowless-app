@@ -1,8 +1,8 @@
 {
     "compilerOptions": {
         "lib": ["es2023"],
-        "module": "node16",
-        "moduleResolution": "node16",
+        "module": "nodenext",
+        "moduleResolution": "nodenext",
         "target": "es6",
         "strict": false,
         "esModuleInterop": true,
